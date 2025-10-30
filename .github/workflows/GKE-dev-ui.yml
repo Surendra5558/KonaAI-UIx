@@ -15,8 +15,14 @@ jobs:
         with:
           credentials_json: ${{ secrets.GKE_LOGIN_SERVER }}
       - name: Configure Docker for Artifact Registry
-        run: |+
+        run: |
           gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+      - name: Get GKE credentials
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+          cluster_name: ${{ secrets.GKE_CLUSTER2_NAME }}
+          location: ${{ secrets.GKE_LOCATION }}
+          project_id: ${{ secrets.GKE_PROJECT }}
            
       - name: Build and push Docker container
         run: |
@@ -27,14 +33,9 @@ jobs:
           # Optional: also push "latest" tag
           docker tag $IMAGE:${{ github.sha }} $IMAGE:latest
           docker push $IMAGE:latest
-      - name: Get GKE credentials
-        uses: google-github-actions/get-gke-credentials@v2
-        with:
-          cluster_name: ${{ secrets.GKE_CLUSTER2_NAME }}
-          location: ${{ secrets.GKE_LOCATION }}
-          project_id: ${{ secrets.GKE_PROJECT }}
+
       - name: Ensure ingress-nginx is installed
-        run: >
+        run: |
           if helm status ingress-nginx -n ingress-nginx >/dev/null 2>&1; then
            echo "Ingress-NGINX already installed, skipping..."
           else
@@ -60,7 +61,7 @@ jobs:
             echo "TLS secret 'godaddy-wildcard' created successfully in namespace 'ingress-nginx'."
           fi
       - name: Helm install or upgrade
-        run: >+
+        run: |
           RELEASE_NAME=ui-app
 
           NAMESPACE=konaai-dev-ui
