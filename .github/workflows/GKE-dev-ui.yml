@@ -14,6 +14,13 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GKE_LOGIN_SERVER }}  
+
+      - name: Debug GKE values
+        run: |
+         echo "Cluster: ${{ secrets.GKE_CLUSTER2_NAME }}"
+         echo "Location: ${{ secrets.GKE_LOCATION }}"
+         echo "Project: ${{ secrets.GKE_PROJECT }}"
+
           
       - name: Get GKE credentials
         uses: google-github-actions/get-gke-credentials@v2
