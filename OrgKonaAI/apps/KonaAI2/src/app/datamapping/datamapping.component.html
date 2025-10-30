@@ -1,5 +1,5 @@
 <div class="container" *ngIf="!showDetailsScreen">
-  <!-- <div class="header">
+  <div class="header">
     <h3>Stagged Data</h3>
     <div class="status-indicators">
       <span class="status-icon success">
@@ -12,9 +12,9 @@
         <i class="far fa-hourglass"></i> {{ warningCount }}
       </span>
     </div>
-  </div> -->
+  </div>
 
-  <table class="table-main" >
+  <table class="table-main">
     <thead>
       <tr>
         <th>Submodule</th>
@@ -36,9 +36,8 @@
             <i class="far fa-thumbs-up"></i>
             {{ row.status }}
           </span>
-        </td>
-        <td class="icon-cell" style=" padding-right: 16px;">
-          <div style="position: absolute; right: 64px; display: flex;; gap: 30px;">
+        <td class="icon-cell" style="position: relative; padding-right: 16px;">
+          <div style="position: absolute; right: 8px; display: flex; align-items: center; gap: 30px;">
             <i class="bi bi-download" (click)="onDownload(row); $event.stopPropagation()" title="Download"
               style="cursor: pointer; font-size: 15px; -webkit-text-stroke: 0.5px currentColor; display: flex; align-items: center;">
             </i>
@@ -56,31 +55,9 @@
     </tbody>
   </table>
 
-  <div class="bottom-bar">
-    <!-- Pagination Buttons (centered) -->
-    <div class="pagination-controls">
-      <!-- Previous Button -->
-      <button class="pagination-arrow" (click)="onPageChange('prev')" [disabled]="page === 1">‹</button>
-
-      <!-- Page Numbers -->
-      <button *ngFor="let p of [].constructor(totalPages); let i = index" (click)="goToPage(i + 1)"
-        [class.active]="page === i + 1">
-        {{ i + 1 }}
-      </button>
-
-      <!-- Next Button -->
-      <button class="pagination-arrow" (click)="onPageChange('next')" [disabled]="page === totalPages">›</button>
-    </div>
-
-    <!-- Execute Button (right) -->
-    <div class="execute">
-      <button class="btn-execute" style="margin-left: -25%;">Execute</button>
-    </div>
-  </div>
-
 </div>
-  <div *ngIf="showDetailsScreen" class="vm-details-fullscreen-overlay" [class.sidebar-pinned]="isSidebarPinned"
-    [class.sidebar-unpinned]="!isSidebarPinned">
-    <app-mappingdetails (backtoIntial)="handleChildEvent($event)">
-    </app-mappingdetails>
-  </div>
+<div *ngIf="showDetailsScreen" class="vm-details-fullscreen-overlay" [class.sidebar-pinned]="isSidebarPinned"
+  [class.sidebar-unpinned]="!isSidebarPinned">
+  <app-mappingdetails (backtoIntial)="handleChildEvent($event)">
+  </app-mappingdetails>
+</div>

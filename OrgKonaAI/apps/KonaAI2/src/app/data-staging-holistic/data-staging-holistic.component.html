@@ -1,18 +1,13 @@
-
-
 <div class="holistic-container">
   <!-- Header -->
-<div class="header-container">
-  <button class="btn-back" (click)="goBack()">
-    <i class="bi bi-arrow-left-short"></i>
-  </button>
-  <h1 class="header-title">
-    Contract Compliance Audit
-    <span class="phase-badge">Phase 1</span>
-  </h1>
-</div>
- 
- 
+  <div class="layout-back">
+      <button class="btn-back " (click)="goBack()">
+        <i class="bi bi-arrow-left-short"></i>
+      </button>
+       <span class="layout-back-name">{{projectName}} </span>
+      <span class="phase-badge">Phase 1</span>
+  </div>
+
 
   <div class="tabs">
     <div class="tab" [class.active]="activeTab === 'p2p'" (click)="setActiveTab('p2p')">

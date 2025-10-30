@@ -1,0 +1,40 @@
+namespace: konaai-dev-ui  # Change to "default" if you're moving everything there
+replicaCount: 2
+image:
+  repository: us-central1-docker.pkg.dev/konaai-dev-462909/konaai-gke/dev-ui:latest
+  tag: latest
+  pullPolicy: IfNotPresent
+container:
+  name: ui-container
+  port: 80
+service:
+  name: ui-service
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "70m"
+  limits:
+    memory: "128Mi"
+    cpu: "300m"
+labels:
+  app: ui-app
+ingress:
+  enabled: true
+  name: ui-ingress
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  hosts:
+    - host: konaai-dev.mykonaai.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - konaai-dev.mykonaai.com
+      secretName: godaddy-wildcard

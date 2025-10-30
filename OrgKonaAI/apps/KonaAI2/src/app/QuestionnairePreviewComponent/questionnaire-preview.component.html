@@ -16,87 +16,38 @@
 <div class="preview-main">
   <div style="display: flex;">
     <span class="doc-icon"><i class="bi bi-file-earmark" style="color: #9A7A08"></i></span>
-    <h2>{{ questionnaireName }}</h2>
+    <h2>Untitled</h2>
   </div>
 
-  <section *ngFor="let section of sections || []">
+  <section *ngFor="let section of sections">
     <div class="section-heading" (click)="toggleSection(section)" style="cursor:pointer;">
-      <span class="section-num">{{ section.num }}</span>
-      <span>{{ section.title }}</span>
+      <span class="section-num">{{section.num}}</span>
+      <span>{{section.title}}</span>
     </div>
 
     <div *ngIf="section.isOpen">
-      <ng-container *ngFor="let q of section.questions || []">
+      <div *ngFor="let q of section.questions" class="preview-card">
+        <div class="question-label">{{q.text}}</div>
+        <div *ngIf="q.description" class="question-desc">{{q.description}}</div>
 
-        <!-- Parent Question Card -->
-        <div class="preview-card">
-          <div class="question-label">{{ q.text }}<span *ngIf="q.hasChild">
-              <i class="bi bi-diagram-2-fill" style="color: #ccc; font-size: 20px;" title="Has child questions"></i>
-            </span></div>
-          <div *ngIf="q.description" class="question-desc">{{ q.description }}</div>
-
-          <div [ngSwitch]="q.type">
-            <input *ngSwitchCase="'Short Answer'" class="text-field" type="text" disabled placeholder="Enter answer" />
-            <textarea *ngSwitchCase="'Long Answer'" class="text-area" rows="2" disabled
-              placeholder="Long answer"></textarea>
-            <input *ngSwitchCase="'Calender'" type="date" class="text-field" disabled />
-            <input *ngSwitchDefault class="text-field" type="text" disabled placeholder="Enter response" />
-
-            <div *ngSwitchCase="'Multiple Choice'" class="option-group">
-              <label *ngFor="let opt of (q.options?.[0]?.includes(';') ? q.options[0].split(';') : q.options || [])">
-                <input type="radio" name="mc-{{ q.id }}" [value]="opt" [(ngModel)]="q.selectedOption"
-                  (change)="onOptionSelect(q, q.selectedOption || '')" />
-                {{ opt }}
-              </label>
-            </div>
-
-            <div *ngSwitchCase="'Check Boxes'" class="option-group">
-              <label *ngFor="let opt of (q.options?.[0]?.includes(';') ? q.options[0].split(';') : q.options || [])">
-                <input type="checkbox" /> {{ opt }}
-              </label>
-            </div>
-
-            <select *ngSwitchCase="'Dropdown'" [(ngModel)]="q.selectedOption"
-              (change)="onOptionSelect(q, q.selectedOption || '')">
-              <option value="">Select...</option>
-              <option *ngFor="let opt of (q.options?.[0]?.includes(';') ? q.options[0].split(';') : q.options || [])"
-                [value]="opt">
-                {{ opt }}
-              </option>
-            </select>
+        <div [ngSwitch]="q.type">
+          <input *ngSwitchCase="'Short Answer'" class="text-field" type="text" disabled placeholder="Enter answer"/>
+          <textarea *ngSwitchCase="'Long Answer'" class="text-area" rows="2" disabled placeholder="Long answer"></textarea>
+          <div *ngSwitchCase="'Multiple Choice'" class="option-group">
+            <label *ngFor="let opt of q.options">
+              <input type="radio" disabled name="mc-{{q.id}}" />{{opt}}
+            </label>
           </div>
-
-          <!-- Child Questions Inline -->
-          <div *ngIf="hasChildren(q)" class="child-card">
-            <ng-container *ngFor="let child of q.filteredChildren || []">
-              <div class="child-label">{{ child.text }}</div>
-              <div *ngIf="child.description" class="child-desc">{{ child.description }}</div>
-              <div [ngSwitch]="child.type">
-                <input *ngSwitchCase="'Short Answer'" type="text" class="text-field" disabled
-                  placeholder="Enter answer" />
-                <textarea *ngSwitchCase="'Long Answer'" rows="2" class="text-area" disabled></textarea>
-                <input *ngSwitchCase="'Calender'" type="date" class="text-field" disabled />
-
-                <div *ngSwitchCase="'Multiple Choice'" class="option-group">
-                  <label
-                    *ngFor="let opt of (child.options?.[0]?.includes(';') ? child.options[0].split(';') : child.options || [])">
-                    <input type="radio" disabled /> {{ opt }}
-                  </label>
-                </div>
-
-                <select *ngSwitchCase="'Dropdown'" disabled>
-                  <option
-                    *ngFor="let opt of (child.options?.[0]?.includes(';') ? child.options[0].split(';') : child.options || [])">
-                    {{ opt }}
-                  </option>
-                </select>
-              </div>
-            </ng-container>
+          <div *ngSwitchCase="'Check Boxes'" class="option-group">
+            <label *ngFor="let opt of q.options">
+              <input type="checkbox" disabled />{{opt}}
+            </label>
           </div>
-
-
+          <select *ngSwitchCase="'Dropdown'" disabled>
+            <option *ngFor="let opt of q.options">{{opt}}</option>
+          </select>
         </div>
-      </ng-container>
+      </div>
     </div>
   </section>
 </div>

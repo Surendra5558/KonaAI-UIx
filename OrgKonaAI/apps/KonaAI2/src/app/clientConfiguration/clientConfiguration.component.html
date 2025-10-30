@@ -2,74 +2,61 @@
   <!-- Header -->
   <div class="header-block">
     <div>
-      <h2>System Configuration</h2>
-      <p>Modules, risk areas and source system mappings</p>
+      <h2>Client Configuration</h2>
+      <p>Manage modules, risk areas, and source system mappings</p>
     </div>
   </div>
 
   <!-- Enabled Modules Section -->
-  <div class="detail-item">
+ <div class="detail-item modules-section">
     <label>Enabled Modules</label>
-    <div class="module-tags">
-      <span *ngFor="let module of enabledModules" class="module-tag" [class.enabled]="module.enabled"
-        [class.disabled]="!module.enabled">
-        {{ module.name }}
-      </span>
+   <div class="module-tags">
+        <span 
+          *ngFor="let module of enabledModules" 
+          class="module-tag"
+          [class.enabled]="module.enabled"
+          [class.disabled]="!module.enabled">
+          {{ module.name }}
+        </span>
     </div>
   </div>
 
-  <div class="detail-item">
-    <label>Configured Risk Areas</label>
-    <div class="module-tags">
-      <span *ngFor="let risk of riskAreas" class="module-tag" [class.enabled]="risk.enabled"
-        [class.disabled]="!risk.enabled">
-        <i class="bi bi-shield mr-2"></i>{{ risk.name }}
-      </span>
+  <!-- Risk Areas Section -->
+  <div class="config-section">
+    <h3>Risk Areas</h3>
+    <div class="risk-areas-container">
+      <select 
+       class="form-input"
+        [value]="selectedRiskArea"
+        (change)="onRiskAreaChange($event)">
+        <option value="" disabled>Select risk areas</option>
+        <option *ngFor="let area of riskAreas" [value]="area">{{ area }}</option>
+      </select>
     </div>
-  </div>
-
-  <div class="detail-item">
-    <label>OCR Configuration</label>
-    <div
-      style="width: 100%; border: 1px solid #E2E8F0; display: flex; flex-direction: column; padding: 8px 12px; border-radius: 8px;">
-      <span style="font-size: 13px;"><i class="bi bi-file-earmark-text mr-2"></i>OCR Processing</span>
-      <span style="font-size: 12px;color: grey;">Supported Languages: English, Spanish, French</span>
-    </div>
-  </div>
-
-  <div style="padding-bottom: 16px;"></div>
-
-  <div class="header-block">
-    <div>
-      <h2>Integration Connections</h2>
-      <p>External Services and API Integrations</p>
-    </div>
-    <div><button class="btn btn-save"><i class="bi bi-plus-lg mr-2"></i>New Connection</button></div>
   </div>
 
   <!-- Source System Mappings Section -->
   <div class="config-section">
+    <h3>Source System Mappings</h3>
     <div>
       <table class="table-main">
         <thead>
           <tr>
-            <th>Provider</th>
-            <th>Connection Name</th>
-            <th>Created By</th>
-            <th>Created On</th>
+            <th>Source System</th>
+            <th>Field Mapping</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let connection of connections">
-            <td>{{ connection.provider }}</td>
-            <td>{{ connection.connectionName }}</td>
-            <td>{{ connection.createdBy }}</td>
-            <td>{{ connection.createdOn }}</td>
+          <tr *ngFor="let mapping of sourceSystemMappings">
+            <td>{{ mapping.sourceSystem }}</td>
+            <td>{{ mapping.fieldMapping }}</td>
             <td>
-              <span class="status-badge" [class.configured]="connection.status === 'Completed'"
-                [class.not-configured]="connection.status === 'Failed'">
-                {{ connection.status }}
+              <span 
+                class="status-badge"
+                [class.configured]="mapping.status === 'Configured'"
+                [class.not-configured]="mapping.status === 'Not Configured'">
+                {{ mapping.status }}
               </span>
             </td>
           </tr>
@@ -79,8 +66,8 @@
   </div>
 
   <!-- Action Buttons -->
-  <!-- <div class="action-buttons">
-    <button class="btn btn-cancel" (click)="onReset()">Cancel</button>
+  <div class="action-buttons">
+     <button class="btn btn-cancel" (click)="onReset()">Cancel</button>
     <button class="btn btn-save" (click)="onSaveChanges()">Save </button>
-  </div> -->
+  </div>
 </div>

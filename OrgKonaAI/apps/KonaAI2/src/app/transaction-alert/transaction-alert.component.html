@@ -251,7 +251,7 @@
 
           <!-- Entity Transactions Tab Content -->
           <div *ngIf="activeTab === 'transactions'" class="tab-content">
-            <div style="overflow-x: auto;">
+            <div>
               <table class="table-main entity-table">
                 <thead>
                   <tr>
@@ -324,10 +324,9 @@
                         }}</span>
                     </td>
                     <td>
-                      <span class="icon external-link" title="Open in new tab"><i
-                          class="bi bi-arrow-up-right"></i></span>
+                      <span class="icon external-link" title="Open in new tab"><i class="bi bi-arrow-up-right"></i></span>
                       <span class="icon dropdown" title="More options"><i class="bi bi-chevron-down"></i></span>
-                    </td>
+                      </td>
                   </tr>
                 </tbody>
               </table>
@@ -353,50 +352,48 @@
               </div>
 
               <!-- Evidence Table -->
-              <div style="width: 47vw;">
-                <table class="table-main">
-                  <thead>
-                    <tr>
-                      <th>Transaction ID</th>
-                      <th>Name</th>
-                      <th>Uploaded by</th>
-                      <th>Uploaded on</th>
-                      <th>Size</th>
-                      <th>OCR</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let evidence of evidenceItems">
-                      <td>{{ evidence.transactionId }}</td>
-                      <td>{{ evidence.name }}</td>
-                      <td>{{ evidence.uploadedBy }}</td>
-                      <td>{{ evidence.uploadDate | date:'dd MMM yyyy' }}</td>
-                      <td>{{ evidence.size }}</td>
-                      <td class="ocr-cell">
-                        <i class="bi bi-paperclip" (click)="navigateToOcrView(evidence)" title="View OCR Document"></i>
-                      </td>
-                      <td class="actions-cell">
-                        <div class="actions-menu-wrapper" (click)="$event.stopPropagation()">
-                          <button class="btn-icon" (click)="toggleEvidenceMenu(evidence, $event)" title="Actions">
-                            <i class="bi bi-three-dots-vertical"></i>
+              <table class="table-main">
+                <thead>
+                  <tr>
+                    <th>Transaction ID</th>
+                    <th>Name</th>
+                    <th>Uploaded by</th>
+                    <th>Uploaded on</th>
+                    <th>Size</th>
+                    <th>OCR</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let evidence of evidenceItems">
+                    <td>{{ evidence.transactionId }}</td>
+                    <td>{{ evidence.name }}</td>
+                    <td>{{ evidence.uploadedBy }}</td>
+                    <td>{{ evidence.uploadDate | date:'dd MMM yyyy' }}</td>
+                    <td>{{ evidence.size }}</td>
+                    <td class="ocr-cell">
+                      <i class="bi bi-paperclip" (click)="navigateToOcrView(evidence)" title="View OCR Document"></i>
+                    </td>
+                    <td class="actions-cell">
+                      <div class="actions-menu-wrapper" (click)="$event.stopPropagation()">
+                        <button class="btn-icon" (click)="toggleEvidenceMenu(evidence, $event)" title="Actions">
+                          <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <div class="evidence-actions-menu" *ngIf="openEvidenceMenuId === evidence.id">
+                          <button class="menu-item" (click)="renameEvidence(evidence); closeEvidenceMenu()">
+                            <i class="bi bi-pencil-square"></i>
+                            <span>Rename</span>
                           </button>
-                          <div class="evidence-actions-menu" *ngIf="openEvidenceMenuId === evidence.id">
-                            <button class="menu-item" (click)="renameEvidence(evidence); closeEvidenceMenu()">
-                              <i class="bi bi-pencil-square"></i>
-                              <span>Rename</span>
-                            </button>
-                            <button class="menu-item" (click)="navigateToOcrView(evidence); closeEvidenceMenu()">
-                              <i class="bi bi-trash3"></i>
-                              <span>Delete Permanently OCR</span>
-                            </button>
-                          </div>
+                          <button class="menu-item" (click)="navigateToOcrView(evidence); closeEvidenceMenu()">
+                            <i class="bi bi-trash3"></i>
+                            <span>Delete Permanently OCR</span>
+                          </button>
                         </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -477,61 +474,62 @@
 
               <!-- Main Content Area -->
               <!-- <div class="content-area"> -->
-              <!-- Formatting Toolbar -->
-              <div class="formatting-toolbar" [class.visible]="isToolbarVisible">
-                <div class="format-buttons">
-                  <button class="format-btn bold-btn" (click)="applyFormatting('bold')">B</button>
-                  <button class="format-btn italic-btn" (click)="applyFormatting('italic')">I</button>
-                  <button class="format-btn underline-btn" (click)="applyFormatting('underline')">U</button>
-                  <button class="format-btn strikethrough-btn" (click)="applyFormatting('strikethrough')">S</button>
+                <!-- Formatting Toolbar -->
+                <div class="formatting-toolbar" [class.visible]="isToolbarVisible">
+                  <div class="format-buttons">
+                    <button class="format-btn bold-btn" (click)="applyFormatting('bold')">B</button>
+                    <button class="format-btn italic-btn" (click)="applyFormatting('italic')">I</button>
+                    <button class="format-btn underline-btn" (click)="applyFormatting('underline')">U</button>
+                    <button class="format-btn strikethrough-btn" (click)="applyFormatting('strikethrough')">S</button>
+                  </div>
+
+                  <div class="text-styles">
+                    <div class="style-option" [class.selected]="selectedStyle === 'title'"
+                      (click)="selectStyle('title')">
+                      <span class="checkmark">✓</span>
+                      <span class="style-name title">Title</span>
+                    </div>
+                    <div class="style-option" [class.selected]="selectedStyle === 'heading'"
+                      (click)="selectStyle('heading')">
+                      <span class="checkmark">✓</span>
+                      <span class="style-name heading">Heading</span>
+                    </div>
+                    <div class="style-option" [class.selected]="selectedStyle === 'subheading'"
+                      (click)="selectStyle('subheading')">
+                      <span class="checkmark">✓</span>
+                      <span class="style-name subheading">Subheading</span>
+                    </div>
+                    <div class="style-option" [class.selected]="selectedStyle === 'body'" (click)="selectStyle('body')">
+                      <span class="checkmark">✓</span>
+                      <span class="style-name body">Body</span>
+                    </div>
+                    <div class="style-option" [class.selected]="selectedStyle === 'bulleted'"
+                      (click)="selectStyle('bulleted')">
+                      <span class="checkmark">✓</span>
+                      <span class="bullet">•</span>
+                      <span class="style-name">Bulleted List</span>
+                    </div>
+                    <div class="style-option" [class.selected]="selectedStyle === 'dashed'"
+                      (click)="selectStyle('dashed')">
+                      <span class="checkmark">✓</span>
+                      <span class="dash">-</span>
+                      <span class="style-name">Dashed List</span>
+                    </div>
+                    <div class="style-option" [class.selected]="selectedStyle === 'numbered'"
+                      (click)="selectStyle('numbered')">
+                      <span class="checkmark">✓</span>
+                      <span class="number">1.</span>
+                      <span class="style-name">Numbered List</span>
+                    </div>
+                  </div>
                 </div>
 
-                <div class="text-styles">
-                  <div class="style-option" [class.selected]="selectedStyle === 'title'" (click)="selectStyle('title')">
-                    <span class="checkmark">✓</span>
-                    <span class="style-name title">Title</span>
-                  </div>
-                  <div class="style-option" [class.selected]="selectedStyle === 'heading'"
-                    (click)="selectStyle('heading')">
-                    <span class="checkmark">✓</span>
-                    <span class="style-name heading">Heading</span>
-                  </div>
-                  <div class="style-option" [class.selected]="selectedStyle === 'subheading'"
-                    (click)="selectStyle('subheading')">
-                    <span class="checkmark">✓</span>
-                    <span class="style-name subheading">Subheading</span>
-                  </div>
-                  <div class="style-option" [class.selected]="selectedStyle === 'body'" (click)="selectStyle('body')">
-                    <span class="checkmark">✓</span>
-                    <span class="style-name body">Body</span>
-                  </div>
-                  <div class="style-option" [class.selected]="selectedStyle === 'bulleted'"
-                    (click)="selectStyle('bulleted')">
-                    <span class="checkmark">✓</span>
-                    <span class="bullet">•</span>
-                    <span class="style-name">Bulleted List</span>
-                  </div>
-                  <div class="style-option" [class.selected]="selectedStyle === 'dashed'"
-                    (click)="selectStyle('dashed')">
-                    <span class="checkmark">✓</span>
-                    <span class="dash">-</span>
-                    <span class="style-name">Dashed List</span>
-                  </div>
-                  <div class="style-option" [class.selected]="selectedStyle === 'numbered'"
-                    (click)="selectStyle('numbered')">
-                    <span class="checkmark">✓</span>
-                    <span class="number">1.</span>
-                    <span class="style-name">Numbered List</span>
+                <!-- Text Editor Area -->
+                <div class="editor-area">
+                  <div class="editor-content" contenteditable="true">
+                    Click here to start writing...
                   </div>
                 </div>
-              </div>
-
-              <!-- Text Editor Area -->
-              <div class="editor-area">
-                <div class="editor-content" contenteditable="true">
-                  Click here to start writing...
-                </div>
-              </div>
               <!-- </div> -->
             </div>
           </div>

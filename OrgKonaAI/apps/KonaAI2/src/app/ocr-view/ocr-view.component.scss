@@ -2,6 +2,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: #f8fafc;
   font-family: 'Figtree', sans-serif;
 }
 
@@ -60,6 +61,7 @@
     }
 
     .file-name {
+      font-family: 'Figtree', sans-serif;
       font-weight: 800;
       font-size: 20px;
       color: #1c1c1c;
@@ -67,6 +69,7 @@
     }
 
     .document-type {
+      font-family: 'Figtree', sans-serif;
       font-weight: 500;
       font-size: 14px;
       color: #344151;
@@ -83,6 +86,7 @@
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    font-family: 'Figtree', sans-serif;
     font-weight: 600;
     font-size: 14px;
     color: #082d78;
@@ -115,6 +119,7 @@
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    font-family: 'Figtree', sans-serif;
     font-weight: 600;
     font-size: 14px;
     transition: background-color 0.2s;
@@ -139,7 +144,7 @@
   width: 453px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 24px;
   overflow-y: auto;
 }
 
@@ -149,6 +154,7 @@
   gap: 16px;
 
   .section-title {
+    font-family: 'Figtree', sans-serif;
     font-weight: 800;
     font-size: 14px;
     color: #1c1c1c;
@@ -160,7 +166,7 @@
   .info-list {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 18px;
   }
 
   .info-item {
@@ -191,14 +197,16 @@
       }
 
       .label-text {
-        font-weight: 500;
-        font-size: 12px;
+        font-family: 'Figtree', sans-serif;
+        font-weight: 600;
+        font-size: 14px;
         color: #1c1c1c;
         line-height: 1.2;
       }
     }
 
     .info-value {
+      font-family: 'Figtree', sans-serif;
       font-weight: 500;
       font-size: 14px;
       color: #65717d;
@@ -225,6 +233,38 @@
       }
     }
   }
+
+  .add-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background-color: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Figtree', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #082d78;
+    transition: all 0.2s;
+    align-self: flex-start;
+    margin-top: 8px;
+
+    &:hover {
+      background-color: #f1f5f9;
+      transform: translateY(-1px);
+    }
+
+    i {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
 }
 
 .divider {
@@ -241,6 +281,7 @@
   cursor: pointer;
 
   .parameter-name {
+    font-family: 'Figtree', sans-serif;
     font-weight: 600;
     font-size: 14px;
     color: #1c1c1c;
@@ -252,6 +293,7 @@
     gap: 12px;
 
     .parameter-count {
+      font-family: 'Figtree', sans-serif;
       font-weight: 500;
       font-size: 14px;
       color: #65717d;
@@ -271,17 +313,50 @@
   flex-direction: column;
   gap: 10px;
 
-  .table-font{
-    font-size: 13px;
-  }
-
   .parameter-table-wrapper {
+    border: 1px solid #dde3e9;
     border-radius: 10px;
     background: #ffffff;
     overflow: hidden;
   }
 
+  .parameter-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Figtree', sans-serif;
+    font-size: 14px;
+
+    thead th {
+      background: #f8fafc;
+      color: #65717d;
+      font-weight: 700;
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid #dde3e9;
+    }
+
+    tbody td {
+      padding: 14px 12px;
+      border-top: 1px solid #f0f3f6;
+      vertical-align: middle;
+    }
+
     .text-center { text-align: center; }
+
+    .left {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #6b7280;
+      }
+
+      .label { font-weight: 800; color: #1c1c1c; }
+    }
 
     .description-cell {
       justify-content: space-between;
@@ -314,6 +389,7 @@
       padding: 6px 10px;
       border: 1px solid #dde3e9;
       border-radius: 8px;
+      font-family: 'Figtree', sans-serif;
       font-size: 14px;
       color: #1c1c1c;
       min-width: 240px;
@@ -362,7 +438,7 @@
       .icon-btn.active-success { border-color: #b6e4c2; background: #e9f8ee; color: #01912a; }
       .icon-btn.active-error { border-color: #f0b5b5; background: #fdecec; color: #b20000; }
     }
-  
+  }
 
   .parameter-option {
     display: flex;
@@ -394,17 +470,20 @@
     }
 
     .label {
-      font-size: 12px;
+      font-family: 'Figtree', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
       color: #1c1c1c;
     }
   }
 
   .right {
     display: flex;
-    gap: 14px;
+    gap: 16px;
     align-items: center;
 
     .confidence {
+      font-family: 'Figtree', sans-serif;
       font-weight: 700;
       font-size: 12px;
       color: #65717d;
@@ -447,6 +526,7 @@
   }
 
   .parameter-option-value {
+    font-family: 'Figtree', sans-serif;
     font-weight: 500;
     font-size: 14px;
     color: #344151;
@@ -509,6 +589,7 @@
     }
 
     .tab-label {
+      font-family: 'Figtree', sans-serif;
       font-weight: 600;
       font-size: 14px;
       color: #65717d;
@@ -533,6 +614,7 @@
   gap: 16px;
 
   .section-header {
+    font-family: 'Figtree', sans-serif;
     font-weight: 800;
     font-size: 14px;
     color: #1c1c1c;
@@ -558,6 +640,7 @@
     align-items: flex-start;
 
     .label {
+      font-family: 'Figtree', sans-serif;
       font-weight: 500;
       font-size: 14px;
       color: #65717d;
@@ -566,6 +649,7 @@
     }
 
     .value {
+      font-family: 'Figtree', sans-serif;
       font-weight: 600;
       font-size: 14px;
       color: #1c1c1c;
@@ -602,7 +686,43 @@
   overflow-x: auto;
 }
 
+.flight-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Figtree', sans-serif;
+  font-size: 14px;
 
+  th {
+    background-color: #dceafc;
+    padding: 6px 8px;
+    text-align: left;
+    font-weight: 700;
+    color: #1c1c1c;
+    border: 1px solid #dde3e9;
+  }
+
+  td {
+    padding: 12px 8px;
+    border: 1px solid #dde3e9;
+    font-weight: 500;
+    color: #1c1c1c;
+
+    &.text-right {
+      text-align: right;
+    }
+  }
+
+  tbody tr:hover {
+    background-color: #f8fafc;
+  }
+
+  .row-highlight {
+    outline: 2px solid #2951c6;
+    outline-offset: -2px;
+    background-color: #eef5ff;
+    transition: background-color 0.3s ease;
+  }
+}
 
 // Summary Grid
 .summary-grid {
@@ -678,6 +798,7 @@
   }
 
   .page-info {
+    font-family: 'Figtree', sans-serif;
     font-weight: 600;
     font-size: 14px;
     color: #1c1c1c;
@@ -731,8 +852,4 @@
       padding: 8px 4px;
     }
   }
-}
-.btn-width{
-  width: 35%;
-  padding-left: 0px;
 }

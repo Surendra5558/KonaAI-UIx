@@ -64,7 +64,7 @@ export class QuestionnaireListComponent implements OnInit {
     { id: 6, name: 'Untitled', created: '01 Jan 2025' },
     { id: 7, name: 'Transaction Anomaly Analysis', created: '01 Jan 2025' }
   ];
-  dropdownOpen = false;
+
   sections: Section[] = [
     { id: 1, name: 'Initial Analysis', description: 'Capture basic investigation details.', created: '01 Jan 2025' },
     { id: 2, name: 'Transaction Review', description: 'Record transaction-level checks.', created: '01 Jan 2025' },
@@ -562,17 +562,7 @@ export class QuestionnaireListComponent implements OnInit {
   dropQuestion(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.selectedQuestions, event.previousIndex, event.currentIndex);
   }
-  toggleDropdown() {
-    this.dropdownOpen = !this.dropdownOpen;
-  }
-
-  toggleQuestionSelection(id: number) {
-    const index = this.selectedQuestionIds.indexOf(id);
-    if (index > -1) this.selectedQuestionIds.splice(index, 1);
-    else this.selectedQuestionIds.push(id);
-  }
   addSelectedQuestions() {
-    this.dropdownOpen = false;
     if (!this.selectedQuestionIds.length) return;
 
     const newQuestions = this.questions.filter(q =>

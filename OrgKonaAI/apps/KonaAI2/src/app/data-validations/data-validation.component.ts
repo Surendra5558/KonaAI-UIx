@@ -29,9 +29,6 @@ export class DataValidationComponent implements OnInit {
   tableData: any[] = [];
   searchText = '';
   rowId = '';
-  page = 1;
-  pageSize = 5;
-  totalPages = 1;
 
   records = [
     { XBLNR: '1234', MANDT: '1982', BUKRS: 'BR10', LIFNR: '19616', UMSKS: 'UMSK10', UMSKZ: 'UMSKZ9', Status: 'Failed', selected: false },
@@ -106,9 +103,17 @@ export class DataValidationComponent implements OnInit {
       ];
     }, 5000);
 
-
   }
-
+  
+  get filteredPayments() {
+    if (!this.searchText) return this.paymentData;
+    const search = this.searchText.toLowerCase();
+    return this.paymentData.filter(
+      r =>
+        r.dccId.toLowerCase().includes(search) ||
+        r.description.toLowerCase().includes(search)
+    );
+  }
   onRowClick(e: any) {
 
   }
@@ -142,54 +147,4 @@ export class DataValidationComponent implements OnInit {
   onDownload(row: any) {
     console.log('Download clicked', row);
   }
-
- 
-  // Go to a specific page
-  goToPage(pageNum: number) {
-    if (pageNum >= 1 && pageNum <= this.totalPages) {
-      this.page = pageNum;
-    }
-  }
-
-  // Update total pages whenever filteredPayments changes
-  updateTotalPages() {
-    this.totalPages = Math.ceil(this.filteredPayments.length / this.pageSize) || 1;
-  }
-
-  // Watch searchText changes to reset page & update total pages
-  get filteredPayments() {
-    let data = this.paymentData;
-    if (this.searchText) {
-      const search = this.searchText.toLowerCase();
-      data = data.filter(
-        r =>
-          r.dccId.toLowerCase().includes(search) ||
-          r.description.toLowerCase().includes(search)
-      );
-    }
-    // Update total pages whenever filtering changes
-    setTimeout(() => this.updateTotalPages());
-    return data;
-  }
-
-  // Navigate prev/next
-  onPageChange(direction: 'prev' | 'next') {
-    if (direction === 'prev' && this.page > 1) this.page--;
-    else if (direction === 'next' && this.page < this.totalPages) this.page++;
-  }
-
-  // Paginated data for current page
-  get paginatedPayments() {
-    const start = (this.page - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    return this.filteredPayments.slice(start, end);
-  }
-
-  getPages(): number[] {
-  const pages = [];
-  for (let i = 1; i <= this.totalPages; i++) {
-    pages.push(i);
-  }
-  return pages;
-}
 }

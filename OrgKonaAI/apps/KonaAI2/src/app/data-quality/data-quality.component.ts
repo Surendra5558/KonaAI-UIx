@@ -391,72 +391,23 @@ export class DataQualityComponent implements OnInit {
 
   projectName: string = '';
   showHolisticView: boolean = false;
-  successCount: number = 9;
-  errorCount: number = 0;
-  warningCount: number = 6;
-  // Pagination properties
-  page: number = 1;
-  pageSize: number = 5; // Number of rows per page
-  totalPages: number = 0;
-  pagedRows: any[] = [];
+successCount: number = 9;
+errorCount: number = 0;
+warningCount: number = 6;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
     private exportPopupService: ExportPopupService,
-  ) { }
+  ) {}
 
   ngOnInit() {
     // Get project name from query parameters
     this.route.queryParams.subscribe(params => {
       this.projectName = params['projectName'] || '';
     });
-
-    this.calculatePagination();
   }
-
-  calculatePagination() {
-    this.totalPages = Math.ceil(this.dataTableRows.length / this.pageSize);
-    this.updatePagedRows();
-  }
-
-  updatePagedRows() {
-    const startIndex = (this.page - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    this.pagedRows = this.dataTableRows.slice(startIndex, endIndex);
-  }
-
-  goToPage(pageNum: number) {
-    if (pageNum < 1 || pageNum > this.totalPages) return;
-    this.page = pageNum;
-    this.updatePagedRows();
-  }
-
-  onPageChange(direction: 'prev' | 'next') {
-    if (direction === 'prev' && this.page > 1) this.page--;
-    else if (direction === 'next' && this.page < this.totalPages) this.page++;
-    this.updatePagedRows();
-  }
-
-  getPages(): number[] {
-    const pages: number[] = [];
-    for (let i = 1; i <= this.totalPages; i++) {
-      pages.push(i);
-    }
-    return pages;
-  }
-
-  onBottomBarPageChange(newPage: number) {
-    this.page = newPage;
-    this.updatePagedRows(); // you already have this method
-  }
-
-  onExecuteClick() {
-    console.log('Execute clicked on Data Quality screen');
-    // Add your execute logic here if needed
-  }
-
 
   // Helper methods
   getProgressPercentage(completed: number, total: number): number {
@@ -548,11 +499,11 @@ export class DataQualityComponent implements OnInit {
   navigateToDataStaging() {
     // Navigate to data import with staging section active
     if (this.projectName) {
-      this.router.navigate(['/data', ""], {
+      this.router.navigate(['/data',""], {
         queryParams: { projectName: this.projectName, section: 'staging' }
       });
     } else {
-      this.router.navigate(['/data', ""], {
+      this.router.navigate(['/data',""], {
         queryParams: { section: 'staging' }
       });
     }
@@ -561,11 +512,11 @@ export class DataQualityComponent implements OnInit {
   navigateToDataImport() {
     // Navigate to data import with import section active
     if (this.projectName) {
-      this.router.navigate(['/data', ""], {
+      this.router.navigate(['/data',""], {
         queryParams: { projectName: this.projectName, section: 'import' }
       });
     } else {
-      this.router.navigate(['/data', ""], {
+      this.router.navigate(['/data',""], {
         queryParams: { section: 'import' }
       });
     }
@@ -574,11 +525,11 @@ export class DataQualityComponent implements OnInit {
   navigateToDataValidation() {
     // Navigate to data import with validation section active
     if (this.projectName) {
-      this.router.navigate(['/data', ""], {
+      this.router.navigate(['/data',""], {
         queryParams: { projectName: this.projectName, section: 'validation' }
       });
     } else {
-      this.router.navigate(['/data', ""], {
+      this.router.navigate(['/data',""], {
         queryParams: { section: 'validation' }
       });
     }
@@ -587,11 +538,11 @@ export class DataQualityComponent implements OnInit {
   navigateToDataMapping() {
     // Navigate to data import with mapping section active
     if (this.projectName) {
-      this.router.navigate(['/data', ""], {
+      this.router.navigate(['/data',""], {
         queryParams: { projectName: this.projectName, section: 'mapping' }
       });
     } else {
-      this.router.navigate(['/data', ""], {
+      this.router.navigate(['/data',""], {
         queryParams: { section: 'mapping' }
       });
     }

@@ -1,13 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-export interface Connection {
-  provider: string;
-  connectionName: string;
-  createdBy: string;
-  createdOn: string;
-  status: string;
-}
 
 interface SourceSystemMapping {
   sourceSystem: string;
@@ -27,45 +20,24 @@ export class ClientConfigurationComponent {
   enabledModules = [
     { name: 'P2P', enabled: true },
     { name: 'O2C', enabled: true },
-    { name: 'T&E', enabled: true }
+    { name: 'T&E', enabled: true },
+    { name: 'Procurement', enabled: false },
+    { name: 'Risk Management', enabled: false }
   ];
 
-  riskAreas= [
-    { name: 'Financial', enabled: true },
-    { name: 'Operational', enabled: true },
-    { name: 'Compilance', enabled: true },
-    { name: 'Strategic', enabled: true }
-  ];
+  riskAreas: string[] = [];
   selectedRiskArea = '';
 
-  connections: Connection[] = [
+  sourceSystemMappings: SourceSystemMapping[] = [
     {
-      provider: 'Microsoft Azure AD',
-      connectionName: 'Azure SSO Integration',
-      createdBy: 'Sarah Johnson',
-      createdOn: '2024-10-15',
-      status: 'Completed'
+      sourceSystem: 'SAP ERP',
+      fieldMapping: 'Vendor Master ← Client.Vendor',
+      status: 'Configured'
     },
     {
-      provider: 'AWS S3',
-      connectionName: 'Document Storage',
-      createdBy: 'Michael Chen',
-      createdOn: '2024-10-20',
-      status: 'Completed'
-    },
-    {
-      provider: 'Slack',
-      connectionName: 'Notification Service',
-      createdBy: 'Emily Rodriguez',
-      createdOn: '2024-10-25',
-      status: 'Failed'
-    },
-    {
-      provider: 'SendGrid',
-      connectionName: 'Email Notifications',
-      createdBy: 'Sarah Johnson',
-      createdOn: '2024-10-22',
-      status: 'Completed'
+      sourceSystem: 'Oracle Financials',
+      fieldMapping: 'GL Accounts ← Chart of Accounts',
+      status: 'Configured'
     }
   ];
 

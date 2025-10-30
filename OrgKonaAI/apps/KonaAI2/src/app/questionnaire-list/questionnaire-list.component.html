@@ -226,6 +226,9 @@
             </div>
           </div>
 
+          <!-- <textarea [(ngModel)]="question.description" class="question-desc"
+          placeholder="Description (Press Enter to add next)"></textarea> -->
+          <!-- Options for choices -->
           <!-- Options for choices -->
           <div *ngIf="['Multiple Choice','Check Boxes','Dropdown', 'Radio'].includes(question.type)"
             class="options-section">
@@ -272,14 +275,12 @@
 
               <!-- Add Condition button ONLY on the last row -->
               <button *ngIf="last" (click)="addCondition(question, rule)" class="btn btn-rule add-condition-btn"
-                [disabled]="areAllOptionsUsed(question) || !rule.canAddMore"
-                [title]="areAllOptionsUsed(question) ? 'All options already used' : (!rule.canAddMore ? 'No more unique options available' : '')">
+                [disabled]="areAllOptionsUsed(question) || !rule.canAddMore" [title]="areAllOptionsUsed(question) ? 'All options already used' : (!rule.canAddMore ? 'No more unique options available' : '')">
                 <i class="bi bi-plus-lg mr-2"></i> Add Condition
               </button>
-              <button *ngIf="!last" type="button" (click)="removeCondition(question, rule, j)"
-                class="btn btn-delete del-btn" title="Remove this condition"
-                style="display: flex; align-items: center; justify-content: center;">
-                <i class="bi bi-x-lg"></i>
+              <button type="button" (click)="removeCondition(question, rule, j)" class="btn btn-delete del-btn"
+                title="Remove this condition" style="display: flex; align-items: center; justify-content: center;">
+                <i class="bi bi-trash3"></i>
               </button>
             </div>
 
@@ -294,7 +295,7 @@
             </div>
             <div style="width: 100%;display: flex;justify-content: end;">
               <button (click)="removeRule(question, i)" class="btn btn-delete del-btn"><i
-                  class="bi bi-trash mr-2"></i></button>
+                  class="bi bi-trash mr-2"></i>Delete Rule</button>
             </div>
           </div>
           <div style="display: flex;justify-content: space-between;font-size: small; align-items: center;">
@@ -330,37 +331,22 @@
         <input type="text" [(ngModel)]="sectionName" placeholder="Enter section name" class="form-input" />
         <!-- Section description input -->
         <label>Description</label>
-        <input type="text" [(ngModel)]="sectionDescription" placeholder="Enter section description"
-          class="form-input" />
-
-        <label>Select Questions</label>
-        <div class="custom-dropdown">
-          <div class="dropdown-header" (click)="toggleDropdown()">
-            <!-- Show this when dropdown is closed -->
-            <span *ngIf="!dropdownOpen">
-              {{ selectedQuestionIds.length ? selectedQuestionIds.length + ' selected' : 'Select Questions' }}
-            </span>
-
-            <!-- Show this when dropdown is open -->
-            <input *ngIf="dropdownOpen" type="text" [(ngModel)]="questionSearchText" placeholder="Search questions..."
-              (click)="$event.stopPropagation()" class="dropdown-search" />
-
-            <span class="arrow"><i class="bi bi-chevron-down"></i></span>
-          </div>
-
-          <div class="dropdown-list" *ngIf="dropdownOpen">
-            <div *ngFor="let q of filteredQuestions()" class="dropdown-item"
-              [class.disabled]="isQuestionDisabled(q.id)">
-              <input type="checkbox" [checked]="selectedQuestionIds.includes(q.id)"
-                [disabled]="isQuestionDisabled(q.id)" (change)="toggleQuestionSelection(q.id)" />
-              <label>{{ q.question }}</label>
-            </div>
+        <input type="text" [(ngModel)]="sectionDescription" placeholder="Enter section description" class="form-input" />
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Select Questions</mat-label>
+          <mat-select [(value)]="selectedQuestionIds" multiple #questionSelect>
+            <mat-option *ngFor="let q of questions" [value]="q.id" [disabled]="isQuestionDisabled(q.id)">
+              {{ q.question }}
+            </mat-option>
 
             <div class="dropdown-add-btn">
-              <button class="btn-save" (click)="addSelectedQuestions()">Save</button>
+              <button class="btn btn-save" (click)="addSelectedQuestions(); questionSelect.close()">
+                Add Selected Questions
+              </button>
             </div>
-          </div>
-        </div>
+          </mat-select>
+        </mat-form-field>
+
         <div class="selected-questions-table" *ngIf="selectedQuestions.length > 0">
           <table class="table-main">
             <thead>
@@ -374,8 +360,7 @@
             <tbody cdkDropList [cdkDropListData]="selectedQuestions" (cdkDropListDropped)="dropQuestion($event)">
               <tr *ngFor="let q of selectedQuestions; let i = index" cdkDrag>
                 <td cdkDragHandle style="cursor: grab; text-align: center;">
-                  <i class="bi bi-grid-3x2-gap-fill"
-                    style="transform: rotate(90deg) scale(0.8); display: inline-block;"></i>
+                  <i class="bi bi-grip-vertical"></i>
                 </td>
                 <td>{{ q.question }}</td>
                 <td>{{ q.type }}</td>

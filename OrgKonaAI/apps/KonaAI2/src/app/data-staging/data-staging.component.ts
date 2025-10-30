@@ -77,47 +77,13 @@ export class DataStagingComponent {
     }
   ];
 
-  //  Flattened file list
+  // 🔹 Flattened file list for the table
   allFiles = this.groupedData.flatMap(group =>
     group.files.map(file => ({
       ...file,
       submodule: group.submodule
     }))
   );
-
-  //  Pagination properties
-  pageSize = 4;
-  page = 1;
-  totalPages = 0;
-  paginatedFiles: any[] = [];
-
-  constructor() {
-    this.updatePagination();
-  }
-
-  //  Pagination logic
-  updatePagination() {
-    this.totalPages = Math.ceil(this.allFiles.length / this.pageSize);
-    const startIndex = (this.page - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    this.paginatedFiles = this.allFiles.slice(startIndex, endIndex);
-  }
-
-  goToPage(pageNum: number) {
-    if (pageNum >= 1 && pageNum <= this.totalPages) {
-      this.page = pageNum;
-      this.updatePagination();
-    }
-  }
-
-  onPageChange(direction: 'prev' | 'next') {
-    if (direction === 'prev' && this.page > 1) {
-      this.page--;
-    } else if (direction === 'next' && this.page < this.totalPages) {
-      this.page++;
-    }
-    this.updatePagination();
-  }
 
   openArchivePopup(itemName: string) {
     this.popupData = { ...this.popupData, itemName };
@@ -126,6 +92,7 @@ export class DataStagingComponent {
 
   handlePopupResult(result: ArchivePopupResult) {
     this.showPopup = false;
+
     if (result.confirmed) {
       console.log('Archiving:', result.data?.itemName);
       // Call archive API

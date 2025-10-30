@@ -1,6 +1,6 @@
 <div class="uploaded-data-wrapper">
   <!-- Section Header -->
-  <!-- <div class="section-header">
+  <div class="section-header">
     <h2>Uploaded Data</h2>
 
     <div class="status-indicators">
@@ -14,25 +14,25 @@
         <i class="far fa-hourglass"></i> {{ warningCount }}
       </span>
     </div>
-  </div> -->
+  </div>
 
-  <!-- Table -->
-  <table class="table-main" >
+  <!-- Flat Table -->
+  <table class="table-main" style="margin-left: -19px; width: 101%;">
     <thead>
       <tr>
-        <th>Submodule</th>
-        <th>Source System</th>
-        <th>Record Count</th>
+        <th>Submodule <span class="sort-icon"></span></th>
+        <th>Source System <span class="sort-icon"></span></th>
+        <th>Record Count <span class="sort-icon"></span></th>
         <th>File Name</th>
-        <th>Uploaded On</th>
-        <th>Modified On</th>
-        <th>Status</th>
+        <th>Uploaded On <span class="sort-icon"></span></th>
+        <th>Modified On <span class="sort-icon"></span></th>
+        <th>Status <span class="sort-icon"></span></th>
         <th></th>
       </tr>
     </thead>
 
     <tbody>
-      <tr *ngFor="let file of paginatedFiles">
+      <tr *ngFor="let file of allFiles">
         <td>{{ file.submodule }}</td>
         <td>{{ file.sourceSystem }}</td>
         <td>{{ file.recordCount | number }}</td>
@@ -45,10 +45,15 @@
           </span>
         </td>
         <td>
-          <span (click)="openArchivePopup(file.fileName); $event.stopPropagation()"
-            class="text-black hover:text-gray-600" title="Archive">
+          <span
+            (click)="openArchivePopup(file.fileName); $event.stopPropagation()"
+            class="text-black hover:text-gray-600"
+            title="Archive">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
                 d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4">
               </path>
             </svg>
@@ -57,27 +62,10 @@
       </tr>
     </tbody>
   </table>
+</div>
 
-  <!-- ✅ Pagination always visible -->
-  <div class="bottom-bar">
-    <!-- Pagination Buttons (centered) -->
-    <div class="pagination-controls">
-      <button (click)="onPageChange('prev')" [disabled]="page === 1">‹</button>
-
-      <button *ngFor="let p of [].constructor(totalPages); let i = index" (click)="goToPage(i + 1)"
-        [class.active]="page === i + 1">
-        {{ i + 1 }}
-      </button>
-
-      <button (click)="onPageChange('next')" [disabled]="page === totalPages">›</button>
-    </div>
-
-    <!-- Execute Button (right) -->
-    <div class="execute">
-      <button class="btn-execute" style="margin-left: -25%;">Execute</button>
-    </div>
-  </div>
-
-  <!-- Popup -->
-  <app-archive-popup *ngIf="showPopup" [data]="popupData" (result)="handlePopupResult($event)">
-  </app-archive-popup>
+<app-archive-popup
+  *ngIf="showPopup"
+  [data]="popupData"
+  (result)="handlePopupResult($event)">
+</app-archive-popup>

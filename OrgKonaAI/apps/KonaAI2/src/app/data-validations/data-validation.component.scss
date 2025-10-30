@@ -1,9 +1,10 @@
 .uploaded-data-wrapper {
   background: #fff;
+  padding: 20px;
   border-radius: 6px;
   font-family: 'Segoe UI', sans-serif;
 }
-
+ 
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -12,19 +13,20 @@
   margin-left: -17px;
   margin-bottom: 15px;
 }
-
+ 
 .section-header h2 {
   font-size: 20px;
   font-weight: 600;
   color: #111827;
 }
-
 /* Table View */
 .projects-table-outer {
   background: #fff;
   border-radius: 12px;
+  margin: 11px 0px 0 -5px;
   overflow-x: auto;
-  
+  width: 103%;
+  margin-left:-24px;
 }
 
 .projects-table {
@@ -38,8 +40,7 @@
   font-weight: 600;
 }
 
-.projects-table th,
-.projects-table td {
+.projects-table th, .projects-table td {
   padding: 12px 16px;
   text-align: left;
   border-bottom: 1px solid #ddd;
@@ -56,8 +57,8 @@
   border-radius: 16px;
   font-size: 13px;
   font-weight: 500;
-  gap: 6px;
-  width: 77px;
+    gap: 6px;
+    width: 77px;
 }
 
 
@@ -71,15 +72,15 @@
 
 
 .status-indicators {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: 2px solid;
-  border-radius: 30px;
-  width: 159px;
-  border-color: skyblue;
-  justify-content: space-between;
-  padding: 4px;
+ display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 2px solid;
+    border-radius: 30px;
+    width: 159px;
+    border-color: skyblue;
+    justify-content: space-between;
+    padding: 4px;
 }
 
 .status-icon {
@@ -92,26 +93,22 @@
 
 .status-icon i {
   font-size: 15px;
-  font-weight: 400;
-  /* ensure outline version */
+  font-weight: 400; /* ensure outline version */
   background: none;
   border-radius: 50%;
 }
 
 /* Outline colors */
 .status-icon.success i {
-  color: green;
-  /* outline green */
+  color: green; /* outline green */
 }
 
 .status-icon.error i {
-  color: red;
-  /* outline red */
+  color: red; /* outline red */
 }
 
 .status-icon.pending i {
-  color: orange;
-  /* outline yellow/orange */
+  color: orange; /* outline yellow/orange */
 }
 
 
@@ -129,7 +126,6 @@ td.text-end {
 .fa-arrow-up-right-from-square {
   cursor: pointer;
 }
-
 .fullscreen-overlay {
   position: fixed;
   inset: 0;
@@ -249,14 +245,14 @@ td.text-end {
   font-weight: 500;
   color: #334155;
   transition: all 0.2s ease;
-  margin-left: 3px;
+  margin-left:3px;
 
   &:hover {
     background: #f1f5f9;
     border-color: #94a3b8;
   }
 
-
+  
 
   .filter-name {
     white-space: nowrap;
@@ -278,16 +274,67 @@ td.text-end {
     color: #fff;
   }
 }
-
-
-
-.icon-cell {
-  text-align: center;
-  color: #1d4ed8;
-  cursor: pointer;
+.table-main {
+  width: 98%;       /* new width */
+  margin-left: 5px; /* new margin */
 }
+// .table-container {
+//   flex: 1;
+//   overflow-y: auto;
+//   background: white;
+//   margin: 0 20px 20px;
+//   border-radius: 8px;
+//   border: 1px solid #e2e8f0;
 
-.payments-selection-container {
+//   table {
+//     width: 100%;
+//     border-collapse: collapse;
+
+//     thead {
+//       background: #f1f5f9;
+//       th {
+//         text-align: left;
+//         padding: 10px;
+//         font-size: 14px;
+//         font-weight: 600;
+//         border-bottom: 1px solid #e2e8f0;
+//       }
+//     }
+
+//     tbody tr {
+//       border-bottom: 1px solid #f1f5f9;
+
+//       &:hover {
+//         background: #f8fafc;
+//       }
+
+//       td {
+//         padding: 10px;
+//         font-size: 14px;
+//       }
+
+      // .status-badge {
+      //   padding: 3px 8px;
+      //   border-radius: 12px;
+      //   font-size: 12px;
+      //   font-weight: 500;
+      //   &.failed {
+      //     background: #fee2e2;
+      //     color: #b91c1c;
+      //   }
+      //   &.passed {
+      //     background: #dcfce7;
+      //     color: #166534;
+      //   }
+      // }
+
+      .icon-cell {
+        text-align: center;
+        color: #1d4ed8;
+        cursor: pointer;
+      }
+    
+.payments-selection-container{
   background: #f8fafc;
   padding: 16px;
   transition: all 0.3s ease;
@@ -303,6 +350,16 @@ td.text-end {
   }
 }
 
+// .search-bar {
+//   margin-bottom: 12px;
+
+//   input {
+//     width: 100%;
+//     padding: 8px;
+//     border: 1px solid #ddd;
+//     border-radius: 6px;
+//   }
+// }
 
 .info-banner {
   background: #eef5ff;
@@ -316,8 +373,7 @@ td.text-end {
   width: 100%;
   border-collapse: collapse;
 
-  th,
-  td {
+  th, td {
     padding: 8px;
     border-bottom: 1px solid #eee;
     text-align: left;
@@ -328,6 +384,22 @@ td.text-end {
   }
 }
 
+// .status {
+//   padding: 4px 8px;
+//   border-radius: 4px;
+//   font-size: 12px;
+//   font-weight: 500;
+
+//   &.failed {
+//     background: #fde8e8;
+//     color: #c53030;
+//   }
+
+//   &.passed {
+//     background: #e6ffed;
+//     color: #276749;
+//   }
+// }
 
 .bottom-action {
   position: fixed;
@@ -367,9 +439,7 @@ td.text-end {
       background: #2c5282;
     }
   }
-}
-
-.vm-details-fullscreen-overlay {
+}.vm-details-fullscreen-overlay {
   position: fixed;
   top: 0;
   height: 100vh;
@@ -406,8 +476,7 @@ td.text-end {
   display: inline-flex;
   align-items: center;
   padding: 4px 12px;
-  border-radius: 9999px;
-  /* pill */
+  border-radius: 9999px;  /* pill */
   font-size: 12px;
   font-weight: 500;
   line-height: 1.4;
@@ -423,134 +492,45 @@ td.text-end {
 
 /* Completed / Passed (Green) */
 .status-badge.completed {
-  color: #2e7d32;
-  /* Dark green text/icon */
-  background-color: #e8f5e9;
-  /* Light green background */
-  border: 1px solid #c8e6c9;
-  /* Subtle border */
+  color: #2e7d32;               /* Dark green text/icon */
+  background-color: #e8f5e9;    /* Light green background */
+  border: 1px solid #c8e6c9;    /* Subtle border */
 }
 
 /* Failed (Red) */
 .status-badge.failed {
-  color: #c62828;
-  /* Dark red */
-  background-color: #ffebee;
-  /* Light red background */
+  color: #c62828;               /* Dark red */
+  background-color: #ffebee;    /* Light red background */
   border: 1px solid #ffcdd2;
 }
 
 /* In-Progress (Blue) */
 .status-badge.in-progress {
-  color: #1565c0;
-  /* Dark blue */
-  background-color: #e3f2fd;
-  /* Light blue background */
+  color: #1565c0;               /* Dark blue */
+  background-color: #e3f2fd;    /* Light blue background */
   border: 1px solid #bbdefb;
 }
 
 /* Pending (Amber/Orange) */
 .status-badge.pending {
-  color: #ef6c00;
-  /* Dark orange */
-  background-color: #fff3e0;
-  /* Light orange background */
+  color: #ef6c00;               /* Dark orange */
+  background-color: #fff3e0;    /* Light orange background */
   border: 1px solid #ffe0b2;
 }
 
 .action-buttons {
   display: flex;
-  justify-content: flex-end;
-  /* push icons to right */
-  align-items: center;
-  /* vertically align all icons */
-  gap: 25px;
-  /* spacing between icons */
-  padding-right: 10px;
-  /* spacing from cell edge */
+  justify-content: flex-end; /* push icons to right */
+  align-items: center;       /* vertically align all icons */
+  gap: 25px;                 /* spacing between icons */
+  padding-right: 10px;       /* spacing from cell edge */
 }
 
 .action-buttons i,
 .action-buttons .action-icon-wrapper {
-  display: flex;
-  /* ensures SVG and icon align properly */
+  display: flex;             /* ensures SVG and icon align properly */
   align-items: center;
 }
-
-.bi-download {
+.bi-download{
   -webkit-text-stroke: 0.7px;
-}
-
-.bottom-bar {
-  position: fixed;
-  bottom: 20px;
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  /* pagination center, execute right */
-  align-items: center;
-  padding: 8px 16px;
-  z-index: 999;
-  border-radius: 8px;
-}
-
-/* Pagination buttons container */
-.pagination-controls {
-  display: flex;
-  justify-content: center;
-  flex: 1;
-  gap: 8px;
-}
-
-.pagination-controls button {
-  background-color: white;
-  color: #333;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 8px 5px;
-  min-width: 35px;
-  height: 29px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 200;
-  transition: all 0.2s ease-in-out;
-}
-
-.pagination-controls button.active {
-  background-color: #e6f0ff;
-  color: #007bff;
-  border-color: #b3d4ff;
-  font-weight: bold;
-}
-
-.pagination-controls button:not(.active):hover:not(:disabled) {
-  background-color: #f0f0f0;
-}
-
-.pagination-controls button:disabled {
-  color: #ccc;
-  border-color: #eee;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-/* Execute button */
-.execute {
-  margin-left: 16px;
-}
-
-.btn-execute {
-  background-color: #082d78;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 12px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.btn-execute:hover {
-  background-color: #0056b3;
 }

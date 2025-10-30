@@ -33,7 +33,7 @@ interface DataFile {
   fileName: string;
   uploadedOn: Date;
   modifiedOn: Date;
-  status: 'success' | 'error' | 'pending';
+  status: 'success' | 'error' | 'warning';
 }
 
 interface SelectedFile {
@@ -306,9 +306,6 @@ export class DataImportComponent implements OnInit, OnDestroy {
   stage: string = '';
   isSidebarPinned: boolean = false;
   isHide = false;
-    showSplitOptions: boolean = false;
-
-  
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private router: Router, private route: ActivatedRoute, private authService: AuthService, private dialog: MatDialog) {
     this.sub = this.authService.sharedValue$.subscribe(val => {
@@ -410,9 +407,6 @@ export class DataImportComponent implements OnInit, OnDestroy {
     });
   }
 
-  
-  
-
   ngOnInit() {
     // Get project name and section from query parameters if available
     this.route.queryParams.subscribe(params => {
@@ -429,23 +423,8 @@ export class DataImportComponent implements OnInit, OnDestroy {
     this.isDataManager = currentUser?.role === 'Data Manager';
 
     // Initialize with empty data or load from service
-    // this.updateStatusCounts();
+    this.updateStatusCounts();
   }
-
-
-
-  //   updateStatusCounts(): void {
-  //   this.completedCount = this.dataFiles.filter(f => f.status === 'success').length;
-  //   this.failedCount = this.dataFiles.filter(f => f.status === 'error').length;
-  //   this.pendingCount = this.dataFiles.filter(f => f.status === 'pending').length;
-
-  //   // Update globally for other screens if they want to read
-  //   this.statusService.updateCounts({
-  //     completed: this.completedCount,
-  //     failed: this.failedCount,
-  //     pending: this.pendingCount
-  //   });
-  // }
 
   onBackClick(): void {
     if (this.isDataManager) {
@@ -459,7 +438,6 @@ export class DataImportComponent implements OnInit, OnDestroy {
     }
 
   }
-  
 
   get totalPages(): number {
     return Math.ceil(this.filteredFiles.length / this.pageSize);
@@ -471,23 +449,13 @@ export class DataImportComponent implements OnInit, OnDestroy {
     return this.filteredFiles.slice(startIndex, endIndex);
   }
 
-  // onPageChange(direction: 'next' | 'prev') {
-  //   if (direction === 'next' && this.page < this.totalPages) {
-  //     this.page++;
-  //   } else if (direction === 'prev' && this.page > 1) {
-  //     this.page--;
-  //   }
-  // }
-  onPageChange(pageOrDirection: 'next' | 'prev' | number): void {
-  if (typeof pageOrDirection === 'number') {
-    this.page = pageOrDirection;
-  } else if (pageOrDirection === 'next' && this.page < this.totalPages) {
-    this.page++;
-  } else if (pageOrDirection === 'prev' && this.page > 1) {
-    this.page--;
+  onPageChange(direction: 'next' | 'prev') {
+    if (direction === 'next' && this.page < this.totalPages) {
+      this.page++;
+    } else if (direction === 'prev' && this.page > 1) {
+      this.page--;
+    }
   }
-}
-
 
 getPages(): (number | string)[] { // <--- 💡 The fix: Explicitly define the return type
     const total = this.totalPages;
@@ -644,34 +612,8 @@ getPages(): (number | string)[] { // <--- 💡 The fix: Explicitly define the re
       this.handleFiles(Array.from(files));
     }
   }
-
-    toggleSplitOptions(): void {
-    this.showSplitOptions = !this.showSplitOptions;
-  }
-
-  onSplitOptionSelect(option: 'manual' | 'automatic'): void {
-    this.showSplitOptions = false; // Close dropdown
-    console.log('Selected option:', option);
-
-    if(option === 'manual') {
-      this.executeManual();
-    } else if(option === 'automatic') {
-      this.executeAutomatic();
-    }
-  }
-    executeManual(): void {
-    alert('Executing manually...');
-    // Put your manual execution logic here
-  }
-
-  executeAutomatic(): void {
-    alert('Executing automatically...');
-    // Put your automatic execution logic here
-  }
-
   onExecuteAllSteps(): void {
     this.showStepsConfirmationModal = true;
-     this.onExecuteAllSteps();
     // Add body class to prevent scrolling
     document.body.classList.add('steps-modal-open');
   }
@@ -756,7 +698,7 @@ getPages(): (number | string)[] { // <--- 💡 The fix: Explicitly define the re
     this.updateFilteredFiles();
 
     // Update status counts so they match new data
-    // this.updateStatusCounts();
+    this.updateStatusCounts();
 
     this.onCloseModal();
 
@@ -782,16 +724,16 @@ getPages(): (number | string)[] { // <--- 💡 The fix: Explicitly define the re
     }
   }
 
-  // private updateStatusCounts(): void {
-  //   this.completedCount = this.dataFiles.filter(file => file.status === 'success').length;
-  //   this.failedCount = this.dataFiles.filter(file => file.status === 'error').length;
-  //   this.pendingCount = this.dataFiles.filter(file => file.status === 'warning').length;
+  private updateStatusCounts(): void {
+    this.completedCount = this.dataFiles.filter(file => file.status === 'success').length;
+    this.failedCount = this.dataFiles.filter(file => file.status === 'error').length;
+    this.pendingCount = this.dataFiles.filter(file => file.status === 'warning').length;
 
-  //   this.showFailedAlert = this.failedCount > 0;
-  //   this.successCount = this.dataFiles.filter(f => f.status === 'success').length;
-  //   this.errorCount = this.dataFiles.filter(f => f.status === 'error').length;
-  //   this.warningCount = this.dataFiles.filter(f => f.status === 'warning').length;
-  // }
+    this.showFailedAlert = this.failedCount > 0;
+    this.successCount = this.dataFiles.filter(f => f.status === 'success').length;
+    this.errorCount = this.dataFiles.filter(f => f.status === 'error').length;
+    this.warningCount = this.dataFiles.filter(f => f.status === 'warning').length;
+  }
 
   // Method to add sample data for testing
   addSampleData(): void {
@@ -813,7 +755,7 @@ getPages(): (number | string)[] { // <--- 💡 The fix: Explicitly define the re
         status: 'error'
       }
     ];
-    // this.updateStatusCounts();
+    this.updateStatusCounts();
   }
   onCloseFailedAlert(): void {
     this.showFailedAlert = false;
@@ -854,7 +796,7 @@ getPages(): (number | string)[] { // <--- 💡 The fix: Explicitly define the re
   private deleteFileConfirmed(fileName: string): void {
     this.dataFiles = this.dataFiles.filter(f => f.fileName !== fileName);
 
-    // this.updateStatusCounts();
+    this.updateStatusCounts();
     this.updateFilteredFiles();
 
     console.log(`File "${fileName}" deleted successfully`);
@@ -907,8 +849,6 @@ getPages(): (number | string)[] { // <--- 💡 The fix: Explicitly define the re
         // your logic...
       }
     }
-        // this.statusService.resetCounts();
-
 
   }
   resetStepsExecutionState(): void {

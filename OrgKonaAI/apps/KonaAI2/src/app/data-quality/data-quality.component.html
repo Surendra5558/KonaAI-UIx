@@ -1,7 +1,35 @@
 <!-- Main Container -->
 <div class="main-container" *ngIf="!showHolisticView">
+  <div class="px-6 pb-6">
+
+    <!-- Header Row (Title + Export + Status Indicators) -->
+    <div class="header-row">
+      <h2 class="page-title">Uploaded Data</h2>
+
+      <div class="header-actions">
+        <!-- Export Button -->
+        <button class="export-btn" (click)="openExportPopup()">
+          <i class="fa fa-external-link"></i>
+          <span>Export</span>
+        </button>
+
+        <!-- Status Indicators -->
+        <div class="status-indicators">
+          <span class="status-icon success">
+            <i class="far fa-check-circle"></i> {{ successCount }}
+          </span>
+          <span class="status-icon error">
+            <i class="far fa-times-circle"></i> {{ errorCount }}
+          </span>
+          <span class="status-icon pending">
+            <i class="far fa-hourglass"></i> {{ warningCount }}
+          </span>
+        </div>
+      </div>
+    </div>
+
     <!-- Table Section -->
-    <div class="table-section ">
+    <div class="table-section " style="margin-left: -22px;">
       <table class="table-main">
         <thead>
           <tr>
@@ -17,7 +45,7 @@
         </thead>
 
         <tbody>
-          <tr *ngFor="let row of pagedRows">
+          <tr *ngFor="let row of dataTableRows">
             <td>{{ row.submodule }}</td>
             <td>{{ row.sourceSystem }}</td>
             <td>{{ row.recordCount.toLocaleString() }}</td>
@@ -47,40 +75,22 @@
                 <span *ngIf="row.hasDetail" title="Validations">
                   <svg (click)="navigateToDetail(row.detailId); $event.stopPropagation()"
                     xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"
-                    style="cursor: pointer;">
+                    style="cursor: pointer;" >
                     <path d="M1 11L11 1M11 1V11M11 1H1" stroke="#2196f3" stroke-width="1.5" stroke-linecap="round" />
                   </svg>
                 </span>
+
               </div>
             </td>
           </tr>
         </tbody>
-
       </table>
-
-      <!-- Pagination Controls -->
-      <div class="bottom-bar">
-        <!-- Pagination Buttons (centered) -->
-        <div class="pagination-controls">
-          <button class="pagination-arrow" (click)="onPageChange('prev')" [disabled]="page === 1">‹</button>
-
-          <button *ngFor="let p of getPages()" (click)="goToPage(p)" [class.active]="page === p">
-            {{ p }}
-          </button>
-
-          <button class="pagination-arrow" (click)="onPageChange('next')" [disabled]="page === totalPages">›</button>
-        </div>
-
-        <!-- Execute Button (right) -->
-        <div class="execute">
-          <button class="btn-execute" (click)="onExecuteClick()" style="margin-left: -25%;">Execute</button>
-        </div>
-
-
     </div>
 
-    <!-- Popups -->
-    <app-export-popup></app-export-popup>
-    <app-archive-popup *ngIf="showPopup" [data]="popupData" (result)="handlePopupResult($event)">
-    </app-archive-popup>
   </div>
+
+  <!-- Popups -->
+  <app-export-popup></app-export-popup>
+  <app-archive-popup *ngIf="showPopup" [data]="popupData" (result)="handlePopupResult($event)">
+  </app-archive-popup>
+</div>

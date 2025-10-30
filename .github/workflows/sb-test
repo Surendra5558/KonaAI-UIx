@@ -1,0 +1,111 @@
+name: 'Build and Deploy to GKE'
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  setup-build-publish-deploy:
+    name: 'Setup, Build, Publish, and Deploy'
+    runs-on: ubuntu-latest
+    environment: Dev
+    
+    steps:
+      # Step 1: Checkout code
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+
+      # Step 2: Authenticate to Google Cloud
+      - name: Set up Google Cloud auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GKE_LOGIN_SERVER }}
+
+      # Step 3: Configure Docker for Artifact Registry
+      - name: Configure Docker for Artifact Registry
+        run: |
+         gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+          
+      # Step 4: Build and push Docker image
+      - name: 'Build and push Docker container'
+        run: |
+          IMAGE=us-central1-docker.pkg.dev/konaai-dev-462909/konaai-gke/dev-ui
+          docker build -f OrgKonaAI/Dockerfile -t $IMAGE:${{ github.sha }} .
+          docker push $IMAGE:${{ github.sha }}
+
+          # Optional: also push "latest" tag
+          docker tag $IMAGE:${{ github.sha }} $IMAGE:latest
+          docker push $IMAGE:latest
+          
+      - name: Get GKE credentials
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+         cluster_name: ${{ secrets.GKE_CLUSTER2_NAME }}
+         location: ${{ secrets.GKE_LOCATION }}
+         project_id: ${{ secrets.GKE_PROJECT }}
+          
+      - name: Ensure ingress-nginx is installed
+        run: |
+          if helm status ingress-nginx -n ingress-nginx >/dev/null 2>&1; then
+           echo "Ingress-NGINX already installed, skipping..."
+          else
+           echo "Installing Ingress-NGINX..."
+            helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+            helm repo update
+            helm install ingress-nginx ingress-nginx/ingress-nginx \
+             --create-namespace \
+             --namespace ingress-nginx
+           fi
+           echo " Checking if TLS secret 'godaddy-wildcard' exists in namespace 'ingress-nginx'..."
+           if kubectl get secret godaddy-wildcard -n ingress-nginx >/dev/null 2>&1; then
+             echo "TLS secret 'godaddy-wildcard' already exists. Skipping creation."
+           else
+            echo " Creating TLS secret 'godaddy-wildcard'..."
+            echo "${{ secrets.TLS_FULLCHAIN_CRT }}" > /tmp/fullchain.crt
+            echo "${{ secrets.TLS_PRIVATE_KEY }}" > /tmp/private.key
+            
+            kubectl create secret tls godaddy-wildcard \
+              --cert=/tmp/fullchain.crt \
+              --key=/tmp/private.key \
+              -n ingress-nginx
+            echo "TLS secret 'godaddy-wildcard' created successfully in namespace 'ingress-nginx'."
+          fi
+
+/* ---- optional---------------------------------------------------------------------
+      - name: Check if ui-dev-namespace exists
+      run: |
+       if kubectl get ns ui-dev-namespace >/dev/null 2>&1; then
+         echo "ui-dev-namespace already exists, skipping..."
+       else
+        echo "Creating namespace ui-dev-namespace..."
+       kubectl create namespace ui-dev-namespace
+      fi
+   -----------------------------------------------------------------------------
+/*
+
+    /*  ------- Not required-----------------------------------------------------
+      - name: Ensure cert manager is installed
+        run: |
+        if kubectl get ns cert-manager >/dev/null 2>&1; then
+         echo "Cert-manager already installed, skipping..."
+       else
+          echo "Installing cert-manager..."
+        kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml
+        kubectl apply -f Deployments/Cert-Manager/cert-manager.yaml   
+        fi
+-----------------------------------------------------------------------------------
+   */
+
+- name: Helm install or upgrade
+  run: |
+    RELEASE_NAME=ui-app
+    NAMESPACE=konaai-dev-ui
+    CHART_PATH=./OrgKonaAI/GKE-charts/templates  # path to your chart in repo
+    helm upgrade --install $RELEASE_NAME $CHART_PATH \
+      --namespace $NAMESPACE \
+      --values ./OrgKonaAI/GKE-charts/values-dev.yaml \
+      --wait \
+      --atomic \
+      --timeout 3m
+
+          
+    

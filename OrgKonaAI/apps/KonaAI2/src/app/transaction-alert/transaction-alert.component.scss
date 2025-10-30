@@ -1211,14 +1211,13 @@ label {
 
 // Table Styles
 .table-container {
-  width: 50vw;
   margin: 0;
   overflow-x: auto;
   border: none;
 }
 
 .entity-table {
-  width: 52vw;
+  //padding: 0px 6px;
   font-size: small;
 }
 
@@ -1426,6 +1425,10 @@ label {
 
 .icon.dropdown {
   color: #666;
+}
+
+.associated-main {
+  font-size: 13px;
 }
 
 .notes-container {
@@ -1870,7 +1873,7 @@ label {
 
   .input-box {
     display: flex;
-    margin: 10px 0px;
+    margin-top: 10px;
     border: 1px solid #ddd;
     border-radius: 25px;
     padding: 5px 10px;

@@ -1,4 +1,23 @@
 <div class="uploaded-data-wrapper" *ngIf="!showPaymentsScreen && !showPaymentsDetailsScreen">
+  <div class="section-header">
+    <h2>Stagged Data</h2>
+    <!-- <div class="status-indicators">
+      <span class="status-dot success">{{ successCount }}</span>
+      <span class="status-dot error">{{ errorCount }}</span>
+      <span class="status-dot warning">{{ warningCount }}</span>
+    </div> -->
+    <div class="status-indicators">
+      <span class="status-icon success">
+        <i class="far fa-check-circle"></i> {{ successCount }}
+      </span>
+      <span class="status-icon error">
+        <i class="far fa-times-circle"></i> {{ errorCount }}
+      </span>
+      <span class="status-icon pending">
+        <i class="far fa-hourglass"></i> {{ warningCount }}
+      </span>
+    </div>
+  </div>
 
   <div class="projects-table-outer">
     <table class="table-main">
@@ -41,29 +60,8 @@
         </tr>
       </tbody>
     </table>
-    <!-- Pagination Controls -->
-    <div class="bottom-bar">
-      <!-- Pagination Buttons (centered) -->
-      <div class="pagination-controls">
-        <!-- Previous Button -->
-        <button class="pagination-arrow" (click)="onPageChange('prev')" [disabled]="page === 1">‹</button>
-
-        <!-- Page Numbers -->
-        <button *ngFor="let p of getPages()" (click)="goToPage(p)" [class.active]="page === p">
-          {{ p }}
-        </button>
-
-        <!-- Next Button -->
-        <button class="pagination-arrow" (click)="onPageChange('next')" [disabled]="page === totalPages">›</button>
-      </div>
-
-      <!-- Execute Button (right) -->
-      <div class="execute">
-        <button class="btn-execute" style="margin-left: -25%;">Execute</button>
-      </div>
-    </div>
-
   </div>
+
 </div>
 <!-- Payments Modal -->
 <div class="payments-container" *ngIf="showPaymentsScreen" [class.sidebar-pinned]="isSidebarPinned"
@@ -132,7 +130,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let record of paginatedPayments">
+        <tr *ngFor="let record of filteredPayments">
           <td>{{ record.dccId }}</td>
           <td>{{ record.description }}</td>
           <td>{{ record.hitCount }}</td>
@@ -151,10 +149,13 @@
           </td>
           <td class="icon-cell">
             <span (click)="openFullScreenPaymentsDetails(record); $event.stopPropagation()" class="action-icon-wrapper">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"
-                style="cursor: pointer;">
-                <path d="M1 11L11 1M11 1V11M11 1H1" stroke="#2196f3" stroke-width="1.5" stroke-linecap="round" />
-              </svg>
+
+            
+              <svg
+                    xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"
+                    style="cursor: pointer;" >
+                    <path d="M1 11L11 1M11 1V11M11 1H1" stroke="#2196f3" stroke-width="1.5" stroke-linecap="round" />
+                  </svg>
             </span>
           </td>
         </tr>
@@ -202,10 +203,11 @@
             </span>
           </td>
           <td class="icon-cell">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"
-              style="cursor: pointer;">
-              <path d="M1 11L11 1M11 1V11M11 1H1" stroke="#2196f3" stroke-width="1.5" stroke-linecap="round" />
-            </svg>
+           <svg
+                    xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"
+                    style="cursor: pointer;" >
+                    <path d="M1 11L11 1M11 1V11M11 1H1" stroke="#2196f3" stroke-width="1.5" stroke-linecap="round" />
+                  </svg>
           </td>
         </tr>
       </tbody>

@@ -28,12 +28,11 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 12px;
 
   label {
     font-size: 14px;
-    font-weight: 600;
-    color: #45556C;
+    font-weight: 500;
+    color: #374151;
     margin: 0;
   }
 
@@ -56,12 +55,13 @@
 }
 
 .module-tag {
-  color: #082D78;
+  background: #dbeafe;
+  color: #1e40af;
   padding: 4px 12px;
-  border-radius: 8px;
+  border-radius: 16px;
   font-size: 12px;
   font-weight: 500;
-  border: 1px solid #2951C6;
+  border: 1px solid #bfdbfe;
 }
 
 
@@ -152,9 +152,11 @@ border-radius: 5px; // reduced from 6px
 }
 
 .status-badge {
-  padding: 3px 8px; // reduced from 4px 8px
+  padding: 2px 6px; // reduced from 4px 8px
   border-radius: 12px;
+    font-size: 10px; // reduced from 11px
   font-weight: 500;
+  text-transform: uppercase;
   letter-spacing: 0.5px;
   
   &.configured {

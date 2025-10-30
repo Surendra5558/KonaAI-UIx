@@ -708,10 +708,9 @@ html, body {
 // Table design for the whole project just use class name table-main for table tag
 .table-main{
   width: 100%;
- font-size: 13px;
+ font-size: 14px;
  border-collapse: collapse;
  overflow: auto;
- font-family: inherit;
 }
 .table-main thead{
   background-color: #DCEAFC;
@@ -727,7 +726,7 @@ html, body {
     border-bottom-right-radius: 10px;
 }
 .table-main th {
-  padding: 10px 10px;
+  padding: 12px 16px;
   text-align: left;
   background-color: #DCEAFC;
   border: none;
@@ -737,7 +736,7 @@ html, body {
 }
 .table-main td {
 
-  padding: 10px 10px;
+  padding: 12px 16px;
   vertical-align: middle;
   text-align: left;
   border-bottom: 1px solid #ddd;
@@ -1078,7 +1077,7 @@ iframe{
 .content {
   background: #fff;
   border-radius: 8px;
-  padding: 0px 40px;
+  padding: 35px 40px;
 }
 
 

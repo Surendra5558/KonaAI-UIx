@@ -2,7 +2,7 @@
 /* ============ Global Container ============ */
 .container {
   margin: 0 auto;
-   padding: 35px 40px;
+  padding: 24px;
   //background: #f8fafc;
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -60,6 +60,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  z-index: 1001;
 }
 
 
@@ -178,7 +179,7 @@ background: transparent !important;   /* Removes any gray background */
 /* ============ Process Steps ============ */
 .process-steps {
   display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
   gap: 16px;
   margin-bottom: 24px;
   border-bottom: solid 1px #ddd;
@@ -245,7 +246,7 @@ background: transparent !important;   /* Removes any gray background */
   background: #fff;
   //border: 1px solid #e5e7eb;
   border-radius: 12px;
-  // padding: 20px;
+  padding: 20px;
 }
 
 .section-header {
@@ -275,7 +276,10 @@ background: transparent !important;   /* Removes any gray background */
   display: flex;
   align-items: center;
   gap: 6px;
+ // border: 1px solid #d1d5db;
+ // background: #fff;
   padding: 6px 12px;
+  //border-radius: 6px;
   font-size: 15px;
   font-weight: 500;
   color: #374151;
@@ -292,11 +296,6 @@ background: transparent !important;   /* Removes any gray background */
   font-size: 20px;
   color: #2563eb;
 }
-// .action-btn.text-btn i {
-//   font-weight: normal !important;   /* removes bold look */
-//   color: #2563eb;                   /* same blue tone */
-//   opacity: 0.7;                     /* makes it appear lighter */
-// }
 
 
 .status-indicators {
@@ -1904,34 +1903,25 @@ body.steps-modal-open {
 //   background-color: #ccc;
 //   cursor: not-allowed;
 // }
-.bottom-bar {
-  position: fixed;       /* always fixed */
-  bottom: 20px;             /* stick to bottom */
-  left: 0;
-  width: 100%;           /* full width */
-  display: flex;
-  justify-content: space-between; /* pagination center + execute right */
-  align-items: center;
-  padding: 8px 16px;
-  z-index: 999;           /* always on top */
-}
 
-/* Pagination buttons centered */
 .pagination-controls {
+  /* Aligns the pagination controls in the center */
   display: flex;
   justify-content: center;
-  gap: 8px;
-  flex: 1;
-  margin-left: 6%;
+  align-items: center;
+  gap: 8px; /* Reduced gap for a tighter look */
+  padding: 4px;
+  margin-right: 35%;
 }
 
 .pagination-controls button {
+  /* Default page button styling */
   background-color: white;
   color: #333;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 8px 5px;
-  min-width: 35px;
+  border: 1px solid #e0e0e0; /* Light gray border for a raised look */
+  border-radius: 8px; /* Rounded corners */
+  padding: 8px 5px; /* Increased padding for larger, squarer buttons */
+  min-width: 35px; /* Ensures all numbered buttons are the same size */
   height: 29px;
   cursor: pointer;
   font-size: 13px;
@@ -1939,87 +1929,39 @@ body.steps-modal-open {
   transition: all 0.2s ease-in-out;
 }
 
+/* Styling for the currently active page (e.g., '1' in the image) */
 .pagination-controls button.active {
-  background-color: #e6f0ff;
-  color: #007bff;
-  border-color: #b3d4ff;
+  background-color: #e6f0ff; /* Light blue background */
+  color: #007bff; /* Primary blue text color */
+  border-color: #b3d4ff; /* Slightly darker blue border */
   font-weight: bold;
 }
 
 .pagination-controls button:not(.active):hover:not(:disabled) {
-  background-color: #f0f0f0;
+  background-color: #f0f0f0; /* Slight gray on hover */
 }
 
+/* Styling for the < and > arrow buttons */
+.pagination-controls .pagination-arrow {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  color: #333;
+  padding: 8px 5px;
+  /* Resetting padding and size for arrows if needed, but keeping the button style */
+}
+
+/* Styling for the disabled arrow buttons (e.g., < when on page 1) */
 .pagination-controls button:disabled {
+  background-color: white;
   color: #ccc;
   border-color: #eee;
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-/* Split button styling */
-.split-button-container {
-  position: relative;
-  margin-left: 16px;
-}
-
-.btn-execute {
-  padding: 6px 12px;
-  border-radius: 8px;
-  background-color: #082d78;
-  color: white;
-  cursor: pointer;
-  font-size: 13px;
-}
-
-.btn-execute:disabled,
-.btn-execute.disabled {
-  background-color: #ccc;
-  border-color: #999;
-  cursor: not-allowed;
-}
-
-.split-options {
-  position: absolute;
-  bottom: 40px; /* show above the button */
-  right: 0;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  min-width: 120px;
-  z-index: 1000;
-}
-
-.split-options li {
-  padding: 8px 12px;
-  cursor: pointer;
-}
-
-.split-options li:hover {
-  background-color: #f0f0f0;
-}
-
-.execute-hint {
-  font-size: 12px;
+/* Styling for the ellipsis (...) */
+.pagination-ellipsis {
   color: #666;
-  margin-top: 4px;
-}
-.pagination-controls.slightly-right {
-  margin-left: 20%; /* move buttons slightly to the right */
-}
-
-.export-btn {
-  //background: #003585;
-  color: #003585;
-  border: none;
-  background: none transparent;
-  border-radius: 20px;
-  padding: 6px 14px;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  font-size: 16px;
+  padding: 10px 4px;
 }

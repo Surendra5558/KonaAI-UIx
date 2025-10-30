@@ -4,17 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SafePipe } from '../shared/pipes/safe.pipe';
 
-// Interfaces for dynamic fields
-interface InfoField {
-  confidence: number;
-  value: string;
-  status: string;
-}
-
-interface InfoGroup {
-  [key: string]: InfoField;
-}
-
 @Component({
   selector: 'app-ocr-view',
   standalone: true,
@@ -30,62 +19,119 @@ export class OcrViewComponent implements OnInit {
   hoverFieldKey: string | null = null;
   editingFieldKey: string | null = null;
 
-  tempEditedValue: string = '';
+  // Parameters dropdown state and data (updated to match Figma node 436:136211)
   isParameterExpanded = false;
-
   parameter1Options: Array<{ description: string; quantity: number; unitPrice: string; amount: string }> = [
     { description: 'Laura Thompson', quantity: 1, unitPrice: '5,700 INR', amount: '5,700 INR' },
     { description: 'Brian Scott', quantity: 2, unitPrice: '1,500 INR', amount: '1,500 INR' },
     { description: 'Passenger Name', quantity: 3, unitPrice: '1,100 INR', amount: '1,100 INR' }
   ];
 
-  spanishParameter1Options = [
+  // Spanish Parameters dropdown data
+  spanishParameter1Options: Array<{ description: string; quantity: number; unitPrice: string; amount: string }> = [
     { description: 'Laura Thompson', quantity: 1, unitPrice: '5,700 INR', amount: '5,700 INR' },
     { description: 'Brian Scott', quantity: 2, unitPrice: '1,500 INR', amount: '1,500 INR' },
     { description: 'Nombre del Pasajero', quantity: 3, unitPrice: '1,100 INR', amount: '1,100 INR' }
   ];
 
+  // Inline edit state for Description column
   editingDescriptionIndex: number | null = null;
   editedDescription: string = '';
   highlightedFlightIndex: number | null = null;
-
-  // Type-safe InfoGroups
-  basicInfo: InfoGroup = {
+  
+  // OCR Analysis Data - Updated to match Figma design exactly
+  basicInfo = {
     invoicenumber: { confidence: 90, value: 'INV-FLT-0325', status: 'success' },
     invoicedate: { confidence: 90, value: '31 Mar 2025', status: 'success' },
-    companyname: {
-      confidence: 51,
-      value: 'Global Wings Travel Solutions, 21st Floor, Skyview Tower, Business Bay, Dubai, U.A.E',
-      status: 'error'
-    },
-    customer: { confidence: 0, value: 'YUJ Designs Pvt. Ltd., Pune, Maharashtra, India', status: 'loading' },
-    gstin: { confidence: 20, value: '27AAACY1234QIZM', status: 'error' }
+    companyname: { confidence: 51, value: 'Global Wings Travel Solutions', status: 'error' },
+    customer: { confidence: 0, value: 'YUJ Designs Pvt. Ltd.', status: 'loading' },
+    gstin: { confidence: 20, value: '', status: 'error' }
   };
 
-  spanishBasicInfo: InfoGroup = {
+  // Spanish OCR Analysis Data for Original Document Tab
+  spanishBasicInfo = {
     invoicenumber: { confidence: 90, value: 'FAC-VUELO-0325', status: 'success' },
     invoicedate: { confidence: 90, value: '31 Mar 2025', status: 'success' },
-    companyname: {
-      confidence: 51,
-      value: 'Soluciones de Viaje Alas Globales, Piso 21, Torre Skyview, Business Bay, Dubai, E.A.U',
-      status: 'error'
-    },
-    customer: { confidence: 0, value: 'YUJ Diseños Pvt. Ltd., Pune, Maharashtra, India', status: 'loading' },
-    gstin: { confidence: 20, value: '27AAACY1234QIZM', status: 'error' }
+    companyname: { confidence: 51, value: 'Soluciones de Viaje Alas Globales', status: 'error' },
+    customer: { confidence: 0, value: 'YUJ Diseños Pvt. Ltd.', status: 'loading' },
+    gstin: { confidence: 20, value: '', status: 'error' }
   };
 
+  // Flight booking details
   flightDetails = [
-    { sno: 1, passengerName: 'Laura Thompson', airline: 'Indigo', ticketNumber: '0987654321234', travelDate: '10 Mar 25', from: 'Pune', to: 'Delhi', fare: 4500, taxes: 1200 },
-    { sno: 2, passengerName: 'Brian Scott', airline: 'Vistara', ticketNumber: '1234567890123', travelDate: '15 Mar 25', from: 'Mumbai', to: 'Bengaluru', fare: 5000, taxes: 1500 },
-    { sno: 3, passengerName: 'Passenger Name', airline: 'Air India', ticketNumber: '9876543210456', travelDate: '20 Mar 25', from: 'Delhi', to: 'Hyderbad', fare: 4200, taxes: 1100 }
+    {
+      sno: 1,
+      passengerName: 'Laura Thompson',
+      airline: 'Indigo',
+      ticketNumber: '0987654321234',
+      travelDate: '10 Mar 25',
+      from: 'Pune',
+      to: 'Delhi',
+      fare: 4500,
+      taxes: 1200
+    },
+    {
+      sno: 2,
+      passengerName: 'Brian Scott',
+      airline: 'Vistara',
+      ticketNumber: '1234567890123',
+      travelDate: '15 Mar 25',
+      from: 'Mumbai',
+      to: 'Bengaluru',
+      fare: 5000,
+      taxes: 1500
+    },
+    {
+      sno: 3,
+      passengerName: 'Passenger Name',
+      airline: 'Air India',
+      ticketNumber: '9876543210456',
+      travelDate: '20 Mar 25',
+      from: 'Delhi',
+      to: 'Hyderbad',
+      fare: 4200,
+      taxes: 1100
+    }
   ];
 
+  // Spanish Flight booking details
   spanishFlightDetails = [
-    { sno: 1, passengerName: 'Laura Thompson', airline: 'Indigo', ticketNumber: '0987654321234', travelDate: '10 Mar 25', from: 'Pune', to: 'Delhi', fare: 4500, taxes: 1200 },
-    { sno: 2, passengerName: 'Brian Scott', airline: 'Vistara', ticketNumber: '1234567890123', travelDate: '15 Mar 25', from: 'Mumbai', to: 'Bengaluru', fare: 5000, taxes: 1500 },
-    { sno: 3, passengerName: 'Nombre del Pasajero', airline: 'Air India', ticketNumber: '9876543210456', travelDate: '20 Mar 25', from: 'Delhi', to: 'Hyderbad', fare: 4200, taxes: 1100 }
+    {
+      sno: 1,
+      passengerName: 'Laura Thompson',
+      airline: 'Indigo',
+      ticketNumber: '0987654321234',
+      travelDate: '10 Mar 25',
+      from: 'Pune',
+      to: 'Delhi',
+      fare: 4500,
+      taxes: 1200
+    },
+    {
+      sno: 2,
+      passengerName: 'Brian Scott',
+      airline: 'Vistara',
+      ticketNumber: '1234567890123',
+      travelDate: '15 Mar 25',
+      from: 'Mumbai',
+      to: 'Bengaluru',
+      fare: 5000,
+      taxes: 1500
+    },
+    {
+      sno: 3,
+      passengerName: 'Nombre del Pasajero',
+      airline: 'Air India',
+      ticketNumber: '9876543210456',
+      travelDate: '20 Mar 25',
+      from: 'Delhi',
+      to: 'Hyderbad',
+      fare: 4200,
+      taxes: 1100
+    }
   ];
 
+  // Invoice summary
   invoiceSummary = {
     subtotal: 13700,
     totalTaxes: 3800,
@@ -95,6 +141,7 @@ export class OcrViewComponent implements OnInit {
     bankDetails: 'Global Wings Travel Solutions\nICICI Bank, A/C No: 123456789012\nIFSC: ICIC0000123'
   };
 
+  // Spanish Invoice summary
   spanishInvoiceSummary = {
     subtotal: 13700,
     totalTaxes: 3800,
@@ -104,17 +151,28 @@ export class OcrViewComponent implements OnInit {
     bankDetails: 'Soluciones de Viaje Alas Globales\nICICI Bank, Cuenta No: 123456789012\nIFSC: ICIC0000123'
   };
 
+  // Document information
   documentInfo = {
     fileName: 'Flight_Invoice_March2025.pdf',
     documentType: 'OCR Document'
   };
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
+    // Get any parameters passed from the transaction alert component
     this.route.queryParams.subscribe(params => {
-      if (params['transactionId']) console.log('Transaction ID:', params['transactionId']);
-      if (params['documentName']) this.documentInfo.fileName = params['documentName'];
+      if (params['transactionId']) {
+        // Handle transaction ID if needed
+        console.log('Transaction ID:', params['transactionId']);
+      }
+      if (params['documentName']) {
+        // Update document info with the actual document name
+        this.documentInfo.fileName = params['documentName'];
+      }
     });
   }
 
@@ -128,20 +186,28 @@ export class OcrViewComponent implements OnInit {
   }
 
   isFieldHighlighted(fieldKey: string): boolean {
-    return this.selectedFieldKey === fieldKey || this.editingFieldKey === fieldKey;
+    // Only highlight when explicitly selected (not on hover)
+    return this.selectedFieldKey === fieldKey;
   }
 
   private scrollFieldIntoView(fieldKey: string): void {
-    const el = document.getElementById(`doc-${fieldKey}`);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const elementId = `doc-${fieldKey}`;
+    const el = document.getElementById(elementId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   }
 
   previousPage(): void {
-    if (this.currentPage > 1) this.currentPage--;
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
   }
 
   nextPage(): void {
-    if (this.currentPage < this.totalPages) this.currentPage++;
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
   }
 
   goBack(): void {
@@ -159,39 +225,50 @@ export class OcrViewComponent implements OnInit {
 
   getStatusIcon(status: string): string {
     switch (status) {
-      case 'success': return '✓';
-      case 'error': return '✗';
-      case 'loading': return '⟳';
-      default: return '';
+      case 'success':
+        return '✓';
+      case 'error':
+        return '✗';
+      case 'loading':
+        return '⟳';
+      default:
+        return '';
     }
   }
 
   getStatusIconClass(status: string): string {
     switch (status) {
-      case 'success': return 'bi bi-check-circle';
-      case 'error': return 'bi bi-x-circle';
-      case 'loading': return 'bi bi-arrow-clockwise';
-      default: return '';
+      case 'success':
+        return 'bi bi-check-circle-fill';
+      case 'error':
+        return 'bi bi-x-circle-fill';
+      case 'loading':
+        return 'bi bi-arrow-clockwise';
+      default:
+        return '';
     }
   }
 
   getStatusColor(status: string): string {
     switch (status) {
-      case 'success': return '#01912a';
-      case 'error': return '#b20000';
-      case 'loading': return '#e5aa25';
-      default: return '#65717d';
+      case 'success':
+        return '#01912a';
+      case 'error':
+        return '#b20000';
+      case 'loading':
+        return '#e5aa25';
+      default:
+        return '#65717d';
     }
   }
 
   addHeader(): void {
-    const key = `custom_${Date.now()}`;
-    const info = this.getCurrentBasicInfo();
-    info[key] = { confidence: 0, value: 'New Header', status: 'loading' };
-    this.editField(key);
+    // Implementation for adding header
+    console.log('Add header clicked');
   }
 
   addParameter(): void {
+    // Implementation for adding parameter
     console.log('Add parameter clicked');
   }
 
@@ -200,59 +277,55 @@ export class OcrViewComponent implements OnInit {
   }
 
   verifyField(fieldKey: string): void {
-    const info = this.getCurrentBasicInfo();
-    if (info[fieldKey]) info[fieldKey].status = 'success';
+    const currentInfo = this.getCurrentBasicInfo();
+    if (currentInfo[fieldKey as keyof typeof currentInfo]) {
+      currentInfo[fieldKey as keyof typeof currentInfo].status = 'success';
+    }
   }
 
   rejectField(fieldKey: string): void {
-    const info = this.getCurrentBasicInfo();
-    if (info[fieldKey]) {
-      delete info[fieldKey];
-      if (this.selectedFieldKey === fieldKey) this.selectedFieldKey = null;
-      if (this.editingFieldKey === fieldKey) this.cancelEditField();
+    const currentInfo = this.getCurrentBasicInfo();
+    if (currentInfo[fieldKey as keyof typeof currentInfo]) {
+      currentInfo[fieldKey as keyof typeof currentInfo].status = 'error';
     }
   }
 
   editField(fieldKey: string): void {
-    const info = this.getCurrentBasicInfo();
-    if (this.editingFieldKey === fieldKey) return this.cancelEditField();
-    if (!info[fieldKey]) info[fieldKey] = { confidence: 0, value: '', status: 'loading' };
-    this.editingFieldKey = fieldKey;
-    this.tempEditedValue = info[fieldKey].value || '';
-    this.selectField(fieldKey);
-  }
-
-  confirmEditField(fieldKey: string): void {
-    const info = this.getCurrentBasicInfo();
-    if (info[fieldKey]) {
-      info[fieldKey].value = this.tempEditedValue.trim();
-      info[fieldKey].status = 'success';
+    // Toggle edit on same field; when turning off, also clear highlight/selection
+    if (this.editingFieldKey === fieldKey) {
+      this.editingFieldKey = null;
+      if (this.selectedFieldKey === fieldKey) {
+        this.selectedFieldKey = null;
+      }
+    } else {
+      this.editingFieldKey = fieldKey;
+      this.selectField(fieldKey);
     }
-    this.editingFieldKey = null;
-    this.tempEditedValue = '';
+    console.log('Edit toggle for field:', fieldKey, 'active:', this.editingFieldKey === fieldKey);
   }
 
-  cancelEditField(): void {
-    this.editingFieldKey = null;
-    this.tempEditedValue = '';
-  }
-
+  // Parameter 1 interactions
   toggleParameter(): void {
     this.isParameterExpanded = !this.isParameterExpanded;
   }
 
   startEditDescription(index: number): void {
     this.editingDescriptionIndex = index;
-    this.editedDescription = this.getCurrentParameterOptions()[index].description;
+    const currentOptions = this.getCurrentParameterOptions();
+    this.editedDescription = currentOptions[index].description;
     this.highlightedFlightIndex = index;
   }
 
   confirmEditDescription(index: number): void {
     const trimmed = this.editedDescription.trim();
     if (trimmed.length > 0) {
-      this.getCurrentParameterOptions()[index].description = trimmed;
-      if (this.getCurrentFlightDetails()[index]) {
-        this.getCurrentFlightDetails()[index].passengerName = trimmed;
+      const currentOptions = this.getCurrentParameterOptions();
+      const currentFlights = this.getCurrentFlightDetails();
+      
+      currentOptions[index].description = trimmed;
+      // Keep flight booking table in sync and highlight updated row
+      if (currentFlights[index]) {
+        currentFlights[index].passengerName = trimmed;
         this.highlightedFlightIndex = index;
       }
     }
@@ -264,7 +337,8 @@ export class OcrViewComponent implements OnInit {
     this.editedDescription = '';
   }
 
-  getCurrentBasicInfo(): InfoGroup {
+  // Helper methods to get appropriate data based on active tab
+  getCurrentBasicInfo() {
     return this.activeTab === 'original' ? this.spanishBasicInfo : this.basicInfo;
   }
 
@@ -278,9 +352,5 @@ export class OcrViewComponent implements OnInit {
 
   getCurrentParameterOptions() {
     return this.activeTab === 'original' ? this.spanishParameter1Options : this.parameter1Options;
-  }
-
-  deleteDocument(): void {
-    console.log('Delete document clicked');
   }
 }
