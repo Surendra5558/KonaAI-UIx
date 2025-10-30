@@ -1,0 +1,20 @@
+<div class="main-topbar">
+  <div class="main-header">
+    <div class="main-nav-container">
+      <div class="main-tab-wrapper">
+        <!-- Organisation Tab -->
+        <div class="main-tab-item" [class.active]="activeTab === 'organisation'" (click)="selectTab('organisation')">
+          <i class="bi bi-diagram-3"></i>
+          <span>Organisation</span>
+        </div>
+
+        <!-- Projects Tab -->
+        <div class="main-tab-item" [class.active]="activeTab === 'projects'" [class.disabled]="isInstanceAdmin"
+          (click)="!isInstanceAdmin && selectTab('projects')">
+          <i class="bi bi-bar-chart"></i>
+          <span>Projects</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

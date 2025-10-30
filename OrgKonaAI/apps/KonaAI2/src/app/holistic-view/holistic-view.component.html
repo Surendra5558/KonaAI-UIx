@@ -1,0 +1,73 @@
+<div class="holistic-view">
+  <!-- Header -->
+  <div class="header">
+    <h1> <button class="back-btn" (click)="onBackClick()">←</button> Contract Compliance Audit <span class="phase">Phase 1</span></h1>
+    <button class="holistic-btn">Holistic View</button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <span class="active">P2P</span>
+    <span>O2C</span>
+    <span>T&E</span>
+  </div>
+
+  <!-- Summary cards -->
+  <div class="summary-container">
+    <div class="summary-card" *ngFor="let item of summary">
+      <div class="title">{{ item.title }}</div>
+      <div style="display: flex; ">
+        <div class="files">Files: {{ item.files | number:'2.0' }}</div>
+        <div class="divider"></div>
+        <div class="status">
+          <span class="success">{{ item.success | number:'2.0' }}</span>
+        <span class="fail">{{ item.fail | number:'2.0' }}</span>
+        <span class="pending">{{ item.pending | number:'2.0' }}</span>
+        <!-- <span class="success">✔ {{ item.success | number:'2.0' }}</span>
+        <span class="fail">✖ {{ item.fail | number:'2.0' }}</span>
+        <span class="pending">⏳ {{ item.pending | number:'2.0' }}</span> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search + Filter -->
+  <div class="filter-bar">
+    <input type="text" placeholder="🔍 What are you looking for?" />
+    <select>
+      <option>Select Sub Module</option>
+    </select>
+  </div>
+
+  <!-- Table -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Submodule</th>
+          <th>File Name</th>
+          <th>Source System</th>
+          <th>Record Count</th>
+          <th>Uploaded On</th>
+          <th>Modified On</th>
+          <th>Data import</th>
+          <th>Data Quality</th>
+          <th>Data Staging</th>
+          <th>Data Validation</th>
+          <th>Data Mapping</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let file of files">
+          <td>{{ file.submodule }}</td>
+          <td>{{ file.fileName }}</td>
+          <td>{{ file.sourceSystem }}</td>
+          <td>{{ file.recordCount }}</td>
+          <td>{{ file.uploadedOn }}</td>
+          <td>{{ file.modifiedOn }}</td>
+          <td colspan="5" class="status-completed">Completed</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

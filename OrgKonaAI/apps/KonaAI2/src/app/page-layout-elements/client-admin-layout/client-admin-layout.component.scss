@@ -1,0 +1,227 @@
+// .client-admin-layout {
+//   display: flex;
+//   flex-direction: column;
+//   //gap: 5rem;
+//   overflow-y: hidden;
+// }
+
+/* Remove top gap for L1 user when applied at root */
+.client-admin-layout.no-top-gap {
+  gap: 0;
+}
+
+/* Top bar - centered and static */
+.top-bar {
+  position: fixed;
+  top: 9px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center !important;
+  padding: 0;
+  border-radius: 12px;
+  width: auto;
+  min-width: 18vw;
+  max-width: 180px;
+
+  h1 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-left: 18px;
+  }
+}
+
+/* When no-top-gap is active, also remove top bar spacing impact */
+.client-admin-layout.no-top-gap .top-bar {
+  position: static;
+  top: auto;
+  left: auto;
+  transform: none;
+}
+
+.nav-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  justify-content: center !important;
+  width: auto;
+  min-width: 258px;
+  max-width: 258px;
+  padding: 8px;
+  background-color: white;
+  border-radius: 7px;
+  border: 1px solid var(--Primary-Blue-30, #9BC4F6);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  color: #2951C6;
+}
+
+.tab-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.btn-back {
+  background: none;         
+  border: none;            
+  padding: 0;             
+  margin: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+  width: 10px;
+  height: 10px;
+
+  i {
+    font-size: 24px;
+    color: #9BC4F6;
+    line-height: 1;
+  }
+
+  &:hover i {
+    color: #5a9cf6;        
+  }
+
+  &:hover {
+    background: none;     
+    box-shadow: none;       
+  }
+}
+
+/* Position back button + project name to the left of the client admin layout */
+
+// .layout-back-btn {
+//   position: relative;
+// }
+
+
+
+.tab-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 14px;
+  font-weight: 600;
+  background-color: transparent;
+  position: relative;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #374151;
+    transform: translateY(-1px);
+  }
+
+  &.active {
+    background-color: #C4DBFA;
+    color: #2951C6;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    span {
+      color: #2951C6;
+    }
+  }
+
+  i {
+    font-size: 18px;
+    transition: all 0.3s ease;
+    color: #2951C6;
+  }
+
+  span {
+    white-space: nowrap;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    transition: all 0.3s ease;
+  }
+}
+
+.alert-tab {
+  &.active {
+    // background-color: #e3f2fd;
+    color: #1976d2;
+    border: 1px solid #bbdefb;
+
+    i {
+      color: #1976d2;
+    }
+
+    span {
+      color: #1976d2;
+    }
+  }
+}
+
+.tab-item.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.client-admin-content {
+  flex: 1;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+.client-admin-content.no-top-gap {
+  margin-top: 0 !important;
+}
+
+.top-bar-wrapper {
+  display: block;
+}
+
+/* Center client admin content horizontally */
+.client-admin-content-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .client-admin-content {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .client-admin-content {
+    padding: 12px;
+  } 
+}
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 12px 0;
+  border-radius: 8px;
+  gap: 250px;
+
+  h1 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-left: 18px;
+  }
+}

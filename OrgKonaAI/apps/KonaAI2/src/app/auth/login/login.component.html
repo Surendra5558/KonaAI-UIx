@@ -1,0 +1,116 @@
+<div class="login-container font-primary">
+  <div class="background-layer background-layer-dotted"></div>
+  <div class="background-layer"></div>
+
+  <div class="content-wrapper">
+    <!-- Left side content -->
+    <div class="left-content">
+      <div class="logo-section">
+        <img src="assets/images/loginImages/KonaAIicon.png" alt="KonaAI" class="logo">
+        <span class="logo-text">{{ 'LOGIN_FORM.KONA' | transloco }}<span class="ai-text">{{ 'LOGIN_FORM.AI' | transloco }}</span></span>
+      </div>
+
+      <div class="main-content">
+        <h1 class="main-heading">{{ 'LOGIN_FORM.LOGO_TITLE' | transloco }}</h1>
+        <p class="main-description">
+         {{ 'LOGIN_FORM.LOGO_SUB_TITLE' | transloco }}</p>
+      </div>
+    </div>
+
+    <!-- Right side login form -->
+    <div class="right-content">
+      <div class="login-card">
+        <div class="card-header">
+          <h2 class="card-title">{{ 'LOGIN_FORM.TITLE' | transloco }}</h2>
+          <p class="card-subtitle">{{ 'LOGIN_FORM.SUB-TITLE' | transloco }}</p>
+        </div>
+
+        <!-- Error message display -->
+        @if (errorMessage) {
+          <div class="error-message">
+            {{ errorMessage }}
+          </div>
+        }
+
+        <form class="login-form" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="email" class="form-label">{{ 'LOGIN_FORM.EMAIL' | transloco }}</label>
+            <input
+              type="email"
+              id="email"
+              class="form-input font-primary"
+              placeholder="Enter your work mail"
+              [(ngModel)]="loginForm.email"
+              name="email"
+              [disabled]="isLoading"
+              required>
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="form-label">{{ 'LOGIN_FORM.PASSWORD' | transloco }}</label>
+              <div class="password-wrapper">
+                <input
+                  [type]="showPassword ? 'text' : 'password'"
+                  id="password"
+                  class="form-input"
+                  placeholder="Enter password"
+                  [(ngModel)]="loginForm.password"
+                  name="password"
+                  [disabled]="isLoading"
+                  required>
+                  <button
+                    type="button"
+                    class="password-toggle"
+                    (click)="togglePassword()"
+                    [disabled]="isLoading">
+                    <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group sign-in-wrapper">
+                <button
+                  type="submit"
+                  class="sign-in-btn font-primary"
+                  [disabled]="isLoading || !loginForm.email || !loginForm.password">
+                  @if (isLoading) {
+                    <span>Signing in...</span>
+                  }
+                  @if (!isLoading) {
+                    <span>{{ 'LOGIN_FORM.SUBMIT-DB' | transloco }}</span>
+                  }
+                </button>
+              </div>
+
+              <a href="#" class="forgot-password">{{ 'LOGIN_FORM.FORGOT-PASSWORD-TEXT' | transloco }}</a>
+
+              <!-- Divider with "or" text -->
+              <div class="divider-section">
+                <div class="divider-line"></div>
+                <span class="divider-text">{{ 'LOGIN_FORM.OR-TEXT' | transloco }}</span>
+                <div class="divider-line"></div>
+              </div>
+
+              <!-- SSO Sign In Button -->
+              <div class="form-group sso-wrapper">
+                <button
+                  type="button"
+                  class="sso-btn font-primary"
+                  [disabled]="isLoading" routerLink="/ad-auth">
+                 {{ 'LOGIN_FORM.SUBMIT-SSO' | transloco }}
+                </button>
+              </div>
+            </form>
+             <div class="language-selection" style="padding-left: 82%;display: flex;padding-top:23px;">
+              <select class="language-select" style="border-color: 1px solid #d1d5db;border-radius: 7px;" (change)="switchLanguage($event)" [(ngModel)]="currentLanguage">
+                <option value="en">English</option>
+                <option value="de">German</option>
+                <option value="es">Spanish</option>
+                <option value="ja">Japanese</option>
+              </select>
+            </div>
+        </div>
+          </div>
+         
+      </div>
+    </div>

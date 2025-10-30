@@ -1,0 +1,115 @@
+
+<div class="content">
+  <div class="header-block">
+    <div>
+      <h2>Alerts</h2>
+      <p>Track and manage alerts triggered by failed tests, anomalies, and policy violations.</p>
+    </div>
+    <button class="btn btn-save" *ngIf="currentUserRole !== 'L1 User'" (click)="navigateCreateAlert()" ><i class="bi bi-plus-lg mr-2"></i> New Alert</button>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="stats-row">
+    <div class="stat-card">Total <span>578</span></div>
+    <div class="stat-card">Resolved <span>180</span></div>
+    <div class="stat-card">In Progress <span>210</span></div>
+    <div class="stat-card">Unassigned <span>75</span></div>
+    <div class="stat-card">Escalated <span>45</span></div>
+    <div class="stat-card">High-Risk <span>120</span></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs" style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; gap: 10px;">
+      <div class="tab" [class.active]="activeTab==='My Alerts'" (click)="setTab('My Alerts')">My Alerts</div>
+      <div class="tab" 
+           *ngIf="!isLimitedUser() || isL2User()"
+           [class.active]="activeTab==='All Alerts'" 
+           (click)="setTab('All Alerts')">All Alerts</div>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <div class="tab" [class.active]="activeProcessTab==='O2C'" (click)="setTab('O2C')">O2C</div>
+      <div class="tab" [class.active]="activeProcessTab==='P2P'" (click)="setTab('P2P')">P2P</div>
+      <div class="tab" [class.active]="activeProcessTab==='T&E'" (click)="setTab('T&E')">T&E</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <div class="assign-filter">
+      <label>
+        <input type="radio" name="assign" value="all" [(ngModel)]="assignFilter"> All
+      </label>
+      <label>
+        <input type="radio" name="assign" value="assigned" [(ngModel)]="assignFilter"> Assigned
+      </label>
+      <label>
+        <input type="radio" name="assign" value="unassigned" [(ngModel)]="assignFilter"> Unassigned
+      </label>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <table class="alerts-table table-main">
+    <thead>
+      <tr>
+        <!-- <th><input type="checkbox"></th> -->
+        <th>Alert ID</th>
+        <th>Risk Score</th>
+        <th>Risk Amount</th>
+        <th>Sub-module</th>
+        <th>Type</th>
+        <th>Txn Count</th>
+        <th>Created by</th>
+        <th>Created on</th>
+        <th>Due on</th>
+        <th>Assigned to</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let alert of filteredAlerts">
+        <!-- <td><input type="checkbox"></td> -->
+        <td>{{ alert.id }}</td>
+        <td>{{ alert.riskScore }}</td>
+        <td>{{ alert.riskAmount }}</td>
+        <td>{{ alert.subModule }}</td>
+        <td>{{ alert.type }}</td>
+        <td>{{ alert.txnCount }}</td>
+        <td>{{ alert.createdBy }}</td>
+        <td>{{ alert.createdOn }}</td>
+        <td>{{ alert.dueOn }}</td>
+        <td>
+          <span 
+            *ngIf="!alert.assignedTo" 
+            class="assign-link" 
+            (click)="navigateToCreateAlert(alert.id)">
+            Assign
+          </span>
+          <span *ngIf="alert.assignedTo">{{ alert.assignedTo }}</span>
+        </td>
+        <td>
+          <!-- Status badge with icon -->
+          <span class="status" [ngClass]="{
+          'resolved': alert.status==='Resolved',
+          'in-progress': alert.status==='In Progress',
+          'escalated': alert.status==='Escalated'
+        }">
+            <span class="status-icon">
+              <ng-container [ngSwitch]="alert.status">
+                <span *ngSwitchCase="'Resolved'">&#10003;</span> <!-- check mark -->
+                <span *ngSwitchCase="'In Progress'">&#x23F3;</span> <!-- hourglass -->
+                <span *ngSwitchCase="'Escalated'">&#9888;</span> <!-- warning -->
+              </ng-container>
+            </span>
+            {{ alert.status }}
+          </span>
+
+          <!-- Up arrow -->
+          <span class="arrow" (click)="navigateToDetails(alert.type)">&#8599;</span>
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+</div>

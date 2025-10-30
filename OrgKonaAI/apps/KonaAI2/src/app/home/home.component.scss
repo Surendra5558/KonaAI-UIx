@@ -1,0 +1,17 @@
+.no-projects-container {
+  display: flex;
+  justify-content: center; /* centers horizontally */
+  align-items: center;     /* centers vertically */
+  height: 100vh;           /* fill the viewport height */
+  margin: 50%;               /* reset margins */
+  padding: 26%
+}
+
+.message-container {
+  text-align: center;
+}
+
+.no-projects-message {
+  font-size: 1.2rem;
+  color: #908989;
+}

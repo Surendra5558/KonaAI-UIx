@@ -1,0 +1,386 @@
+/* Project Creation Component Styles */
+
+.project-creation-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+}
+
+.project-creation-content {
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px 40px;
+  //overflow-y: scroll;
+}
+
+.project-form {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Form Groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group.half-width {
+  width: 50%;
+  /* occupy half space */
+  display: inline-block;
+  vertical-align: top;
+  /* optional spacing */
+}
+
+/* Labels */
+.form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 6px;
+  display: block;
+}
+.option-placeholder {
+  color: #ccc; /* grey color */
+}
+/* Form Inputs */
+.form-input,
+.form-select,
+.form-textarea {
+  padding: 10px 12px;
+  border: 2px solid #cccccc;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #333333;
+  background-color: #ffffff;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #cccccc;
+  background-color: #ffffff;
+}
+
+// .form-input::placeholder,
+// .form-textarea::placeholder {
+//   color: #999999;
+//   font-size: 14px;
+// }
+
+/* Textarea */
+.form-textarea {
+  width: 66%;
+  resize: vertical;
+  min-height: 65px;
+  font-family: inherit;
+}
+
+/* Select Dropdown */
+.form-select {
+  cursor: pointer;
+  background-color: #ffffff;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23999999' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+.form-select:disabled {
+  background-color: #f8f9fa;
+  color: #999999;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-select option {
+  padding: 8px;
+  color: #333333;
+}
+
+/* Form Rows */
+.form-row {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+.form-column{
+  display: flex;
+  flex-direction: column;
+}
+
+// .form-row.half-width {
+//   width: 60%;
+// }
+.calender-width{
+  width: 66%;
+}
+
+.half-width {
+  flex: 1;
+  min-width: 0;
+}
+
+.third-width {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Date Input */
+.date-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* Info Text */
+.info-text {
+  font-size: 14px;
+  color: #333333;
+  line-height: 1.5;
+  margin: 16px 0;
+  font-weight: 400;
+}
+
+/* Module Section */
+.modules-section {
+  display: flex;
+  gap: 40px;
+  margin-top: 8px;
+}
+
+.module-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.module-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+/* Checkbox Styling */
+.module-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #007bff;
+  margin: 0;
+}
+
+.module-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333333;
+  cursor: pointer;
+  margin: 0;
+  user-select: none;
+}
+
+/* Module Select Dropdown */
+.module-select {
+  width: 200px;
+  margin-left: 28px;
+  flex-shrink: 0;
+}
+
+/* Hover Effects */
+// .form-input:hover:not(:focus),
+// .form-select:hover:not(:focus),
+// .form-textarea:hover:not(:focus) {
+//   border-color: #999999;
+// }
+
+.module-checkbox:hover {
+  transform: scale(1.05);
+  transition: transform 0.1s ease;
+}
+
+.module-label:hover {
+  color: #007bff;
+  transition: color 0.2s ease;
+}
+
+/* Form Validation States */
+// .form-input.ng-invalid.ng-touched,
+// .form-select.ng-invalid.ng-touched,
+// .form-textarea.ng-invalid.ng-touched {
+//   border-color: #dc3545;
+// }
+
+// .form-input.ng-valid.ng-touched,
+// .form-select.ng-valid.ng-touched,
+// .form-textarea.ng-valid.ng-touched {
+//   border-color: #28a745;
+// }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .project-creation-container {
+    padding: 16px;
+    margin: 0;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .half-width,
+  .third-width {
+    width: 100%;
+  }
+
+  .module-select {
+    width: 100%;
+    margin-left: 28px;
+  }
+
+  .modules-section {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .project-creation-container {
+    padding: 12px;
+  }
+
+  .project-form {
+    gap: 20px;
+  }
+
+  .form-label {
+    font-size: 13px;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  .module-select {
+    margin-left: 20px;
+  }
+}
+
+/* Focus visible for accessibility */
+// .form-input:focus-visible,
+// .form-select:focus-visible,
+// .form-textarea:focus-visible,
+// .module-checkbox:focus-visible {
+//   outline: 2px solid #007bff;
+//   outline-offset: 2px;
+// }
+
+/* Print styles */
+@media print {
+  .project-creation-container {
+    background-color: white;
+    padding: 0;
+    margin: 0;
+    max-width: none;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    border: 1px solid #333;
+    background: white;
+  }
+}
+
+::ng-deep.form-select.ng-valid.ng-touched{
+  border-color: #ccc !important;
+}
+::ng-deep.form-textarea.ng-valid.ng-touched{
+  border-color: #ccc !important;
+}
+::ng-deep.form-input.ng-valid.ng-touched{
+  border-color: #ccc !important;
+  background-color: #fff;
+}
+
+
+
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus,
+.module-checkbox:focus,
+.btn:focus,
+.closePopup:focus {
+  // outline: 2px solid #007bff !important;
+  // outline-offset: 2px !important;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15) !important;
+  border-color: #007bff !important;
+}
+
+/* Special focus style for checkboxes */
+.module-checkbox:focus + .module-label {
+  color: #007bff;
+  font-weight: 600;
+}
+
+/* Enhanced button focus styles */
+.btn:focus {
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25), 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Close button focus style */
+.closePopup:focus {
+  background-color: rgba(0, 123, 255, 0.1);
+  border-radius: 4px;
+}
+
+/* Ensure all interactive elements are focusable */
+.form-input,
+.form-select,
+.form-textarea,
+.module-checkbox,
+.btn,
+.closePopup {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Remove default browser outline and replace with custom styling */
+.form-input,
+.form-select,
+.form-textarea,
+.module-checkbox,
+.btn,
+.closePopup {
+  outline: none;
+}
+
+/* Hover effects that complement focus styles */
+.form-input:hover:not(:focus),
+.form-select:hover:not(:focus),
+.form-textarea:hover:not(:focus) {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.15);
+}
+
+.btn:hover:not(:focus) {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

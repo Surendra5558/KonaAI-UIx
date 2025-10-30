@@ -1,0 +1,405 @@
+<!-- <div class="container"> -->
+  <!-- Full-width header -->
+  <!-- <div class="header top-bar">
+    <h1>
+      <button class="back-btn" (click)="goBack()">←</button>
+      {{ projectData?.name || 'Contract Compliance Audit' }}
+    </h1>
+  </div> -->
+
+  <div class="container">
+    <!-- Overview + next button inline -->
+    <div class="header-block">
+      <div>
+        <h2>Overview</h2>
+        <p>Review the key details of your project</p>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab" [class.active]="activeTab === 'summary'" (click)="setActiveTab('summary')">Summary</button>
+      <!-- <button class="tab" [class.active]="activeTab === 'documents'" (click)="setActiveTab('documents')">Project Documents</button>
+      <button class="tab" [class.active]="activeTab === 'ocr'" (click)="setActiveTab('ocr')">OCR</button>
+      <button class="tab" [class.active]="activeTab === 'insights'" (click)="setActiveTab('insights')">Insights Template</button> -->
+    </div>
+
+    <!-- Summary Tab -->
+    <div *ngIf="activeTab === 'summary'">
+      <div class="section">
+        <div class="row">
+          <div>
+            <strong>Name</strong>
+            {{ projectData?.owner }}
+          </div>
+        </div>
+        <br />
+      </div>
+
+      <div class="section">
+        <div class="grid">
+          <div><strong>Project Name</strong>{{ projectData?.name }}</div>
+          <div><strong>Risk Area</strong>{{ projectData?.risk }}</div>
+          <div><strong>Created On</strong>{{ projectData?.range }}</div>
+          <div><strong>Audit Responsibility</strong>scope</div>
+        </div>
+        <div class="scope">
+          <strong>Scope</strong>
+           {{ projectData?.scope }}
+        </div>
+        <br />
+      </div>
+
+      <div class="section">
+        <div class="grid">
+          <div><strong>Modules</strong>{{ projectData?.modules }}</div>
+          <div><strong>Data Range</strong>{{ projectData?.range }}</div>
+          <div><strong>Country</strong>–</div>
+          <div><strong>Business Unit</strong>–</div>
+       </div>
+       <div class="scope">
+          <div><strong>Business Development</strong>–</div>
+        </div>
+         <br />
+        </div>
+      </div>
+  
+
+    <!-- Project Documents Tab -->
+<div *ngIf="activeTab === 'documents'" class="documents-content">
+  
+<table class="documents-table">
+  <thead>
+    <tr>
+      <th >Module</th>
+      <th >File Name</th>
+      <th >Size</th>
+      <th >Type</th>
+      <th >Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let doc of projectDocuments; trackBy: trackByName">
+      <td >{{ doc.modules }}</td>
+      <td >{{ doc.name }}</td>
+      <td >{{ doc.size }}</td>
+      <td >{{ doc.type }}</td>
+      <td > <i class="bi bi-eye-fill"></i></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+   <!-- Project Documents Tab -->
+<div *ngIf="activeTab === 'ocr'" class="ocr-scroll-container">
+      <div class="config-section split-layout">
+        <div class="section-left">
+          <h3>Data Intelligence Key</h3>
+          <p>Manage API keys for secure and efficient OCR data processing</p>
+        </div>
+        <div class="section-right">
+          <div class="form-group">
+            <label for="serviceKey">Service Key*</label>
+            <div class="input-with-icon">
+              <input 
+                type="text" 
+                id="serviceKey" 
+                [(ngModel)]="serviceKey" 
+                placeholder="SON%_SF@g7da2c-1234-456f-88aa-ce401f234567"
+                class="form-input">
+              <button class="copy-btn" (click)="copyToClipboard(serviceKey)">
+             <i class="bi bi-link"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="serviceEndpoint">Service Endpoint*</label>
+            <div class="input-with-icon">
+              <input 
+                type="text" 
+                id="serviceEndpoint" 
+                [(ngModel)]="serviceEndpoint" 
+                placeholder="https://api.konai.com/ocr/v1/process"
+                class="form-input">
+              <button class="copy-btn" (click)="copyToClipboard(serviceEndpoint)">
+              <i class="bi bi-link"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- File Settings Section -->
+      <div class="config-section split-layout">
+        <div class="section-left">
+          <h3>File Settings</h3>
+          <p>Configure file formats and processing rules for accurate text extraction.</p>
+        </div>
+        <div class="section-right">
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" [(ngModel)]="automaticOCR">
+              <span class="checkmark"></span>
+              Automatic OCR processing for all files
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" [(ngModel)]="enhanceResolution">
+              <span class="checkmark"></span>
+              Enhance low-resolution text to improve OCR accuracy and readability
+            </label>
+          </div>
+        </div>
+        </div>
+     
+
+      <!-- Multi Language Processing Section -->
+      <div class="config-section split-layout">
+        <div class="section-left">
+          <h3>Multi Language Processing</h3>
+        </div>
+        <div class="section-right">
+          <div class="form-group">
+            <label>Target Translation Language</label>
+            <p class="field-description">Select the language for OCR extracted text translation.</p>
+            <select [(ngModel)]="targetLanguage" class="form-select">
+              <option value="english">English</option>
+              <option value="spanish">Spanish</option>
+              <option value="french">French</option>
+              <option value="german">German</option>
+              <option value="chinese">Chinese</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="two-section-layout">
+        <!-- Supported File Formats Section -->
+        <div class="config-section split-layout">
+          <div class="section-left">
+            <h3>Supported File Formats</h3>
+            <p>View and manage file types compatible with OCR processing.</p>
+          </div>
+          <div class="section-right">
+            <div class="file-formats">
+              <span 
+                *ngFor="let format of fileFormats" 
+                class="format-tag" 
+                [class.active]="format.active"
+                (click)="toggleFormat(format)">
+                {{ format.extension }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+      <!-- Add Keywords Section -->
+      <div class="config-section split-layout">
+       <div class="section-left">
+            <h3>Keyword Lemmatization</h3>
+            <p>Select the language for OCR-extracted text translation.</p>
+          </div>
+        <div class="section-right">
+          <h3>Add Keywords</h3>
+          <p>Define relevant terms to enhance data processing and insights.</p>
+
+            <div class="keyword-files">
+            <div *ngFor="let file of keywordFiles" class="keyword-file">
+              <div class="file-info">
+                <span class="file-icon"><i class="bi bi-filetype-pdf"></i></span>
+                <div class="file-details">
+                  <span class="file-name">{{ file.name }}</span>
+                  <span class="file-size">{{ file.size }}</span>
+                </div>
+              </div>
+              <div class="file-actions">
+                <button class="action-btn" (click)="viewFile(file)"><i class="bi bi-eye-fill"></i></button>
+                <button class="action-btn" (click)="downloadFile(file)"><i class="bi bi-download"></i></button>
+                <button class="action-btn" (click)="deleteFile(file)"><i class="bi bi-trash-fill"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Anomaly Detection Section -->
+      <div class="config-section split-layout">
+        <div class="section-left">
+          <h3>Anomaly Detection</h3>
+          <p>Spot missing, inconsistent, or unexpected data patterns.</p>
+        </div>
+        <div class="section-right">
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" [(ngModel)]="detectIncompleteData">
+              <span class="checkmark"></span>
+              Detect null or incomplete data fields in OCR-extracted content.
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" [(ngModel)]="identifyFlaggedAnnotations">
+              <span class="checkmark"></span>
+              Identify flagged annotations, remarks, or system-generated comments.
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" [(ngModel)]="classifyOutliers">
+              <span class="checkmark"></span>
+              Classify and validate data anomalies, excluding past or future dates.
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Document Mapping Section -->
+      <div class="config-section split-layout">
+        <div class="section-left">
+          <h3>Data Document Mapping</h3>
+          <p>Map data fields to documents for structured processing and integration.</p>
+        </div>
+        <div class="section-right">
+          <!-- Content can be added here -->
+        </div>
+      </div>
+    </div>
+    </div>
+    
+
+<div *ngIf="activeTab === 'insights'" class="insights-content">
+    <div class="insights-content">
+            <!-- Insights Header Section -->
+            <div class="insights-header-section">
+              <div class="insights-title-section">
+                <h2 class="insights-main-title">Insights Template</h2>
+                <p class="insights-subtitle">Choose and customize insight templates for your analysis</p>
+              </div>
+            </div>
+           
+            <!-- Insights Grid Container -->
+            <div class="insights-grid-container">
+              <!-- O2C Insights Card -->
+              <div class="insights-card">
+                <div class="insights-card-image">
+                  <div class="card-background-image"></div>
+                </div>
+                <div class="insights-card-content">
+                  <div class="insights-card-header">
+                    <div class="insights-card-info">
+                      <div class="insights-module-label">Module: O2C</div>
+                      <div class="insights-card-title">O2C_Insights.ppt</div>
+                    </div>
+                    <div class="insights-menu-container">
+                      <button class="insights-menu-btn" (click)="toggleInsightsMenu($event, 'o2c')">
+                        <span class="insights-menu-icon"></span>
+                      </button>
+                      @if (activeInsightsMenu === 'o2c') {
+                        <div class="insights-dropdown-menu" (click)="$event.stopPropagation()">
+                          <div class="insights-menu-items">
+                            <div class="insights-menu-item active" (click)="previewInsightCard('o2c')">
+                              <div class="insights-menu-content">
+                                <div class="insights-menu-icon-eye"></div>
+                                <span class="insights-menu-text">Preview</span>
+                              </div>
+                            </div>
+                            <div class="insights-menu-item" (click)="downloadInsightCard('o2c')">
+                              <div class="insights-menu-content">
+                                <div class="insights-menu-icon-download"></div>
+                                <span class="insights-menu-text">Download</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                  <div class="insights-card-description">
+                    Identify revenue risks, assess credit exposure, and monitor customer payment trends. Ensure compliance and improve cash flow visibility with structured insights.
+                  </div>
+                </div>
+              </div>
+ 
+              <!-- P2P Insights Card -->
+              <div class="insights-card">
+                <div class="insights-card-image">
+                  <div class="card-background-image"></div>
+                </div>
+                <div class="insights-card-content">
+                  <div class="insights-card-header">
+                    <div class="insights-card-info">
+                      <div class="insights-module-label">Module: P2P</div>
+                      <div class="insights-card-title">P2P_Insights.ppt</div>
+                    </div>
+                    <div class="insights-menu-container">
+                      <button class="insights-menu-btn" (click)="toggleInsightsMenu($event, 'p2p')">
+                        <span class="insights-menu-icon"></span>
+                      </button>
+                      @if (activeInsightsMenu === 'p2p') {
+                        <div class="insights-dropdown-menu" (click)="$event.stopPropagation()">
+                          <div class="insights-menu-items">
+                            <div class="insights-menu-item active" (click)="previewInsightCard('p2p')">
+                              <div class="insights-menu-content">
+                                <div class="insights-menu-icon-eye"></div>
+                                <span class="insights-menu-text">Preview</span>
+                              </div>
+                            </div>
+                            <div class="insights-menu-item" (click)="downloadInsightCard('p2p')">
+                              <div class="insights-menu-content">
+                                <div class="insights-menu-icon-download"></div>
+                                <span class="insights-menu-text">Download</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                  <div class="insights-card-description">
+                    Identify revenue risks, assess credit exposure, and monitor customer payment trends. Ensure compliance and improve cash flow visibility with structured insights.
+                  </div>
+                </div>
+              </div>
+ 
+              <!-- T&E Insights Card -->
+              <div class="insights-card">
+                <div class="insights-card-image">
+                  <div class="card-background-image"></div>
+                </div>
+                <div class="insights-card-content">
+                  <div class="insights-card-header">
+                    <div class="insights-card-info">
+                      <div class="insights-module-label">Module: T&E</div>
+                      <div class="insights-card-title">T&E_Insights.ppt</div>
+                    </div>
+                    <div class="insights-menu-container">
+                      <button class="insights-menu-btn" (click)="toggleInsightsMenu($event, 'te')">
+                        <span class="insights-menu-icon"></span>
+                      </button>
+                      @if (activeInsightsMenu === 'te') {
+                        <div class="insights-dropdown-menu" (click)="$event.stopPropagation()">
+                          <div class="insights-menu-items">
+                            <div class="insights-menu-item active" (click)="previewInsightCard('te')">
+                              <div class="insights-menu-content">
+                                <div class="insights-menu-icon-eye"></div>
+                                <span class="insights-menu-text">Preview</span>
+                              </div>
+                            </div>
+                            <div class="insights-menu-item" (click)="downloadInsightCard('te')">
+                              <div class="insights-menu-content">
+                                <div class="insights-menu-icon-download"></div>
+                                <span class="insights-menu-text">Download</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                  <div class="insights-card-description">
+                    Identify revenue risks, assess credit exposure, and monitor customer payment trends. Ensure compliance and improve cash flow visibility with structured insights.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+          </div>
+<!-- </div> -->
+

@@ -1,0 +1,780 @@
+<div class="insights-entity-trans-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="header-left">
+      <button class="back-button" (click)="goBack()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M10 4L6 8L10 12" stroke="#2951C6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <h1 class="header-title">Contract Compliance Audit</h1>
+    </div>
+    
+    <div class="header-center">
+      <div class="header-tabs">
+        <button class="tab-button">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <rect x="2" y="3" width="12" height="10" rx="2" stroke="#1C1C1C" stroke-width="1.5" fill="none"/>
+            <path d="M6 1V5M10 1V5" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        
+        <button class="tab-button">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2 8L8 2L14 8" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 7V13C3 13.5523 3.44772 14 4 14H12C12.5523 14 13 13.5523 13 13V7" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        
+        <button class="tab-button active">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 13L8 3L13 13" stroke="#2951C6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5.5 10H10.5" stroke="#2951C6" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span>Insights</span>
+        </button>
+        
+        <button class="tab-button">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="3" stroke="#1C1C1C" stroke-width="1.5" fill="none"/>
+            <path d="M8 1V3M8 13V15M15 8H13M3 8H1M12.95 12.95L11.54 11.54M4.46 4.46L3.05 3.05M12.95 3.05L11.54 4.46M4.46 11.54L3.05 12.95" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <div class="header-right">
+      <!-- Empty space for balance -->
+    </div>
+  </div>
+
+  <!-- Insights Section -->
+  <div class="insights-section">
+    <div class="insights-header">
+      <h2 class="insights-title">Insights</h2>
+      <p class="insights-description">View test results, anomalies, and analyse data trends for deeper insights.</p>
+    </div>
+    
+    <div class="insights-controls">
+      <div class="radio-buttons">
+        <label class="radio-option">
+          <input type="radio" name="insight-type" value="O2C" [(ngModel)]="selectedInsightType">
+          <span class="radio-icon o2c"></span>
+          <span class="radio-label">O2C</span>
+        </label>
+        
+        <label class="radio-option">
+          <input type="radio" name="insight-type" value="P2P" [(ngModel)]="selectedInsightType">
+          <span class="radio-icon p2p"></span>
+          <span class="radio-label">P2P</span>
+        </label>
+        
+        <label class="radio-option">
+          <input type="radio" name="insight-type" value="T&E" [(ngModel)]="selectedInsightType">
+          <span class="radio-icon te"></span>
+          <span class="radio-label">T&E</span>
+        </label>
+      </div>
+      
+      <div class="dropdown-container">
+        <select class="dropdown" [(ngModel)]="selectedInvoiceType">
+          <option value="invoices">Invoices</option>
+          <option value="receipts">Receipts</option>
+          <option value="contracts">Contracts</option>
+        </select>
+      </div>
+      
+      <button class="report-button">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M10 1V13M10 13L7 10M10 13L13 10" stroke="#FCFCFC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 17H16" stroke="#FCFCFC" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span>Report</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <!-- Left Sidebar -->
+    <div class="visualizations-sidebar">
+      <div class="sidebar-header" (click)="navigateToVisualizations()">
+        <div class="header-content">
+          <span class="header-title">Visualisations</span>
+        </div>
+        <button class="expand-button">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M4 6L8 10L12 6" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="divider"></div>
+      
+      <div class="sidebar-menu">
+        <div class="menu-item active" [class.active]="activeView === 'entity-view'" (click)="switchToEntityView()">
+          <div class="menu-indicator"></div>
+          <span class="menu-text">Entity View</span>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="menu-item" [class.active]="activeView === 'transaction-view'" (click)="switchToTransactionView()">
+          <span class="menu-text">Transaction View</span>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="menu-item" (click)="navigateToScenarioManager()">
+          <span class="menu-text">Scenario Manager</span>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="menu-item" (click)="navigateToSimilarTransactions()">
+          <span class="menu-text">Similar Transaction</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Information Toast - positioned next to left sidebar -->
+    <div class="info-toast" *ngIf="activeView === 'entity-view'">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <circle cx="10" cy="10" r="8" stroke="#8CAAFE" stroke-width="1.5" fill="none"/>
+        <path d="M10 6V10M10 14H10.01" stroke="#8CAAFE" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span class="toast-message">Select an one or more entities and click 'Transaction Details' to review all transactions associated with them.</span>
+      <button class="toast-close">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M12 4L4 12M4 4L12 12" stroke="#3538CD" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Right Content Area -->
+    <div class="right-content" [ngStyle]="{'padding-top': activeView === 'entity-view' ? '60px' : '0px '}">
+      <!-- Tabs Section - Only show for entity view -->
+      <div class="content-tabs" *ngIf="activeView === 'entity-view'">
+        <button 
+          class="content-tab" 
+          [class.active]="activeTab === 'entity-profiling'"
+          [class.disabled]="activeTab === 'transaction-details'"
+          (click)="switchToEntityProfiling()">
+          Entity Profiling
+        </button>
+        <button 
+          class="content-tab" 
+          [class.active]="activeTab === 'transaction-details'"
+          [class.disabled]="activeTab === 'entity-profiling'"
+          [attr.disabled]="activeTab === 'entity-profiling' ? true : null">
+          Transaction Details
+        </button>
+      </div>
+
+      <!-- Search and Filters - Only show for entity view -->
+      <div class="search-filters" >
+        <div class="search-bar">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="9" cy="9" r="6" stroke="#8597A4" stroke-width="1.5" fill="none"/>
+            <path d="M15 15L19 19" stroke="#8597A4" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <input type="text" placeholder="Search Entities" [(ngModel)]="searchTerm">
+        </div>
+        
+        <select class="risk-dropdown" [(ngModel)]="selectedRiskCategory">
+          <option value="">Select Risk Category</option>
+          <option value="high">High Risk</option>
+          <option value="medium">Medium Risk</option>
+          <option value="low">Low Risk</option>
+        </select>
+        
+        <button class="columns-button">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="3" y="3" width="4" height="14" stroke="#082D78" stroke-width="1.5" fill="none"/>
+            <rect x="9" y="3" width="4" height="14" stroke="#082D78" stroke-width="1.5" fill="none"/>
+            <rect x="15" y="3" width="2" height="14" stroke="#082D78" stroke-width="1.5" fill="none"/>
+          </svg>
+          <span>Columns</span>
+        </button>
+      </div>
+
+      <!-- Data Tables with Unified Structure -->
+      <div class="table-wrapper">
+        <!-- Transaction View Table -->
+        <ng-container *ngIf="activeView === 'transaction-view'; else entityProfilingTable">
+          <div class="data-table-container">
+            <div class="table-scroll-container" style="max-height: 25em; min-height: 2rem;">
+              <table class="data-table unified-table transaction-view-table">
+                <thead class="table-header">
+                  <tr>
+                    <th class="col-checkbox">
+                      <input type="checkbox" class="select-all" (change)="toggleSelectAllTransactionView($event)">
+                    </th>
+                    <th class="col-system-invoice sortable">
+                      <div class="header-content">
+                        <span>System Invoice</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-vendor-name sortable">
+                      <div class="header-content">
+                        <span>Vendor Name</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-invoice-type sortable">
+                      <div class="header-content">
+                        <span>Invoice Type</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-invoice-description sortable">
+                      <div class="header-content">
+                        <span>Invoice Description</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-posting-date sortable">
+                      <div class="header-content">
+                        <span>Posting Date</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-gl-account sortable">
+                      <div class="header-content">
+                        <span>GL Account Description</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-physical-invoice sortable">
+                      <div class="header-content">
+                        <span>Physical Invoice</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-tag sortable">
+                      <div class="header-content">
+                        <span>Tag</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-alerts sortable">
+                      <div class="header-content">
+                        <span>Alerts</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-ocr sortable">
+                      <div class="header-content">
+                        <span>OCR</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-actions">
+                      <div class="header-content">
+                        <span></span>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="table-body">
+                  <tr *ngFor="let tx of transactionViewData; let i = index" [class.selected]="tx.selected">
+                    <td class="col-checkbox">
+                      <input type="checkbox" [(ngModel)]="tx.selected" (change)="onTransactionViewSelectionChange()">
+                    </td>
+                    <td class="col-system-invoice">{{ tx.systemInvoice }}</td>
+                    <td class="col-vendor-name">
+                      <div class="vendor-name-text">{{ tx.vendorName }}</div>
+                    </td>
+                    <td class="col-invoice-type">{{ tx.invoiceType }}</td>
+                    <td class="col-invoice-description">
+                      <div class="description-text">{{ tx.invoiceDescription }}</div>
+                    </td>
+                    <td class="col-posting-date">{{ tx.postingDate }}</td>
+                    <td class="col-gl-account">{{ tx.glAccountDescription }}</td>
+                    <td class="col-physical-invoice">{{ tx.physicalInvoice }}</td>
+                    <td class="col-tag">
+                      <span *ngIf="tx.tag" class="tag" [ngClass]="tx.tagClass">{{ tx.tag }}</span>
+                    </td>
+                    <td class="col-alerts">
+                      <div class="alert-info" [class.inactive]="tx.alerts === 0">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M8 2 L14 14 H2 Z" [attr.stroke]="tx.alerts > 0 ? '#B20000' : '#8597A4'" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+                          <path d="M8 6 V9" [attr.stroke]="tx.alerts > 0 ? '#B20000' : '#8597A4'" stroke-width="1.5" stroke-linecap="round"/>
+                          <circle cx="8" cy="11.5" r="0.75" [attr.fill]="tx.alerts > 0 ? '#B20000' : '#8597A4'"/>
+                        </svg>
+                        <span>{{ tx.alerts }}</span>
+                      </div>
+                    </td>
+                    <td class="col-ocr">
+                      <svg *ngIf="tx.hasOcr" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g transform="rotate(-90 12 12)">
+                          <path d="M21.44 11.05l-7.07 7.07a5 5 0 01-7.07-7.07l8.49-8.49a3.5 3.5 0 114.95 4.95l-9.19 9.19a2 2 0 11-2.83-2.83l8.49-8.49" stroke="#082D78" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </g>
+                      </svg>
+                    </td>
+                    <td class="col-actions">
+                      <button class="action-menu" (click)="showActionMenu($event, i)">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <circle cx="10" cy="5" r="1" fill="#1C1C1C"/>
+                          <circle cx="10" cy="10" r="1" fill="#1C1C1C"/>
+                          <circle cx="10" cy="15" r="1" fill="#1C1C1C"/>
+                        </svg>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Entity Profiling Table -->
+        <ng-template #entityProfilingTable>
+          <ng-container *ngIf="activeTab === 'entity-profiling'; else transactionDetailsTable">
+          <div class="data-table-container">
+            <div class="table-scroll-container">
+              <table class="data-table unified-table">
+                <thead class="table-header">
+                  <tr>
+                    <th class="col-checkbox">
+                      <input type="checkbox" class="select-all" (change)="toggleSelectAll($event)">
+                    </th>
+                    <th class="col-vendor-id sortable">
+                      <div class="header-content">
+                        <span>Vendor ID</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-vendor-name sortable">
+                      <div class="header-content">
+                        <span>Vendor Name</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-vendor-country sortable">
+                      <div class="header-content">
+                        <span>Vendor Country</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-risk-ranking sortable">
+                      <div class="header-content">
+                        <span>Risk Ranking</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-risk-score sortable">
+                      <div class="header-content">
+                        <span>Risk Score</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-tag sortable">
+                      <div class="header-content">
+                        <span>Tag</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-alerts sortable">
+                      <div class="header-content">
+                        <span>Alerts</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-actions">
+                      <div class="header-content">
+                        <span></span>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="table-body">
+                  <tr *ngFor="let vendor of vendors; let i = index" [class.selected]="vendor.selected">
+                    <td class="col-checkbox">
+                      <input type="checkbox" [(ngModel)]="vendor.selected" (change)="onSelectionChange()">
+                    </td>
+                    <td class="col-vendor-id">{{ vendor.id }}</td>
+                    <td class="col-vendor-name">
+                      <div class="vendor-name-text">{{ vendor.name }}</div>
+                    </td>
+                    <td class="col-vendor-country">{{ vendor.country }}</td>
+                    <td class="col-risk-ranking">{{ vendor.riskRanking }}</td>
+                    <td class="col-risk-score">{{ vendor.riskScore }}</td>
+                    <td class="col-tag">
+                      <span *ngIf="vendor.tag" class="tag" [ngClass]="vendor.tagClass">{{ vendor.tag }}</span>
+                    </td>
+                    <td class="col-alerts">
+                      <div class="alert-info" [class.inactive]="vendor.alerts === 0">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M8 1L15 14H1L8 1Z" [attr.stroke]="vendor.alerts > 0 ? '#B20000' : '#8597A4'" stroke-width="1.5" [attr.fill]="vendor.alerts > 0 ? '#B20000' : '#8597A4'"/>
+                          <path *ngIf="vendor.alerts > 0" d="M8 6V9M8 12H8.01" stroke="#FFF" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        <span>{{ vendor.alerts }}</span>
+                      </div>
+                    </td>
+                    <td class="col-actions">
+                      <button class="action-menu" (click)="showActionMenu($event, i)">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <circle cx="10" cy="5" r="1" fill="#1C1C1C"/>
+                          <circle cx="10" cy="10" r="1" fill="#1C1C1C"/>
+                          <circle cx="10" cy="15" r="1" fill="#1C1C1C"/>
+                        </svg>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </ng-container>
+        </ng-template>
+
+        <ng-template #transactionDetailsTable>
+          <div class="data-table-container">
+            <div class="table-scroll-container">
+              <table class="data-table unified-table">
+                <thead class="table-header">
+                  <tr>
+                    <th class="col-checkbox">
+                      <input type="checkbox" class="select-all" (change)="toggleSelectAllTransactions($event)">
+                    </th>
+                    <th class="col-system-invoice sortable">
+                      <div class="header-content">
+                        <span>System Invoice</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-vendor-name sortable">
+                      <div class="header-content">
+                        <span>Vendor Name</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-invoice-type sortable">
+                      <div class="header-content">
+                        <span>Invoice Type</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-invoice-description sortable">
+                      <div class="header-content">
+                        <span>Invoice Description</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-tag sortable">
+                      <div class="header-content">
+                        <span>Tag</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-alerts sortable">
+                      <div class="header-content">
+                        <span>Alerts</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-ocr sortable">
+                      <div class="header-content">
+                        <span>OCR</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </th>
+                    <th class="col-actions">
+                      <div class="header-content">
+                        <span></span>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="table-body">
+                  <tr *ngFor="let tx of transactions; let i = index" [class.selected]="tx.selected">
+                    <td class="col-checkbox">
+                      <input type="checkbox" [(ngModel)]="tx.selected" (change)="onTransactionSelectionChange()">
+                    </td>
+                    <td class="col-system-invoice">{{ tx.systemInvoice }}</td>
+                    <td class="col-vendor-name">
+                      <div class="vendor-name-text">{{ tx.vendorName }}</div>
+                    </td>
+                    <td class="col-invoice-type">{{ tx.invoiceType }}</td>
+                    <td class="col-invoice-description">
+                      <div class="description-text">{{ tx.invoiceDescription }}</div>
+                    </td>
+                    <td class="col-tag">
+                      <span *ngIf="tx.tag" class="tag" [ngClass]="tx.tagClass">{{ tx.tag }}</span>
+                    </td>
+                    <td class="col-alerts">
+                      <div class="alert-info" [class.inactive]="tx.alerts === 0">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M8 2 L14 14 H2 Z" [attr.stroke]="tx.alerts > 0 ? '#B20000' : '#8597A4'" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+                          <path d="M8 6 V9" [attr.stroke]="tx.alerts > 0 ? '#B20000' : '#8597A4'" stroke-width="1.5" stroke-linecap="round"/>
+                          <circle cx="8" cy="11.5" r="0.75" [attr.fill]="tx.alerts > 0 ? '#B20000' : '#8597A4'"/>
+                        </svg>
+                        <span>{{ tx.alerts }}</span>
+                      </div>
+                    </td>
+                    <td class="col-ocr">
+                      <svg *ngIf="tx.hasOcr" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g transform="rotate(-90 12 12)">
+                          <path d="M21.44 11.05l-7.07 7.07a5 5 0 01-7.07-7.07l8.49-8.49a3.5 3.5 0 114.95 4.95l-9.19 9.19a2 2 0 11-2.83-2.83l8.49-8.49" stroke="#082D78" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </g>
+                      </svg>
+                    </td>
+                    <td class="col-actions">
+                      <button class="action-menu" (click)="showActionMenu($event, i)">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <circle cx="10" cy="5" r="1" fill="#1C1C1C"/>
+                          <circle cx="10" cy="10" r="1" fill="#1C1C1C"/>
+                          <circle cx="10" cy="15" r="1" fill="#1C1C1C"/>
+                        </svg>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Pagination - Row Layout at Bottom -->
+      <div class="pagination-container">
+        <div class="pagination-left">
+          <div class="pagination-info">
+            <span>Showing 1-15 of 2,03,42,069</span>
+          </div>
+        </div>
+        
+        <div class="pagination-center">
+          <div class="pagination-controls">
+            <button class="page-nav" [disabled]="currentPage === 1">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M10 4L6 8L10 12" stroke="#65717D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            
+            <button class="page-number active">1</button>
+            <button class="page-number">2</button>
+            <button class="page-number">3</button>
+            <span class="page-ellipsis">...</span>
+            <button class="page-number">20</button>
+            
+            <button class="page-nav">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M6 4L10 8L6 12" stroke="#65717D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div class="pagination-right">
+          <div class="items-per-page">
+            <span>Items per page</span>
+            <select [(ngModel)]="itemsPerPage">
+              <option value="15">15</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unified Selection Popup for Both Tabs -->
+  <div class="selection-popup compact" *ngIf="(hasSelectedRecords() && activeTab === 'entity-profiling') || (hasSelectedTransactions() && activeTab === 'transaction-details') || (hasSelectedTransactionViewRecords() && activeView === 'transaction-view')">
+    <div class="popup-header">
+      <div class="popup-title">
+        <button class="popup-close" (click)="getCloseSelectionMethod()()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M12 4L4 12M4 4L12 12" stroke="#FCFCFC" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <span class="popup-title-text">
+          {{ getSelectionPopupTitle() }} 
+          ({{ getSelectionPopupCount() }})
+        </span>
+      </div>
+    </div>
+    
+    <div class="popup-content">
+      <div class="popup-left">
+        <div class="add-tag-section">
+          <span class="add-tag-label">Add Tag:</span>
+          <div class="tag-options">
+            <label class="tag-option">
+              <input type="radio" name="unifiedTag" value="prioritise" [(ngModel)]="selectedTag">
+              <span class="radio-button"></span>
+              <span class="tag-text">Prioritise Review</span>
+            </label>
+            
+            <label class="tag-option">
+              <input type="radio" name="unifiedTag" value="flag" [(ngModel)]="selectedTag">
+              <span class="radio-button"></span>
+              <span class="tag-text">Flag For Review</span>
+            </label>
+            
+            <label class="tag-option">
+              <input type="radio" name="unifiedTag" value="downgrade" [(ngModel)]="selectedTag">
+              <span class="radio-button"></span>
+              <span class="tag-text">Downgrade</span>
+            </label>
+            
+            <button class="apply-button" (click)="getApplyTagMethod()">Apply</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="popup-separator"></div>
+      
+      <div class="popup-right">
+        <div class="action-buttons">
+          <!-- Show View Transaction Details only for entity profiling -->
+          <button 
+            *ngIf="activeTab === 'entity-profiling'" 
+            class="view-details-button" 
+            (click)="viewTransactionDetails()">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <rect x="2" y="3" width="16" height="13" rx="2" stroke="#082D78" stroke-width="1.5" fill="none"/>
+              <path d="M2 8H18" stroke="#082D78" stroke-width="1.5"/>
+              <path d="M6 12H14" stroke="#082D78" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span>View Transaction Details</span>
+          </button>
+          
+          <button class="new-alert-button" (click)="getCreateAlertMethod()()">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 2L18 17H2L10 2Z" stroke="#2844A5" stroke-width="1.5"/>
+              <path d="M10 7V11M10 14H10.01" stroke="#2844A5" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span>New Alert</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Menu Popup -->
+  <div 
+    class="action-popup" 
+    *ngIf="showActionPopup"
+    [style.top.px]="actionPopupPosition.top"
+    [style.left.px]="actionPopupPosition.left"
+    (click)="$event.stopPropagation()">
+    
+    <div class="popup-content">
+      <div class="popup-item" (click)="onChangeTag(selectedRowIndex)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 8L8 2L14 8" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 7V13C3 13.5523 3.44772 14 4 14H12C12.5523 14 13 13.5523 13 13V7" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Change Tag</span>
+      </div>
+      
+      <div class="popup-item" (click)="onViewAlerts(selectedRowIndex)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8 1L15 14H1L8 1Z" stroke="#1C1C1C" stroke-width="1.5" fill="none"/>
+          <path d="M8 6V9M8 12H8.01" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span>View Alerts</span>
+      </div>
+      
+      <div class="popup-item" (click)="onCreateAlert(selectedRowIndex)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8 1V15M1 8H15" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span>Create Alert</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Tag Popup Modal with Dark Overlay -->
+  <div class="modal-overlay" *ngIf="showChangeTagPopup" (click)="closeChangeTagPopup()">
+    <div class="change-tag-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">Change Tag</h2>
+      </div>
+      
+      <div class="modal-divider"></div>
+      
+      <div class="tag-options">
+        <label class="tag-option">
+          <input type="radio" name="tagOption" value="prioritise" [ngModel]="selectedTagOption" (ngModelChange)="selectedTagOption = $event">
+          <span class="radio-button"></span>
+          <span class="option-label">Prioritise Review</span>
+        </label>
+        
+        <label class="tag-option">
+          <input type="radio" name="tagOption" value="flag" [ngModel]="selectedTagOption" (ngModelChange)="selectedTagOption = $event">
+          <span class="radio-button"></span>
+          <span class="option-label">Flag for Review</span>
+        </label>
+        
+        <label class="tag-option">
+          <input type="radio" name="tagOption" value="downgrade" [ngModel]="selectedTagOption" (ngModelChange)="selectedTagOption = $event">
+          <span class="radio-button"></span>
+          <span class="option-label">Downgrade</span>
+        </label>
+        
+        <label class="tag-option">
+          <input type="radio" name="tagOption" value="none" [ngModel]="selectedTagOption" (ngModelChange)="selectedTagOption = $event">
+          <span class="radio-button"></span>
+          <span class="option-label">No tag</span>
+        </label>
+      </div>
+      
+      <div class="modal-actions">
+        <button class="cancel-button" (click)="closeChangeTagPopup()">Cancel</button>
+        <button class="save-button" [disabled]="!selectedTagOption" (click)="saveTagChange()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

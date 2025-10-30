@@ -1,0 +1,136 @@
+
+<div class="table-container">
+  <div class="table-header">
+    <h2 class="table-title">Transaction Risk Index</h2>
+    <div class="table-actions">
+      <div class="search-container">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Search Columns"
+          [(ngModel)]="searchText">
+      </div>
+      <button class="action-btn columns-btn">
+        <mat-icon>view_column</mat-icon>
+        <span>Columns</span>
+      </button>
+      <button class="action-btn icon-btn" (click)="toggleChart()">
+        <mat-icon>{{ showChart ? 'table_chart' : 'scatter_plot' }}</mat-icon>
+      </button>
+      <button class="action-btn icon-btn">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="content-wrapper">
+    <!-- Table View -->
+    <div class="table-wrapper" [class.hidden]="showChart">
+      <table mat-table [dataSource]="filteredTransactions" class="transaction-table">
+        
+        <!-- Transaction Line No Column -->
+        <ng-container matColumnDef="lineNo">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">
+            <div class="header-content">
+              <span>Transaction Line No</span>
+              <mat-icon class="sort-icon">unfold_more</mat-icon>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element" class="data-cell">{{element.lineNo}}</td>
+        </ng-container>
+
+        <!-- Vendor ID Column -->
+        <ng-container matColumnDef="vendorId">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">
+            <div class="header-content">
+              <span>Vendor ID</span>
+              <mat-icon class="sort-icon">unfold_more</mat-icon>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element" class="data-cell">{{element.vendorId}}</td>
+        </ng-container>
+
+        <!-- Vendor Name Column -->
+        <ng-container matColumnDef="vendorName">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">
+            <div class="header-content">
+              <span>Vendor Name</span>
+              <mat-icon class="sort-icon">unfold_more</mat-icon>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element" class="data-cell">{{element.vendorName}}</td>
+        </ng-container>
+
+        <!-- Risk Ranking Column -->
+        <ng-container matColumnDef="riskRanking">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">
+            <div class="header-content">
+              <span>Risk Ranking</span>
+              <mat-icon class="sort-icon">unfold_more</mat-icon>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element" class="data-cell">{{element.riskRanking}}</td>
+        </ng-container>
+
+        <!-- Risk Score Column -->
+        <ng-container matColumnDef="riskScore">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">
+            <div class="header-content">
+              <span>Risk Score</span>
+              <mat-icon class="sort-icon">unfold_more</mat-icon>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element" class="data-cell">{{element.riskScore}}</td>
+        </ng-container>
+
+        <!-- P2PCIPY111 Column -->
+        <ng-container matColumnDef="p2pcipy111">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">
+            <div class="header-content">
+              <span>P2PCIPY111 - Payments made t...</span>
+              <mat-icon class="sort-icon">unfold_more</mat-icon>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element" class="data-cell">{{element.p2pcipy111}}</td>
+        </ng-container>
+
+        <!-- P2PCIPY112 Column -->
+        <ng-container matColumnDef="p2pcipy112">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">
+            <div class="header-content">
+              <span>P2PCIPY112 - Payments made t...</span>
+              <mat-icon class="sort-icon">unfold_more</mat-icon>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element" class="data-cell">{{element.p2pcipy112}}</td>
+        </ng-container>
+
+        <!-- P2PCIPY113 Column -->
+        <ng-container matColumnDef="p2pcipy113">
+          <th mat-header-cell *matHeaderCellDef class="header-cell">
+            <div class="header-content">
+              <span>P2PCIPY113 - Payments made t...</span>
+              <mat-icon class="sort-icon">unfold_more</mat-icon>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element" class="data-cell">{{element.p2pcipy113}}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row 
+            *matRowDef="let row; columns: displayedColumns;" 
+            class="table-row"
+            [class.selected]="selectedTransaction?.lineNo === row.lineNo"
+            (click)="onRowClick(row)"></tr>
+      </table>
+    </div>
+
+    <!-- Chart View -->
+    <div class="chart-wrapper" [class.hidden]="!showChart">
+      <div class="chart-container">
+        <canvas #chartCanvas></canvas>
+      </div>
+    </div>
+  </div>
+</div>

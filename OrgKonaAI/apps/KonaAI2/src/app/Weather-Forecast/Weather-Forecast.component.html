@@ -1,0 +1,113 @@
+ <div class="api-tester">
+      <div class="header">
+        <h1>🌤️ Weather Forecast API Tester</h1>
+        <p>Test various weather forecast APIs and monitor their performance</p>
+      </div>
+
+      <div class="test-controls">
+       
+     <div class="api-buttons">
+          
+          <button 
+            class="test-btn secondary" 
+            (click)="testLocalAPI()"
+            [disabled]="isLoading"
+            [class.loading]="currentTest === 'local'">
+            <span class="btn-icon">🏠</span>
+            Test Local API
+            <div *ngIf="currentTest === 'local'" class="loading-spinner"></div>
+          </button>
+
+     
+          <button 
+            class="test-btn danger" 
+            (click)="clearResults()"
+            [disabled]="isLoading">
+            <span class="btn-icon">🗑️</span>
+            Clear Results
+          </button>
+        </div>
+      </div>
+
+      <div class="results-section" *ngIf="testResults.length > 0">
+        <h2>Test Results</h2>
+        
+        <div class="results-grid">
+          <div 
+            *ngFor="let result of testResults; trackBy: trackByIndex" 
+            class="result-card"
+            [ngClass]="result.status">
+            
+            <div class="result-header">
+              <div class="result-title">
+                <span class="status-icon">
+                  {{ result.status === 'success' ? '✅' : '❌' }}
+                </span>
+                <h3>{{ result.apiName }}</h3>
+              </div>
+              <div class="result-meta">
+                <span class="timestamp">{{ result.timestamp | date:'HH:mm:ss' }}</span>
+                <span class="response-time" *ngIf="result.result.responseTime">
+                  {{ result.result.responseTime }}ms
+                </span>
+                <span class="status-code" *ngIf="result.result.statusCode"
+                      [ngClass]="getStatusCodeClass(result.result.statusCode)">
+                  {{ result.result.statusCode }}
+                </span>
+              </div>
+            </div>
+
+            <div class="result-content">
+              <!-- Success Result -->
+              <div *ngIf="result.status === 'success' && result.result.data" class="success-content">
+                <div class="location-info">
+                  <h4>📍 {{ result.result.data.city }}, {{ result.result.data.country }}</h4>
+                </div>
+                
+                <div class="forecasts">
+                  <div 
+                    *ngFor="let forecast of result.result.data.forecasts" 
+                    class="forecast-item">
+                    <div class="forecast-date">
+                      {{ forecast.date | date:'MMM dd, yyyy' }}
+                    </div>
+                    <div class="forecast-temp">
+                      <span class="temp-c">{{ forecast.temperatureC }}°C</span>
+                      <span class="temp-f">{{ forecast.temperatureF }}°F</span>
+                    </div>
+                    <div class="forecast-summary">{{ forecast.summary }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Error Result -->
+              <div *ngIf="result.status === 'error'" class="error-content">
+                <div class="error-message">
+                  <strong>Error:</strong> {{ result.result.error }}
+                </div>
+                <div class="error-suggestions" *ngIf="result.result.error && getErrorSuggestions(result.result.error).length > 0">
+                  <strong>Suggestions:</strong>
+                  <ul>
+                    <li *ngFor="let suggestion of getErrorSuggestions(result.result.error)">
+                      {{ suggestion }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="api-info" *ngIf="testResults.length === 0">
+        <div class="info-card">
+          <h3>🚀 Get Started</h3>
+          <p>Test different weather forecast APIs to check their availability and performance:</p>
+          <ul>
+            <li><strong>OpenWeatherMap:</strong> Requires an API key from openweathermap.org</li>
+            <li><strong>Local API:</strong> Tests your local development server</li>
+            <li><strong>Mock API:</strong> Tests with mock data for demonstration</li>
+          </ul>
+        </div>
+      </div>
+    </div>

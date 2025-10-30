@@ -1,0 +1,148 @@
+<div class="container">
+  <!-- Header -->
+  <div class="header-block">
+    <div>
+        <h2>Workflow Setup</h2>
+        <p>Set criteria and adjust parameters to configure your test for accurate results.</p>
+    </div>
+   </div>
+    <!-- Tabs -->
+    <div style="display: flex;justify-content: space-between;">
+      <div class="tabs">
+        <button class="tab" [class.active]="activeTab === 'O2C'">O2C (Order to cash)</button>
+        <button class="tab" [class.active]="activeTab === 'P2P'">P2P (Procure to pay)</button>
+        <button class="tab" [class.active]="activeTab === 'T&E'">T&E (Travel & expense)</button>
+      </div>
+      <button class="default-btn">
+        <span class="icon"><i class="bi bi-arrow-counterclockwise"></i></span>
+        Set to default
+      </button>
+    </div>
+  
+
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <ul class="sidebar-menu">
+        <li *ngFor="let category of categories" class="sidebar-item" [class.active]="currentCategory === category"
+          [class.has-data]="hasData(category)" (click)="selectCategory(category)">
+          <span class="category-text">{{ category }}</span>
+          <i *ngIf="currentCategory === category" class="bi bi-chevron-right"></i>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="table-container" *ngIf="getCurrentRules().length > 0; else noDataTemplate">
+        <table class="table-main">
+          <thead>
+            <tr>
+              <th>Test ID</th>
+              <th>Test Description</th>
+              <th>Status</th>
+              <th>Risk Score</th>
+              <th>Adjust Parameters</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let rule of getCurrentRules()" [class.enabled]="rule.status">
+              <td class="test-id">{{ rule.id }}</td>
+              <td class="description">{{ rule.description }}</td>
+              <td class="status">
+                <label class="toggle-switch">
+                  <input type="checkbox" [(ngModel)]="rule.status" (change)="toggleRule(rule.id)" />
+                  <span class="slider"></span>
+                </label>
+              </td>
+              <td class="risk-score">
+                <div class="score-container">
+                  <input type="number" class="score-input" [(ngModel)]="rule.riskScore" [disabled]="!rule.status"
+                    (change)="onRiskScoreChange(rule)" min="1" max="10" />
+
+                  <div class="score-controls">
+                    <button class="score-btn up" (click)="adjustRiskScore(rule.id, 1)"
+                      [disabled]="!rule.status || rule.riskScore >= 10">
+                      <i class="bi bi-chevron-compact-up"></i>
+                    </button>
+                    <button class="score-btn down" (click)="adjustRiskScore(rule.id, -1)"
+                      [disabled]="!rule.status || rule.riskScore <= 1">
+                      <i class="bi bi-chevron-compact-down"></i>
+                    </button>
+                  </div>
+                </div>
+              </td>
+
+              <td class="parameters">
+                <button class="param-btn" (click)="openParameters(rule.id)" [disabled]="!rule.status"
+                  title="Configure parameters">
+                  <i class="bi bi-arrow-up-right"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- No Data Template -->
+      <ng-template #noDataTemplate>
+        <div class="no-data">
+          <div class="no-data-icon">📊</div>
+          <h4>No test rules available</h4>
+          <p>Test rules for "{{ currentCategory }}" will be configured soon.</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ Modal Popup placed OUTSIDE -->
+<!-- Modal Popup -->
+<div class="modal-backdrop" *ngIf="showParametersPopup">
+  <div class="modal-container">
+    <h3 style="margin: 10px; border-bottom: 1px solid #ccc; padding-bottom: 10px;color: #0E0E0E;">Adjust Parameters</h3>
+    <p style="padding: 5px 10px; font-size: 12px; color: #344151;">Test ID: <strong>{{ selectedRuleId }}</strong></p>
+
+    <!-- Dynamic Conditions -->
+    <div *ngFor="let condition of conditions; let i = index" class="condition-row">
+
+      <!-- First row shows "Where", others show "and" -->
+      <label *ngIf="i === 0">Where</label>
+      <select *ngIf="i > 0" [(ngModel)]="condition.logicalOperator" class="form-operator">
+        <option value="and">and</option>
+        <option value="or">or</option>
+      </select>
+
+      <!-- Column dropdown -->
+      <select [(ngModel)]="condition.column" class="form-select">
+        <option value="Vendor_ID">Vendor_ID</option>
+        <option value="Bank_Account_Number">Bank_Account_Number</option>
+        <option value="Column_ID">Column ID</option>
+      </select>
+
+      <!-- Operator dropdown -->
+      <select [(ngModel)]="condition.operator" class="form-select">
+        <option *ngFor="let op of operators" [value]="op.value">
+          {{ op.label }}
+        </option>
+      </select>
+
+      <!-- Value input -->
+      <input type="text" [(ngModel)]="condition.value" placeholder="Value" class="form-input" />
+
+      <!-- Delete -->
+      <button *ngIf="i > 0" (click)="deleteCondition(i)" class="delete-btn"><i class="bi bi-trash3"></i></button>
+    </div>
+
+    <!-- Add Condition -->
+    <div class="condition-row">
+      <button class="btn btn-clear" (click)="addCondition()"><i class="bi bi-plus-lg pr-4"></i> Add Condition</button>
+    </div>
+
+    <!-- Actions -->
+    <div class="modal-actions">
+      <button class="btn btn-clear" (click)="closeParameters()">Cancel</button>
+      <button class="btn btn-save" (click)="saveParameters()">Save</button>
+    </div>
+  </div>
+</div>

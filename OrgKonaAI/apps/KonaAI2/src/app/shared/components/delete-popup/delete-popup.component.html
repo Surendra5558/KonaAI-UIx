@@ -1,0 +1,42 @@
+<!-- Overlay -->
+<div class="popup-overlay" (click)="onOverlayClick($event)">
+  <!-- Modal Container -->
+  <div class="popup-modal" role="dialog" aria-labelledby="popup-title" aria-describedby="popup-message">
+    
+    <!-- Delete Icon with Background -->
+    <div class="icon-container">
+      <div class="icon-wrapper delete-icon">
+        <i class="bi bi-trash3"></i>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="popup-content">
+      <!-- Title -->
+      <h2 id="popup-title" class="popup-title">{{ data.title }}</h2>
+      
+      <!-- Message -->
+      <p id="popup-message" class="popup-message">
+        {{ data.message }} "{{ data.itemName }}"?
+      </p>
+    </div>
+
+    <!-- Actions -->
+    <div class="popup-actions">
+      <button 
+        type="button" 
+        class="btn btn-clear" 
+        (click)="onCancel()"
+        [attr.aria-label]="data.cancelText">
+        {{ data.cancelText }}
+      </button>
+      <button 
+        type="button" 
+        class="btn btn-save" 
+        (click)="onConfirm()"
+        [attr.aria-label]="data.confirmText">
+        {{ data.confirmText }}
+      </button>
+    </div>
+  </div>
+</div>

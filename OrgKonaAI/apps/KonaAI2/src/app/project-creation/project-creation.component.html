@@ -1,0 +1,172 @@
+<div class="project-creation-container topbar-header">
+  <h2>Create Project</h2>
+  <h4 (click)="closePopup()" class="closePopup" title="Close" tabindex="0">X</h4>
+</div>
+<div class="project-creation-content">
+  <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="project-form">
+
+    <!-- Project Name -->
+    <div class="form-row">
+      <div class="form-group half-width">
+        <label for="projectName" class="form-label required">
+          Project Name<span class="star-required">*</span>
+        </label>
+        <input type="text" id="projectName" formControlName="projectName" class="form-input"
+          placeholder="Give your project a relevant name">
+
+        <div class="error-message" *ngIf="f['projectName'].touched && f['projectName'].invalid">
+          <small *ngIf="f['projectName'].errors?.['required']">Project Name is required.</small>
+          <small *ngIf="f['projectName'].errors?.['maxlength']">Project Name cannot exceed 100 characters.</small>
+          <small *ngIf="f['projectName'].errors?.['leadingSpace']">Project Name cannot start with a space.</small>
+        </div>
+      </div>
+
+      <div class="form-group half-width">
+        <label for="auditResponsibility" class="form-label required">Audit Responsibility<span
+            class="star-required">*</span></label>
+        <select id="auditResponsibility" formControlName="auditResponsibility" class="form-select" tabindex="2">
+          <option value="" class="option-placeholder" selected disabled>Choose the line of defence</option>
+          <option *ngFor="let audit of auditResponsibility" [value]="audit.rowId">
+            {{audit.name}}
+            </option>
+        </select>
+      </div>
+
+      <div class="form-group half-width">
+        <label for="riskArea" class="form-label required">Risk Area<span class="star-required">*</span></label>
+        <select id="riskArea" formControlName="riskArea" class="form-select" tabindex="3">
+          <option value="" class="option-placeholder" selected disabled>Select the audit test focus area</option>
+          <option *ngFor="let area of riskAreas" [value]="area.rowId" >
+            {{area.name}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Project Scope -->
+    <div class="form-group">
+      <label for="projectScope" class="form-label">Project Scope</label>
+      <textarea id="projectScope" formControlName="projectScope" class="form-textarea" tabindex="4"
+        placeholder="Outline the purpose and boundaries of this audit" rows="3">
+      </textarea>
+    </div>
+
+    <!-- Date Range Row -->
+    <div class="form-row calender-width">
+      <!-- Start Date -->
+      <div class="form-group half-width">
+        <label for="startDate">Start Date<span class="star-required">*</span></label>
+        <input type="date" id="startDate" formControlName="startDate" class="form-input">
+
+        <div class="error-message" *ngIf="f['startDate'].touched && f['startDate'].invalid">
+          <small *ngIf="f['startDate'].errors?.['required']">Start Date is required.</small>
+          <small *ngIf="f['startDate'].errors?.['startDatePast']">Start Date cannot be in the past.</small>
+          <small *ngIf="f['startDate'].errors?.['startDateAfterEndDate']">Start Date must be before End Date.</small>
+        </div>
+      </div>
+
+      <!-- End Date -->
+      <div class="form-group half-width">
+        <label for="endDate">End Date<span class="star-required">*</span></label>
+        <input type="date" id="endDate" formControlName="endDate" class="form-input">
+
+        <div class="error-message" *ngIf="f['endDate'].touched && f['endDate'].invalid">
+          <small *ngIf="f['endDate'].errors?.['required']">End Date is required.</small>
+          <small *ngIf="f['endDate'].errors?.['endDateBeforeStartDate']">End Date must be after Start Date.</small>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- Select Module -->
+    <div class="form-group">
+      <label class="form-label">Select Module<span class="star-required">*</span></label>
+
+      <div class="modules-section" formGroupName="modules">
+        <!-- P2P Module -->
+        <div class="module-group">
+          <div class="module-header">
+            <input type="checkbox" 
+                  id="pci" 
+                  formControlName="pci"
+                  class="module-checkbox" 
+                  tabindex="7">
+            <label for="pci" class="module-label">P2P</label>
+          </div>
+        </div>
+
+        <!-- O2C Module -->
+        <div class="module-group">
+          <div class="module-header">
+            <input type="checkbox" 
+                  id="soc" 
+                  formControlName="soc"
+                  class="module-checkbox" 
+                  tabindex="8">
+            <label for="soc" class="module-label">O2C</label>
+          </div>
+        </div>
+
+        <!-- T&E Module -->
+        <div class="module-group">
+          <div class="module-header">
+            <input type="checkbox" 
+                  id="tms" 
+                  formControlName="tms"
+                  class="module-checkbox" 
+                  tabindex="9">
+            <label for="tms" class="module-label">T&E</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error message for module selection -->
+      <div class="error-message" *ngIf="projectForm.get('modules')?.touched && projectForm.get('modules')?.invalid">
+        <small *ngIf="projectForm.get('modules')?.errors?.['noModuleSelected']">Please select at least one module.</small>
+      </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="form-row">
+      <div class="form-group third-width">
+        <label for="country" class="form-label">Country</label>
+        <select id="country" formControlName="country" class="form-select" tabindex="10">
+          <option value="">Select Country</option>
+          <option *ngFor="let country of countries" [value]="country.value">
+            {{country.label}}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group third-width">
+        <label for="businessUnit" class="form-label">Business Unit</label>
+        <select id="businessUnit" formControlName="businessUnit" class="form-select" tabindex="11">
+          <option value="">Specify Business Unit</option>
+          <option *ngFor="let unit of businessUnits" [value]="unit.rowId">
+            {{unit.name}}
+            </option>
+        </select>
+      </div>
+
+      <div class="form-group third-width">
+        <label for="businessDepartment" class="form-label">Business Department</label>
+        <select id="businessDepartment" formControlName="businessDepartment" class="form-select" tabindex="12">
+          <option value="">Select Departments</option>
+          <option *ngFor="let dept of departments" [value]="dept.rowId">
+            {{dept.name}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="model-footer">
+      <button type="button" class="btn btn-clear" (click)="onClear()" tabindex="13">
+        Clear
+      </button>
+      <button type="submit" class="btn btn-save" [disabled]="!projectForm.valid" tabindex="14">
+        Save
+      </button>
+    </div>
+  </form>
+</div>

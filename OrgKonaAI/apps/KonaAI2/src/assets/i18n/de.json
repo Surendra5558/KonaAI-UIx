@@ -1,0 +1,16 @@
+{
+  "LOGIN_FORM": {
+    "KONA": "Kona",
+    "AI": "AI",
+    "LOGO_TITLE": "Bereit für deine nächste Audittask?",
+    "LOGO_SUB_TITLE": "Ihr intelligenter Audit-Arbeitsbereich ist bereit. Nutzen Sie KI-Warnungen und optimierte Workflows, um selbstbewusst zu untersuchen.",
+    "TITLE": "Melde dich bei deinem Konto an",
+    "SUB-TITLE": "Erstellen Sie neue Rollen und verwalten Sie Berechtigungen, um den Zugriff auf der gesamten Plattform zu steuern.",
+    "EMAIL": "E‑Mail‑ID",
+    "PASSWORD": "Passwort",
+    "SUBMIT-DB": "Anmelden",
+    "SUBMIT-SSO": "Mit SSO anmelden",
+    "FORGOT-PASSWORD-TEXT": "Passwort vergessen?",
+    "OR-TEXT": "oder mit"
+  }
+}

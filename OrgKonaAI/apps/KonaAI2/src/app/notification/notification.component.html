@@ -1,0 +1,65 @@
+<div class="backdrop" *ngIf="isOpen"></div>
+
+<div class="help-modal" *ngIf="isOpen" [ngStyle]="{ left: isCollapsed ? '18%' : '30%' }">
+  <div class="notifications-panel">
+    <div class="header">
+      <h3>Notifications (04)</h3><button class="close-btn" (click)="close()"><i class="bi bi-x"></i></button>
+    </div>
+
+    <div class="tabs">
+      <div class="tab-item" (click)="setActiveTab('View All')" [class.active]="activeTab === 'View All'">View All</div>
+      <div class="tab-item" (click)="setActiveTab('Mentions')" [class.active]="activeTab === 'Mentions'">Mentions</div>
+    </div>
+
+    <div class="section">
+      <h4>New</h4>
+      <div class="notification new">
+        <div class="icon green"><i class="bi bi-check-circle"></i></div>
+        <div class="contents">
+          <p class="title">Project Approval Request</p>
+          <span class="time">2 hrs ago</span>
+          <p class="desc">
+            A new project (Project Name) has been submitted for approval. Please review and take action.
+          </p>
+          <a href="#">View Details <i class="bi bi-arrow-up-right"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h4>Today</h4>
+
+      <div class="notification">
+        <div class="icon blue"><i class="bi bi-hand-thumbs-up"></i></div>
+        <div class="contents">
+          <p class="title">Project Request Approved</p>
+          <span class="time">2 hrs ago</span>
+          <p class="desc">
+            Your project request for (Project Name) has been (Approved/Denied)
+          </p>
+        </div>
+      </div>
+      <hr class="m-0">
+      <div class="notification">
+        <div class="contents">
+          <p class="title">Your role has been updated to (New Role)</p>
+          <span class="time">4 days ago</span>
+          <a href="#">View your updated permissions <i class="bi bi-arrow-up-right"></i></a>
+        </div>
+      </div>
+      <hr class="m-0">
+
+      <div class="notification">
+        <div class="icon red"><i class="bi bi-x-circle"></i></div>
+        <div class="contents">
+          <p class="title">Project Request Denied</p>
+          <span class="time">2 hrs ago</span>
+          <p class="desc">
+            Your project request for (Project Name) has been (Approved/Denied)
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

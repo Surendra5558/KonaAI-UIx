@@ -1,0 +1,335 @@
+
+  <div class="content">
+    <div class="header-block">
+      <div class="topbar-inner">
+        <div>
+          <h2>Members</h2>
+          <p>Manage members on the platform, assign roles, and control access seamlessly.</p>
+        </div>
+      </div>
+
+        <div> 
+          <button type="button" class="btn btn-save" (click)="openAdd()">
+             <i class="bi bi-plus-lg mr-2"></i> Member 
+            </button>
+          </div>
+      </div>
+    
+
+    <div class="members-wrapper" (click)="closeDropdowns()"> 
+      <!-- Header --> 
+
+
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="members.length === 0">
+        <img class="robot" src="assets/images/robot-empty.svg" alt="robot" />
+        <h3>No Members Added Yet</h3>
+        <p>Collaborate effectively by adding members.</p> 
+        <button class="primary" (click)="openAdd()">Add your First Member</button>
+      </div>
+
+       <!-- Filters -->
+      <div class="filters">
+        <div class="searchbar"> 
+          <i class="bi bi-search search-icon"></i> 
+          <input type="text" placeholder="Search Users" [(ngModel)]="searchTerm" /> 
+        </div>
+      </div> 
+
+      <!-- Table -->
+      <div class="table-wrap" *ngIf="members.length > 0">
+        <!-- <table class="members-table table-main">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>
+                <div class="dropdown" (click)="$event.stopPropagation()"> 
+                  <button class="dd-btn" (click)="toggleStatusDd()"> 
+                    <span>Status</span><i class="bi bi-chevron-down"></i>
+                   </button>
+                  <div class="dd-menu" [class.open]="statusDropdownOpen"> 
+                    <label *ngFor="let s of allStatuses" class="dd-item"> 
+                      <input type="checkbox" [checked]="selectedStatuses.has(s)" (change)="onStatusChange(s,$event)" /> 
+                      <span>{{ s }}</span> 
+                    </label> 
+                  </div>
+                </div>
+              </th>
+              <th>Role</th>
+              <th class="actions-th"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let m of pagedMembers()">
+              <td class="name-cell">
+                <div
+                  style="border-radius: 50%;width: 40px;height: 40px;background-color: aliceblue; display: flex;justify-content: center;align-items: center;">
+                  <i class="bi bi-person"></i>
+                 </div>
+                <div class="name-block">
+                  <div class="name">{{ m.firstName }}</div>
+                  <div class="email" *ngIf="m.email">{{ m.email }}</div>
+                </div>
+              </td>
+              <td> 
+                <span class="chip" [ngClass]="m.status.toLowerCase().replace('re-invite','reinvite')"> 
+                  {{ m.status }}
+                </span> 
+              </td>
+              <td> 
+                <ng-container [ngSwitch]="getDisplayRole(m)"> 
+                  <span *ngSwitchCase="'Investigator'"> 
+                    Investigator
+                    <label class="toggle-option-inline"> 
+                      <input type="radio" [checked]="getInvestigatorLevelFromRole(m.role) === 'L1'" disabled /> 
+                      <span>L1</span>
+                     </label>
+                    <label class="toggle-option-inline">
+                       <input type="radio" [checked]="getInvestigatorLevelFromRole(m.role) === 'L2'" disabled /> 
+                       <span>L2</span> 
+                      </label>
+                   </span> 
+                   <span *ngSwitchCase="'Data Manager'">Data Manager</span> 
+                   <span *ngSwitchCase="'Client Admin'">Client Admin</span> 
+                   <span *ngSwitchDefault>{{ m.role }}</span>
+                </ng-container> 
+              </td>
+              <td class="row-actions"> 
+                <button class="action-btn" title="Edit" (click)="openEdit(m)">
+                   <i class="bi bi-pencil"></i> 
+                  </button> 
+                  <button class="delete-btn" title="Delete" (click)="openDelete(m)"> 
+                    <i class="bi bi-trash3"></i> 
+                  </button> 
+                </td>
+            </tr>
+          </tbody>
+        </table>  -->
+
+        <table class="members-table table-main">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>
+        <div class="dropdown" (click)="$event.stopPropagation()">
+          <button class="dd-btn" (click)="toggleStatusDd()">
+            <span>Status</span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+          <div class="dd-menu" [class.open]="statusDropdownOpen">
+            <label *ngFor="let s of allStatuses" class="dd-item">
+              <input
+                type="checkbox"
+                [checked]="selectedStatuses.has(s)"
+                (change)="onStatusChange(s, $event)"
+              />
+              <span>{{ s }}</span>
+            </label>
+          </div>
+        </div>
+      </th>
+      <th>Role</th>
+      <th class="actions-th"></th>
+      <th class="actions-th"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let m of pagedMembers()">
+      <td class="name-cell">
+        <div class="avatar">
+          <i class="bi bi-person"></i>
+        </div>
+        <div class="name-block">
+          <div class="name">{{ m.firstName }}</div>
+          <div class="email" *ngIf="m.email">{{ m.email }}</div>
+        </div>
+      </td>
+      <td>
+        <span class="chip" [ngClass]="m.status.toLowerCase().replace('re-invite','reinvite')">
+          {{ m.status }}
+        </span>
+      </td>
+      <td>
+        <ng-container [ngSwitch]="getDisplayRole(m)">
+          <span *ngSwitchCase="'Investigator'">
+            Investigator
+            <label class="toggle-option-inline">
+              <input type="radio" [checked]="getInvestigatorLevelFromRole(m.role) === 'L1'" disabled />
+              <span>L1</span>
+            </label>
+            <label class="toggle-option-inline">
+              <input type="radio" [checked]="getInvestigatorLevelFromRole(m.role) === 'L2'" disabled />
+              <span>L2</span>
+            </label>
+          </span>
+          <span *ngSwitchCase="'Data Manager'">Data Manager</span>
+          <span *ngSwitchCase="'Client Admin'">Client Admin</span>
+          <span *ngSwitchDefault>{{ m.role }}</span>
+        </ng-container>
+      </td>
+      <td class="row-actions">
+        <button class="action-btn" title="Edit" (click)="openEdit(m)">
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button class="action-btn delete-btn" title="Delete" (click)="openDelete(m)">
+          <i class="bi bi-trash3"></i>
+        </button>
+      </td>
+      <td></td>
+
+    </tr>
+  </tbody>
+</table>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <div> 
+            <span>Showing 1-5 of 15</span> 
+          </div>
+          <div class="pager"> 
+            <button class="page-btn" [disabled]="pageIndex===0" (click)="prevPage()">&lt;</button>
+            <button class="page-btn" [class.active]="pageIndex===i"
+              *ngFor="let i of [].constructor(totalPages); let idx=index" (click)="goToPage(idx)">{{ idx+1 }}</button>
+            <button class="page-btn" [disabled]="pageIndex===totalPages-1" (click)="nextPage()">&gt;</button> 
+          </div>
+          <div class="page-size">Items per page 
+            <select [(ngModel)]="pageSize">
+              <option *ngFor="let s of pageSizeOptions" [value]="s">{{ s }}</option>
+            </select> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
+
+<!-- Single Modal for Add/Edit Member -->
+<div class="modal-backdrop" *ngIf="showModal"></div>
+<div class="modal" *ngIf="showModal">
+  <div class="modal-header">
+    <h3>{{ modalMode === 'add' ? 'Add Member' : 'Edit Member' }}</h3>
+     <button class="closePopup" (click)="closeAllModals()">×</button>
+  </div>
+
+  <div class="modal-body grid"> 
+
+    <!-- First Name --> 
+     <label>
+      First Name<span class="star-required">*</span>
+       <input type="text" [(ngModel)]="draft.firstName" required /> 
+      </label> 
+
+      <!-- Last Name --> 
+       <label> 
+        Last Name<span class="star-required">*</span> 
+        <input type="text" [(ngModel)]="draft.lastName" required /> 
+      </label>
+
+    <!-- Email -->
+      <label>
+         Email<span class="star-required">*</span>
+          <input type="email" [(ngModel)]="draft.email" required /> 
+        </label>
+
+         <!-- Phone -->
+         <label class="phone-field">
+           Phone Number 
+           <div class="phone-input"> 
+            <select [(ngModel)]="draft.phoneCode">
+          <option value="+91">+91</option>
+          <option value="+1">+1</option>
+          <option value="+44">+44</option>
+        </select> 
+        <input type="text" [(ngModel)]="draft.phoneNumber" /> 
+      </div> 
+    </label> 
+
+    <!-- Role --> 
+     <label> 
+      Assign Role<span class="star-required">*</span> 
+      <select [(ngModel)]="draft.role">
+        <option *ngFor="let r of allRoles" [value]="r">{{ r }}</option>
+      </select> 
+    </label> 
+
+      <!-- Status -->
+        <label> 
+          Status<span class="star-required">*</span> 
+          <select [(ngModel)]="draft.status">
+        <option *ngFor="let s of allStatuses" [value]="s">{{ s }}</option>
+      </select> 
+    </label>
+
+   </div>
+
+  <div class="modal-footer">
+     <button class="btn btn-clear" (click)="closeAllModals()">Cancel</button>
+      <button class="btn btn-save" (click)="saveMember()">
+         {{ modalMode === 'add' ? 'Invite' : 'Save' }}
+         </button>
+         </div>
+</div>
+<!-- Users List Popup -->
+<div class="modal-backdrop" *ngIf="showUsersPopup" (click)="closeUsersPopup()"></div>
+<div class="modal users-modal" *ngIf="showUsersPopup">
+  <div class="modal-header">
+    <h3>{{ getUsersModalTitle() }}</h3> 
+    <button class="closePopup" (click)="closeUsersPopup()">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="table-wrap">
+      <table class="members-table table-main users-table">
+        <colgroup>
+          <col style="width: 10%" />
+          <col style="width: 30%" />
+          <col style="width: 30%" />
+          <col style="width: 30%" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th> 
+              <input type="checkbox" [checked]="isAllUsersSelected()" (change)="toggleSelectAllUsers($event)" />
+             </th>
+            <th>Name</th>
+            <th>Email</th>
+            <th> Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of usersFromAssets">
+            <td> 
+              <input type="checkbox" [checked]="selectedUserEmails.has(u.email)" (change)="onUserCheckboxChange(u.email,$event)" />
+             </td>
+            <td>{{ u.fullName }}</td>
+            <td>{{ u.email }}</td>
+            <td>
+              <ng-container [ngSwitch]="getDisplayRoleForUser(u)"> 
+                <span *ngSwitchCase="'Investigator'" class="investigator-display">
+                  Investigator
+                  <div class="investigator-level-display"> 
+                    <label class="toggle-option-inline readonly"> 
+                      <input type="radio" [checked]="getInvestigatorLevelFromUserRole(u.role) === 'L1'" disabled /> 
+                      <span>L1</span>
+                     </label>
+                    <label class="toggle-option-inline readonly">
+                       <input type="radio" [checked]="getInvestigatorLevelFromUserRole(u.role) === 'L2'" disabled /> 
+                       <span>L2</span> 
+                      </label>
+                   </div>
+                </span>
+                <span *ngSwitchDefault class="role-display">{{ u.role }}</span>
+              </ng-container>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer"> 
+    <button class="btn btn-clear" (click)="closeUsersPopup()">Cancel</button>
+     <button class="btn btn-save" [disabled]="selectedUserEmails.size===0" (click)="grantAccessToSelectedUsers()">Grant Access</button>
+     </div>
+</div>
+<app-delete-popup *ngIf="showDeletePopup" [data]="deleteData" (result)="handleDeleteResult($event)"></app-delete-popup>

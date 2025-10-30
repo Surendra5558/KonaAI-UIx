@@ -1,0 +1,55 @@
+<div class="backdrop" *ngIf="show"></div>
+
+<div class="help-modal" *ngIf="show" [ngStyle]="{ left: isCollapsed ? '19%' : '31%' }">
+  <div class="header">
+    <h3>Resources</h3>
+    <button class="close" (click)="close()"><i class="bi bi-x-lg"></i></button>
+  </div>
+
+  <div class="links">
+    <a href="#">Documentation ↗</a>
+    <a href="#">Tutorials ↗</a>
+  </div>
+
+  <hr />
+
+  <div class="contents">
+    <h3>Contact Support</h3>
+    <p class="description">
+      Our support team is here for you! If you have any questions, issues, or need assistance,
+      please reach out to us by providing all the relevant information below.
+    </p>
+
+    <form>
+      <label>Priority</label>
+      <select>
+        <option>Select Priority</option>
+        <option>Low</option>
+        <option>Medium</option>
+        <option>High</option>
+      </select>
+
+      <label>Question or issue</label>
+      <textarea [(ngModel)]="questionText" name="question"
+        placeholder="Describe your question or issue, along with any relevant information. Please be detailed and specific.">
+  </textarea>
+
+      <label>Screenshot</label>
+      <div class="file-upload">
+        Drop your file(s) here or
+        <label for="screenshotInput" class="browse-link">Browse</label>
+        <input id="screenshotInput" type="file" hidden (change)="onFileSelected($event)" accept=".csv,.txt,.xlsx" />
+        <p>Files supported - CSV, TXT, XLSX<br />Maximum size - 5 MB</p>
+        <div *ngIf="fileSelected" class="file-info">
+          <strong>{{ fileSelected.name }}</strong>
+          ({{ (fileSelected.size / 1024).toFixed(1) }} KB)
+        </div>
+      </div>
+
+      <div style="float: right;">
+        <button type="button" class="btn btn-save" [disabled]="!canSubmit" (click)="submit()">Submit</button>
+      </div>
+    </form>
+
+  </div>
+</div>

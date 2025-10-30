@@ -1,0 +1,220 @@
+<div class="editor-container">
+  <header class="topbar topbar-header topbar-inner">
+    <div>
+      <div class="topbar-content">
+        <button class="header-backbtn" (click)="onBackClick()">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <div>
+          <h3>Questionnaire</h3>
+          <p>Review role details and permissions</p>
+        </div>
+      </div>
+    </div>
+    <div class="questionnaire-icons">
+      <button (click)="preview()" title="Preview" class="icon-header"><i class="bi bi-eye"></i></button>
+      <button title="Undo" class="icon-header"><i class="bi bi-arrow-counterclockwise"></i></button>
+      <button title="Redo" class="icon-header"><i class="bi bi-arrow-clockwise"></i></button>
+      <button (click)="save()" class="btn btn-save">Save</button>
+    </div>
+  </header>
+
+  <div class="editor-content">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div *ngFor="let section of sections" (click)="selectSection(section.id)"
+        [class.selected]="section.id === selectedSectionId" class="sidebar-section">
+
+        <div class="side-section-header">
+          <span>{{ section.title || 'Untitled Section' }}</span>
+          <button class="btn btn-delete" (click)="confirmDeleteSection(section)" title="Delete this section">
+            <i class="bi bi-trash3"></i>
+          </button>
+        </div>
+        <ol>
+          <li *ngFor="let question of section.questions" style="font-size: small;">
+            {{ question.text || 'New Question' }}
+          </li>
+        </ol>
+      </div>
+      <button (click)="openSectionSlider()" class="btn btn-clear">+ Add Section</button>
+    </aside>
+
+    <!-- Main Editor -->
+    <main class="main-editor" *ngIf="selectedSection">
+      <div class="questionnaire-name-container">
+        <input type="text" class="form-control" [(ngModel)]="questionnaireName"
+          placeholder="Enter questionnaire name" />
+      </div>
+
+      <!-- <input class="section-title" [(ngModel)]="selectedSection.title" placeholder="Section Title" /> -->
+      <div class="section-title-container">
+        <input class="section-title" [(ngModel)]="selectedSection.title" placeholder="Enter Section Title (required)"
+          required #sectionTitle="ngModel" />
+        <div *ngIf="sectionTitle.invalid && sectionTitle.touched" class="error-text">
+          Section name is required.
+        </div>
+      </div>
+      <!-- Read-only Question Display -->
+      <div *ngFor="let question of selectedSection.questions"
+        style="display: flex; justify-content: space-between;align-items: center;">
+        <div class="question-card">
+          <div class="question-header">
+            <div class="question-input-fields">
+              <input type="text" [value]="question.text" class="question-input" readonly />
+              <input type="text" [value]="question.type" class="question-type" readonly />
+            </div>
+
+          </div>
+
+          <!-- Options / Answer display -->
+          <div class="answer-section">
+            <ng-container [ngSwitch]="question.type">
+              <ul *ngSwitchCase="'Multiple Choice'" class="readonly-options">
+                <li *ngFor="let opt of question.options">{{ opt }}</li>
+              </ul>
+              <ul *ngSwitchCase="'Check Boxes'" class="readonly-options">
+                <li *ngFor="let opt of question.options">{{ opt }}</li>
+              </ul>
+              <ul *ngSwitchCase="'Dropdown'" class="readonly-options">
+                <li *ngFor="let opt of question.options">{{ opt }}</li>
+              </ul>
+
+              <p *ngSwitchCase="'Short Answer'" class="readonly-text">[Text answer]</p>
+              <p *ngSwitchCase="'Long Answer'" class="readonly-text">[Text answer]</p>
+              <p *ngSwitchCase="'List'" class="readonly-text">[Text answer]</p>
+              <p *ngSwitchCase="'File Upload'" class="readonly-text">[File upload]</p>
+              <p *ngSwitchCase="'Linear'" class="readonly-text">[Linear rating 1-5]</p>
+              <p *ngSwitchCase="'Date'" class="readonly-text">[Date answer]</p>
+            </ng-container>
+          </div>
+
+          <hr style="border-top: 1px dashed #000;">
+        </div>
+        <span><button *ngIf="isQuestionDeletable(question, selectedSection)" class="btn btn-delete"
+            (click)="confirmDeleteQuestion(selectedSection, question)" title="Delete this question">
+            <i class="bi bi-trash3"></i>
+          </button></span>
+      </div>
+
+      <div class="editor-footer">
+        <button (click)="openQuestionSlider()" class="btn btn-clear" [disabled]="!selectedSection?.isManual"
+          [title]="selectedSection?.isManual ? 'Add a question to this section' : 'Cannot add questions to imported sections'">
+          <i class="bi bi-plus-lg mr-2"></i> Add Question
+        </button>
+        <!-- <button (click)="openSectionSlider()" class="btn btn-clear"><i class="bi bi-view-stacked mr-2"></i> Add
+          Section</button> -->
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Slider for selecting questions -->
+<div class="slider-overlay" *ngIf="showQuestionSlider">
+  <div class="slider">
+    <div style="margin-bottom: 10px;">
+      <h3>Select Questions</h3>
+      <p style="font-size: 14px;">Choose one or more questions to add</p>
+    </div>
+    <div class="searchbar">
+      <i class="bi bi-search search-icon"></i>
+      <input type="text" placeholder="Search Question" [(ngModel)]="searchText" />
+    </div>
+    <div class="question-list">
+      <table class="table-main">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Question</th>
+            <th style="width: 9vw;">Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let q of paginatedQuestions">
+            <td>
+              <input type="checkbox" [(ngModel)]="q.selected" [disabled]="isQuestionUsedInSections(q.id)" />
+            </td>
+            <td>{{ q.text }}</td>
+            <td>{{ q.type }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+      <div class="pagination-container">
+        <button (click)="prevPage()" [disabled]="currentPage === 1">‹</button>
+        <button *ngFor="let page of paginationPages" [disabled]="page === '...'" [class.active]="currentPage === page"
+          (click)="goToPage(page)">
+          {{ page }}
+        </button>
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages">›</button>
+      </div>
+      <div class="slider-actions">
+        <button class="btn btn-clear" (click)="closeSlider()">Cancel</button>
+        <button class="btn btn-save" (click)="selectQuestions()">Select</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slider for selecting sections -->
+<div class="slider-overlay" *ngIf="showSectionSlider">
+  <div class="slider">
+    <div style="margin-bottom: 10px;">
+      <h3>Select Section</h3>
+      <p style="font-size: 14px;">Choose a section to add to the questionnaire</p>
+    </div>
+    <div class="searchbar">
+      <i class="bi bi-search search-icon"></i>
+      <input type="text" placeholder="Search Section" [(ngModel)]="sectionSearchText" />
+    </div>
+    <div class="section-list">
+      <div *ngFor="let section of filteredSectionSliderData()">
+        <div class="section-header">
+          <div>
+            <input type="checkbox" [(ngModel)]="section.selected" [disabled]="isSectionUsedInSlider(section.id)" />
+            <span style="margin-left: 12px;">{{ section.title }}</span>
+          </div>
+          <span class="toggle-icon" (click)="toggleSection(section)">
+            <i class="bi" [ngClass]="section.isOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+          </span>
+        </div>
+        <div *ngIf="section.isOpen" class="question-table-container">
+          <table class="table-main">
+            <thead>
+              <tr>
+                <th>Question</th>
+                <th>Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let q of section.questions">
+                <td>{{ q.text }}</td>
+                <td>{{ q.type }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button (click)="addSection()" class="btn btn-cancel">Create Custom Section</button>
+    </div>
+    <div class="slider-actions" style="margin-top: 20px; display: flex; justify-content: flex-end;">
+      <button class="btn btn-clear" (click)="closeSectionSlider()">Cancel</button>
+      <button class="btn btn-save" (click)="selectSectionsFromSlider()">Select</button>
+    </div>
+  </div>
+</div>
+
+<!-- Alert Popup -->
+<app-alert-popup *ngIf="showAlertPopup" [data]="alertData" (result)="handleAlertResult($event)"></app-alert-popup>
+<app-delete-popup *ngIf="showDeletePopup" [data]="deleteData" (result)="handleDeleteResult($event)"></app-delete-popup>
+<!-- Local Alert Popup -->
+<div class="popup-overlay" *ngIf="showNameAlert">
+  <div class="popup-box">
+    <h3>Alert</h3>
+    <p>{{ alertMessage }}</p>
+    <button class="ok-btn" (click)="showNameAlert = false">OK</button>
+  </div>
+</div>

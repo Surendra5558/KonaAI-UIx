@@ -1,0 +1,41 @@
+[
+  {
+    "clientId": 1,
+    "name": "Acme Corporation",
+    "domain": "https://acme.konaai.com",
+    "modules": ["P2P", "O2C", "T&E"],
+    "licenseStatus": "Active",
+    "projects": 12,
+    "users": 145,
+     "createdBy": "admin@konaai.com",
+     "createdOn": "2023-06-10",
+     "riskAreas": ["Financial", "Operational"],
+     "sla": "99.5% uptime"
+  },
+  {
+    "clientId": 2,
+    "name": "TechFlow Inc",
+    "domain": "https://techflow.konaai.com",
+    "modules": ["P2P", "O2C"],
+    "licenseStatus": "Expired",
+    "projects": 8,
+    "users": 67,
+     "createdBy": "admin@konaai.com",
+    "createdOn": "2023-06-10",
+     "riskAreas": ["Financial", "Operational"],
+     "sla": "99.5% uptime"
+  },
+  {
+    "clientId": 3,
+    "name": "Global Solutions",
+    "domain": "https://global.konaai.com",
+    "modules": ["P2P", "O2C", "T&E"],
+    "licenseStatus": "Expiring Soon",
+    "projects": 24,
+    "users": 289,
+     "createdBy": "admin@konaai.com",
+    "createdOn": "2023-06-10",
+    "riskAreas": ["Financial", "Operational"],
+    "sla": "99.5% uptime"
+  }
+]

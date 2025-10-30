@@ -1,0 +1,226 @@
+<div class="case-details-container">
+  <div class="alert-header-container">
+    <!-- Top Row: Alert Info + Actions -->
+    <div class="alert-info-row">
+      <div class="alert-details">
+        <span class="alert-id">● ALRT-000001</span>
+        <span class="risk-amount">Risk Amount ↑ <span class="amount">$1,500</span></span>
+        <a href="#" class="transaction-link">Transaction Level</a>
+        <span class="assigned-to">Assigned to: <strong>Michael Johnson</strong></span>
+        <span class="due-date">Due on: <strong>25 Apr 2025</strong></span>
+        <span class="priority">Priority: <span class="priority-high">● High</span></span>
+        <i class="fa-solid fa-pen edit-icon"></i>
+      </div>
+      <div class="alert-actions">
+        <button class="btn btn-outline">Escalate</button>
+        <button class="btn btn-primary">Resolve</button>
+      </div>
+    </div>
+
+    <!-- Icon Button Row -->
+    <div class="toolbar-row">
+      <button class="icon-btn"><i class="fa-regular fa-file"></i></button>
+      <button class="icon-btn"><i class="fa-solid fa-link"></i></button>
+      <button class="icon-btn"><i class="fa-solid fa-arrow-down"></i></button>
+    </div>
+
+    <!-- Tabs Row -->
+    <div class="tabs-row">
+      <a href="#" class="tab active">Details</a>
+      <a href="#" class="tab">Entity Transactions</a>
+      <a href="#" class="tab">Associated Alerts</a>
+      <a href="#" class="tab">Evidence</a>
+    </div>
+  </div>
+
+  <!-- ===== HEADER ===== -->
+  <div class="case-header">
+    <div class="assigned-info">
+      Assigned to: <span class="bold">Michael Johnson</span>
+    </div>
+    <div class="due-date">
+      Due on: <span class="bold">25 Apr 2025</span>
+    </div>
+    <div class="priority">
+      Priority: <span class="priority-high">● High</span>
+    </div>
+    <div class="header-actions">
+      <i class="fa-solid fa-pen"></i>
+    </div>
+  </div>
+
+  <div class="content-wrapper">
+
+    <!-- ===== LEFT CONTENT ===== -->
+    <div class="left-panel">
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <div class="tab active">Details</div>
+        <div class="tab">Entity Transactions</div>
+        <div class="tab disabled">Associated Alerts</div>
+        <div class="tab">Evidence</div>
+      </div>
+      <div class="details-container">
+        <!-- Tabs -->
+        <div class="tabs">
+          <span class="active-tab">● Details</span>
+          <span>Entity Transactions</span>
+          <span>Associated Alerts</span>
+          <span>Evidence</span>
+        </div>
+
+        <!-- Patterns Detected -->
+        <div class="patterns-box">
+          <div class="patterns-header">
+            <strong>Patterns Detected</strong>
+            <span class="brand">konaAI ✨</span>
+          </div>
+          <ul>
+            <li>Employee Jane Smith has submitted 5 business class flights in one week.</li>
+            <li>Employee Jane Smith has taken 10 business trips to tax haven countries in 3 months.</li>
+            <li>Employee Jane Smith submits and approves their own expense report.</li>
+          </ul>
+        </div>
+
+        <!-- Risk Assessment -->
+        <div class="section-title">Risk Assessment</div>
+        <div class="two-column">
+          <div>
+            <div><strong>Current Risk Score</strong> <span>85</span></div>
+            <div><strong>Duplicate Transaction</strong> <span>✅ Yes</span></div>
+            <div><strong>Tests Failed Count</strong> <span>2</span></div>
+          </div>
+          <div>
+            <div><strong>Tests Failed</strong> <span>Personal Expense Claimed</span></div>
+            <div><span>Weekend Transaction</span></div>
+          </div>
+        </div>
+
+        <!-- Entity Details -->
+        <div class="section-title">Entity Details</div>
+        <div class="two-column">
+          <div>
+            <div><strong>Entity Type</strong> Employee</div>
+            <div><strong>Number</strong> EMP-56789</div>
+            <div><strong>Name</strong> Jane Smith</div>
+            <div><strong>Country</strong> United States</div>
+            <div><strong>Country Code</strong> USA</div>
+            <div><strong>Region</strong> North America</div>
+            <div><strong>Category</strong> Senior Manager</div>
+          </div>
+          <div>
+            <div><strong>Risk Score</strong> 85</div>
+            <div><strong>Rank</strong> 4</div>
+            <div><strong>Total Transactions Count</strong> 45</div>
+            <div><strong>Hit Transactions Count</strong> 7</div>
+            <div><strong>Total Transactions Amount</strong> $30,000</div>
+            <div><strong>Hit Transactions Amount</strong> $6,500</div>
+          </div>
+        </div>
+      </div>
+
+
+  
+
+      <div class="patterns-box" *ngIf="isEntitylevel">
+        <div class="patterns-text">
+          <strong>Patterns Detected</strong>
+          <span class="patterns-icon">konaAI ✨</span>
+        </div>
+        <ul>
+          <li>Employee Jane Smith has submitted 5 business class flights in one week.</li>
+          <li>Employee Jane Smith has taken 10 business trips to tax haven countries in 3 months.</li>
+          <li>Employee Jane Smith submits and approves their own expense report.</li>
+        </ul>
+      </div>
+
+      <!-- Risk Assessment -->
+      <div class="section">
+        <h3>Risk Assessment</h3>
+        <div class="two-col">
+          <div>
+            <div><strong>Current Risk Score</strong><br>85</div>
+            <div><strong>Duplicate Transaction</strong><br>✅ Yes</div>
+            <div><strong>Tests Failed Count</strong><br>2</div>
+          </div>
+          <div>
+            <div><strong>Tests Failed</strong><br>Personal Expense Claimed</div>
+            <div><br>Weekend Transaction</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transaction Details -->
+      <div class="section">
+        <h3>Transaction Details</h3>
+        <div class="two-col">
+          <div>
+            <div><strong>Module</strong><br>T&amp;E</div>
+            <div><strong>Submodule</strong><br>Expenses</div>
+            <div><strong>Phase</strong><br>2</div>
+            <div><strong>Risk Amount</strong><br>$1,500</div>
+            <div><strong>Transaction ID</strong><br>TXN-245678</div>
+            <div><strong>Report Number</strong><br>REP-90876</div>
+            <div><strong>Transaction Date</strong><br>15 Mar 2024</div>
+            <div><strong>Line Item Description</strong><br>Business-Class Flight Upgrade</div>
+          </div>
+          <div>
+            <div><strong>Payment Type</strong><br>Corporate Credit Card</div>
+            <div><strong>Billing Currency</strong><br>USD</div>
+            <div><strong>Billing Amount</strong><br>$1,500</div>
+            <div><strong>Approved By</strong><br>John Doe</div>
+            <div><strong>Approved On</strong><br>18 Mar 2024</div>
+            <div><strong>Payment Date</strong><br>20 Mar 2024</div>
+            <div><strong>Payment Status</strong><br>Paid</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== RIGHT CONTENT ===== -->
+    <div class="right-panel">
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <i class="fa-solid fa-file-lines"></i>
+        <i class="fa-solid fa-link"></i>
+        <i class="fa-solid fa-download"></i>
+        <select class="role-select">
+          <option>L1 Auditor</option>
+        </select>
+      </div>
+
+      <!-- Questionnaire -->
+      <div class="questionnaire">
+
+        <div class="question-block">
+          <div class="q-title"><span class="q-number">1</span> Initial Analysis &amp; Validation</div>
+          <div class="q-item">
+            <label>List the Transaction ID(s) under review.</label>
+            <p>ALRT-000001</p>
+          </div>
+          <div class="q-item">
+            <label>Which entities are involved?</label>
+            <p>Jane Smith, Luxury Airlines Inc.</p>
+          </div>
+          <div class="q-item">
+            <label>List the tests failed.</label>
+            <p>Personal Expense Claimed</p>
+            <p>Weekend Transaction</p>
+          </div>
+          <div class="q-item">
+            <label>How was the transaction(s) identified</label>
+            <div class="radio-group">
+              <label><input type="radio" name="identify"> Risk Scoring</label>
+              <label><input type="radio" name="identify"> Judgemental Selection by RCM</label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

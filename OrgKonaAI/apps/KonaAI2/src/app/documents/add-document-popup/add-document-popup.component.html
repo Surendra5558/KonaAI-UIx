@@ -1,0 +1,69 @@
+<div *ngIf="data.isOpen" class="popup-backdrop" (click)="onBackdropClick($event)">
+  <div class="popup-card popup-enter">
+    <!-- Header -->
+    <div class="modal-header">
+      <h2>{{ data.mode === 'edit' ? 'Edit Document' : 'New Document' }}</h2>
+       <button class="closePopup" (click)="onCancel()">×</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- File area: show current file name (edit) or picker (new) -->
+    <div class="drop-area">
+      <ng-container *ngIf="data.mode === 'edit' && (data.currentFileName || data.file); else picker">
+        <div class="file-row">
+          <i class="bi bi-file-earmark"></i>
+          <span class="file-name">{{ (data.file?.name) || data.currentFileName }}</span>
+          <button class="change-btn" (click)="$event.stopPropagation();">
+            Change
+          </button>
+        </div>
+      </ng-container>
+      <ng-template #picker>
+        <div class="drop-icon"></div>
+        <div class="drop-text">
+          <div class="title">Select a file or drag and drop here</div>
+          <div class="subtitle">JPG, PNG or PDF, file size no more than 10MB</div>
+        </div>
+        <input type="file" class="file-input" (change)="onFileSelected($event)" [disabled]="data.isLoading" />
+      </ng-template>
+    </div>
+
+    <!-- Form fields -->
+    <div class="form-grid">
+      <div class="field-group">
+        <label>Module <span class="required">*</span></label>
+        <div class="checkbox-row">
+          <label class="checkbox"><input type="checkbox" [checked]="data.selectedModules.includes('O2C')" (change)="popup.toggleModule('O2C')" /> <span>O2C</span></label>
+          <label class="checkbox"><input type="checkbox" [checked]="data.selectedModules.includes('P2P')" (change)="popup.toggleModule('P2P')" /> <span>P2P</span></label>
+          <label class="checkbox"><input type="checkbox" [checked]="data.selectedModules.includes('T&E')" (change)="popup.toggleModule('T&E')" /> <span>T&amp;E</span></label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Next Update Date <span class="required">*</span></label>
+        <input type="date" class="input" [(ngModel)]="data.nextUpdateDue" (ngModelChange)="popup.update('nextUpdateDue', $event)" [disabled]="data.isLoading" placeholder="dd mmm yyyy" />
+      </div>
+
+      <div class="field-group">
+        <label>Exclusion Base Data Object <span class="required">*</span></label>
+        <input type="text" class="input" [(ngModel)]="data.exclusionDataObject" (ngModelChange)="popup.update('exclusionDataObject', $event)" [disabled]="data.isLoading" placeholder="Enter data object name" />
+      </div>
+      <div class="field-group">
+        <label>Exclusion Base Field <span class="required">*</span></label>
+        <input type="text" class="input" [(ngModel)]="data.exclusionBaseField" (ngModelChange)="popup.update('exclusionBaseField', $event)" [disabled]="data.isLoading" placeholder="Enter field name" />
+      </div>
+
+      <div class="field-group full">
+        <label>Comments</label>
+        <input type="text" class="input" [(ngModel)]="data.comment" (ngModelChange)="popup.update('comment', $event)" [disabled]="data.isLoading" placeholder="Add any relevant details or notes" />
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="btn btn-clear" (click)="onCancel()">Cancel</button>
+      <button class="btn btn-save" [disabled]="(data.mode === 'create' && !data.file) || data.isLoading" (click)="onSave()">Save</button>
+    </div>
+  </div>
+</div>

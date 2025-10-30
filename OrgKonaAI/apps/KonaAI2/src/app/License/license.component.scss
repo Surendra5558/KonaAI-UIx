@@ -1,0 +1,209 @@
+.license-information-container {
+    max-width: 1200px;
+    margin-left: 50px;
+    margin-right: 50PX;
+    background-color: #ffffff;
+}
+
+// Header Styles
+.license-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+
+  h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+
+
+}
+  .btn-renew {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border: 1px solid #cf3737;
+
+    &:hover {
+    border: 1px solid #b91c1c;
+  }
+    &:focus {
+      outline: none;
+    }
+
+    .renew-icon {
+      font-size: 16px;
+    }
+  }
+// License Details Grid
+.license-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+.license-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+// Info Group Styles
+.info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .info-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin: 0;
+  }
+}
+
+// Status Styles
+.status-container {
+  display: flex;
+  align-items: center;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+
+  .status-icon {
+    font-size: 8px;
+  }
+
+  &.status-active {
+    background-color: #d1fae5;
+    color: #065f46;
+  }
+
+  &.status-expired {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+
+  &.status-expiring {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+}
+
+// Date Styles
+.date-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+
+  .calendar-icon {
+    font-size: 14px;
+    opacity: 0.6;
+  }
+
+  .date-value {
+    font-size: 14px;
+    color: #374151;
+    font-weight: 500;
+  }
+}
+
+// Terms Styles
+.terms-value {
+  padding: 8px 0;
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}
+
+// Alert Styles
+.alert-container {
+  margin-top: 8px;
+}
+
+.alert {
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px solid;
+
+  &.alert-error {
+    background-color: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+  }
+
+  .alert-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+
+    .alert-icon {
+      font-size: 16px;
+      color: #dc2626;
+    }
+
+    .alert-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #991b1b;
+    }
+  }
+
+  .alert-message {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #7f1d1d;
+    margin: 0;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .license-information-container {
+    padding: 16px;
+  }
+
+  .license-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+
+    .btn-renew {
+      align-self: stretch;
+      justify-content: center;
+    }
+  }
+
+  .license-details-grid {
+    gap: 20px;
+  }
+
+  .info-group {
+    gap: 6px;
+  }
+}

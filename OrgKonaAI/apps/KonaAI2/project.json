@@ -1,0 +1,165 @@
+{
+  "name": "KonaAI2",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/KonaAI2/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/KonaAI2/browser",
+        "index": "apps/KonaAI2/src/index.html",
+        "main": "apps/KonaAI2/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/KonaAI2/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/KonaAI2/src/assets",
+            "output": "assets"
+          }
+        ],
+        "styles": [
+          "node_modules/font-awesome/css/font-awesome.min.css",
+          "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+          "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+          "apps/KonaAI2/src/styles.scss"
+        ],
+        "scripts": [
+          "node_modules/@popperjs/core/dist/umd/popper.min.js",
+          "node_modules/bootstrap/dist/js/bootstrap.min.js"
+        ]
+
+      },
+      "configurations": {
+        "production": {
+           "fileReplacements": [
+            {
+              "replace": "apps/KonaAI2/src/environments/environment.ts",
+              "with": "apps/KonaAI2/src/environments/environment.prod.ts"
+            }
+          ],
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "10mb",
+              "maximumError": "20mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "300kb",
+              "maximumError": "500kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "KonaAI2:build:production"
+        },
+        "development": {
+          "buildTarget": "KonaAI2:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "KonaAI2:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/KonaAI2/jest.config.ts"
+      }
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "KonaAI2:build",
+        "port": 4200,
+        "spa": true
+      }
+    },
+    "server": {
+      "dependsOn": ["build"],
+      "executor": "@angular-devkit/build-angular:server",
+      "options": {
+        "outputPath": "dist/apps/KonaAI2/server",
+        "main": "apps/KonaAI2/src/server.ts",
+        "tsConfig": "apps/KonaAI2/tsconfig.server.json",
+        "inlineStyleLanguage": "scss"
+      },
+      "configurations": {
+        "production": {
+          "outputHashing": "media"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "sourceMap": true,
+          "extractLicenses": false,
+          "vendorChunk": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve-ssr": {
+      "continuous": true,
+      "executor": "@angular-devkit/build-angular:ssr-dev-server",
+      "configurations": {
+        "development": {
+          "browserTarget": "KonaAI2:build:development",
+          "serverTarget": "KonaAI2:server:development"
+        },
+        "production": {
+          "browserTarget": "KonaAI2:build:production",
+          "serverTarget": "KonaAI2:server:production"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "prerender": {
+      "executor": "@angular-devkit/build-angular:prerender",
+      "options": {
+        "routes": ["/"]
+      },
+      "configurations": {
+        "development": {
+          "browserTarget": "KonaAI2:build:development",
+          "serverTarget": "KonaAI2:server:development"
+        },
+        "production": {
+          "browserTarget": "KonaAI2:build:production",
+          "serverTarget": "KonaAI2:server:production"
+        }
+      },
+      "defaultConfiguration": "production"
+    }
+  }
+}

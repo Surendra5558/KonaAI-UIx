@@ -1,0 +1,115 @@
+<div *ngIf="isDataManager || isInstanceAdmin">
+  <app-top-bar  [activeTab]="activateTab" (tabChanged)="onTabChanged($event)"></app-top-bar>
+</div>
+
+<!-- Summary tab content - only show when selectedTab is 'summary' -->
+<div *ngIf="selectedTab === 'summary'">
+
+  <!-- Show Project Workflow content for Client Admin when project is selected -->
+  <div *ngIf="isClientAdmin && isProjectSelected && selectedProjectId">
+    <app-project-workflow [inputProjectId]="selectedProjectId"></app-project-workflow>
+  </div>
+
+  <!-- Show default client summary content for other cases -->
+  <div *ngIf="!isClientAdmin || !isProjectSelected || !selectedProjectId" class="client-admin-home">
+    <!-- Content area -->
+    <div class="content">
+      <!-- Client Details and Billing Information Card -->
+      <div class="client-info-card">
+        <!-- Client Details Section -->
+        <div class="client-details-section">
+          <div class="header-block">
+            <div>
+            <h2>Client Details</h2>
+            <p>View and manage individual client information and settings</p>
+            </div>
+          </div>
+
+          <div class="details-grid">
+            <div class="detail-item">
+              <label>Client URL</label>
+              <span class="detail-value">https://client-demo.konaai.com</span>
+            </div>
+
+            <div class="detail-item">
+              <label>Assigned CSM</label>
+              <span class="detail-value">Sarah Johnson</span>
+            </div>
+
+            <div class="detail-item modules-section">
+              <label>Modules Enabled</label>
+              <div class="module-tags">
+                <span class="module-tag">Risk Assessment</span>
+                <span class="module-tag">Compliance</span>
+                <span class="module-tag">Audit Management</span>
+                <span class="module-tag">Reporting</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="section-divider"></div>
+
+        <!-- Billing Information Section -->
+        <div class="billing-section">
+          <div class="section-header">
+            <h3>Billing Information</h3>
+          </div>
+
+          <div class="billing-grid">
+            <div class="billing-item">
+              <label>Plan:</label>
+              <span class="billing-value">Enterprise</span>
+            </div>
+
+            <div class="billing-item">
+              <label>Billing Cycle:</label>
+              <span class="billing-value">Annual</span>
+            </div>
+
+            <div class="billing-item">
+              <label>Next Payment:</label>
+              <span class="billing-value">Mar 15, 2025</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Information Message -->
+      <div class="info-message">
+        <i class="bi bi-info-circle"></i>
+        <span>Modules and source system configurations are set up by the super admin from the pre-live forms.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- users-->
+
+<div *ngIf="selectedTab=='users'">
+  <app-members *ngIf="selectedTab == 'users'"></app-members>
+</div>
+
+<!-- roles-->
+<div *ngIf="selectedTab=='roles'">
+  <app-roles *ngIf="selectedTab == 'roles'"></app-roles>
+</div>
+
+<!-- connections-->
+<div *ngIf="selectedTab=='connectors'">
+  <app-connections *ngIf="selectedTab == 'connectors'"></app-connections>
+</div>
+
+<!-- configurations-->
+<div *ngIf="selectedTab=='configurations'">
+  <app-clientConfiguration *ngIf="selectedTab == 'configurations'"></app-clientConfiguration>
+</div>
+
+<!-- license-->
+<div *ngIf="selectedTab=='license'">
+  <app-license *ngIf="selectedTab == 'license'"></app-license>
+</div>

@@ -1,0 +1,27 @@
+{
+  "msal": {
+    "auth": {
+      "clientId": "YOUR_CLIENT_ID",
+      "authority": "https://login.microsoftonline.com/YOUR_TENANT_ID",
+      "redirectUri": "/localhost:4200/ad-auth",
+      "postLogoutRedirectUri": "/login"
+    },
+    "cache": {
+      "cacheLocation": "localStorage"
+    },
+    "system": {
+        "allowPlatformBroker": false
+    }
+  },
+  "guard": {
+    "interactionType": "redirect",
+    "authRequest": {
+      "scopes": ["user.read"]
+    },
+    "loginFailedRoute": "/login-failed"
+  },
+  "interceptor": {
+    "interactionType": "redirect",
+    "protectedResourceMap": [["https://graph.microsoft.com/v1.0/me", ["user.read"]]]
+  }
+}

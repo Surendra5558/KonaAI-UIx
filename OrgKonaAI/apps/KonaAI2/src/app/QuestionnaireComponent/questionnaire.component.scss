@@ -1,0 +1,44 @@
+.header-bar {
+  width: 100%;
+  background: #f8fafc; /* Use actual color from screenshot */
+  padding: 18px 32px 6px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+}
+
+.header-title {
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: #232e3d;
+}
+
+.header-desc {
+  font-size: 0.93rem;
+  color: #556179;
+  margin-top: 2px;
+}
+
+.centered-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 80px;
+  text-align: center;
+}
+
+.questionnaire-graphic img {
+  width: 140px;
+  margin: 20px 0;
+}
+
+.create-btn {
+  margin-top: 20px;
+  padding: 10px 24px;
+  font-size: 1rem;
+  border-radius: 25px;
+  background-color: #003366;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}

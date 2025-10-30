@@ -1,0 +1,324 @@
+<!-- <div *ngIf="isDataManager">
+  <div class="top-bar topbar-header" *ngIf="isDataManager">
+      <div class="header">
+        <div class="nav-container">
+          <div class="tab-wrapper">
+            <div class="tab-item" [class.active]="activeTab === 'organisation'" (click)="selectTab('organisation')">
+              <i class="bi bi-diagram-3"></i>
+              <span>Organisation</span>
+            </div>
+            <div class="tab-item" [class.active]="activeTab === 'projects'" (click)="selectTab('projects')">
+              <i class="bi bi-bar-chart"></i>
+              <span>Projects</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div> -->
+<app-top-bar *ngIf="isDataManager" [activeTab]="activateTab" (tabChanged)="onTabChanged($event)"></app-top-bar>
+
+<div class="content" *ngIf="isShowProjectDashboard">
+  <div>
+    <div class="header-block">
+      <div>
+        <h2>Project Dashboard</h2>
+        <p> Manage and track all the projects created across organisation seamlessly.</p>
+      </div>
+      <div *ngIf="isClientAdmin">
+        <button type="button" class="btn btn-save" (click)="openAddProjectModal()">
+          <i class="bi bi-plus-lg mr-2"></i> Project
+        </button>
+      </div>
+    </div>
+
+
+    <div class="projects-toolbar">
+      <div class="searchbar">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" placeholder="What are you looking for?" [(ngModel)]="searchTerm" />
+      </div>
+      <div class="filter-dropdowns">
+        <select [(ngModel)]="selectedModule" (change)="onFilterChange()">
+          <option Value="" disabled selected hidden>Select Module</option>
+          <option *ngFor="let module of modules" [value]="module">{{ module }}</option>
+        </select>
+
+
+        <select [(ngModel)]="selectedStatusFilter" (change)="onFilterChange()">
+          <option value="" disabled selected hidden>All Status</option>
+          <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+        </select>
+      </div>
+
+
+      <div class="toolbar-actions">
+        <button class="toolbar-btn list-btn" [class.active]="viewMode === 'list'" (click)="viewMode = 'list'"
+          aria-label="List view">
+          <i class="bi bi-filter-right fs-1"></i>
+        </button>
+        <button class="toolbar-btn grid-btn" [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'"
+          aria-label="Grid view">
+          <i class="bi bi-grid fs-2"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="modal-overlay" *ngIf="isEditVisible" (click)="closeModal($event)">
+      <div class="modal-content" (click)="stopPropagation($event)">
+        <div class="modal-header">
+          <h2>Edit Details</h2>
+          <button class="closePopup" (click)="isEditVisible = false">×</button>
+        </div>
+        <hr class="modal-divider" />
+
+        <div class="modal-body">
+          <div class="detail-row">
+            <span>Project Name</span>
+            <strong>Q1 224 Procurement Audit</strong>
+          </div>
+          <div class="detail-row">
+            <span>Audit Responsibility</span>
+            <strong>Internal Audit</strong>
+          </div>
+          <div class="detail-row">
+            <span>Risk Area</span>
+            <strong>Fraud 360</strong>
+          </div>
+          <div class="detail-row">
+            <span>Modules</span>
+            <strong>P2P, T&E</strong>
+          </div>
+          <div class="detail-row">
+            <span>Data Range</span>
+            <strong>1 Jan 2024 - 31 Dec 2024</strong>
+          </div>
+
+          <div class="form-row">
+            <label>
+              Owner<span class="required">*</span><br />
+              <select class="form-control" [(ngModel)]="owner">
+                <option *ngFor="let o of owners" [value]="o">{{ o }}</option>
+              </select>
+            </label>
+
+            <label>
+              Status<span class="required">*</span><br />
+              <select class="form-control" [(ngModel)]="status">
+                <option>Approved</option>
+                <option>Pending</option>
+                <option>Rejected</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="model-footer">
+          <button class="btn btn-clear" (click)="closeModal($event)">cancel</button>
+          <button class="btn btn-save" (click)="save()">Save</button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- List View -->
+    <div *ngIf="viewMode === 'list'" class="projects-table-outer">
+      <table class="projects-table table-main">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Owner <i class="bi bi-chevron-down"></i></th>
+            <th>Audit Responsibility <i class="bi bi-chevron-down"></i></th>
+            <th>Risk Areas <i class="bi bi-chevron-down"></i></th>
+            <th>Modules <i class="bi bi-chevron-down"></i></th>
+            <th>Data Range</th>
+            <th>Status <i class="bi bi-chevron-down"></i></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let project of filteredProjects" (click)="goToProjectSummary(project)" style="cursor: pointer;">
+            <td>{{ project.name }}</td>
+            <td>{{ project.owner }}</td>
+            <td>{{ project.audit }}</td>
+            <td>{{ project.risk }}</td>
+            <td>{{ project.modules }}</td>
+            <td>{{ project.range }}</td>
+            <td>
+              <!-- <span class="status-pill" [ngClass]="project.status.toLowerCase()">
+                <i *ngIf="project.status === 'Pending'" class="bi bi-hourglass text-warning me-1"></i>
+                <i *ngIf="project.status === 'Approved'" class="bi bi-hand-thumbs-up text-success me-1"></i>
+                {{ project.status }}
+              </span> -->
+              <span class="status-badge" [ngClass]="project.status.toLowerCase()">
+                <i *ngIf="project.status === 'Pending'" class="far fa-hourglass"></i>
+                <i *ngIf="project.status === 'Approved'" class="far fa-thumbs-up"></i>
+                <i *ngIf="project.status === 'Failed'" class="fas fa-times-circle"></i>
+                {{ project.status }}
+              </span>
+            </td>
+            <td class="actions-column" style="position: relative;" (click)="$event.stopPropagation()">
+              <div class="dropdown-wrapper">
+                <button class="menu-button">
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+
+                <ul class="more-options">
+                  <li (click)="isEditVisible = true">
+                    <span class="option-icon"><i class="bi bi-pencil-square"></i></span> Edit Details
+                  </li>
+                  <li>
+                    <span class="option-icon"> <i class="bi bi-person-circle me-1"></i></span> Owner Profile
+                  </li>
+                  <li>
+                    <span class="option-icon"><i class="bi bi-trash3-fill"></i></span> Delete Permanently
+                  </li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <!-- Grid View -->
+    <div class="Grid-View">
+      <div *ngIf="viewMode === 'grid'" class="projects-grid">
+        <div *ngFor="let project of filteredProjects" class="project-card">
+          <div class="card-body">
+            <div class="card-header">
+              <h3 (click)="goToProjectSummary(project)">{{ project.name }}</h3>
+              <button class="menu-btn"><i class="bi bi-three-dots" (click)="openFloatingMenu($event, project)">
+                </i></button>
+            </div>
+
+            <div class="card-meta">
+              <span class="meta-item">
+                <i class="bi bi-calendar2-check me-1"></i>
+                Created On: {{ project.range }}
+              </span>
+              <span class="divider">|</span>
+              <span class="meta-item">
+                <i class="bi bi-person-circle me-1"></i>
+                Owner: {{ project.owner }}
+              </span>
+            </div>
+
+            <div class="card-content">
+              <div class="content-row">
+                <div class="content-item">
+                  <label>Audit Responsibility</label>
+                  <span>{{ project.audit }}</span>
+                </div>
+                <div class="content-item">
+                  <label>Risk Area</label>
+                  <span>{{ project.risk }}</span>
+                </div>
+              </div>
+
+              <div class="content-row">
+                <div class="content-item">
+                  <label>Modules</label>
+                  <span>{{ project.modules }}</span>
+                </div>
+                <div class="content-item">
+                  <label>Data Range</label>
+                  <span>{{ project.range }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer" [ngClass]="project.status.toLowerCase()">
+            <div class="status-badge" [ngClass]="project.status.toLowerCase()">
+              <i *ngIf="project.status === 'Pending'" class="bi bi-hourglass text-warning me-1"></i>
+              <i *ngIf="project.status === 'Approved'" class="bi bi-hand-thumbs-up"></i>
+              {{ project.status }}
+            </div>
+          </div>
+        </div>
+        <!-- Floating dropdown menu -->
+        <div class="floating-menu" *ngIf="floatingMenuVisible" [ngStyle]="{
+    top: floatingMenuPosition.top + 'px',
+    left: floatingMenuPosition.left + 'px'
+  }">
+          <ul class="floating-options">
+            <li (click)="editDetails()"><span class="option-icon"><i class="bi bi-pencil-square"></i></span> Edit
+              Details
+            </li>
+            <li (click)="deleteProject()"><span class="option-icon"><i class="bi bi-trash3-fill"></i></span> Delete
+              Permanently</li>
+          </ul>
+        </div>
+
+        <div class="modal-overlay" *ngIf="isEditVisible && selectedProject" (click)="closeModal($event)">
+          <div class="modal-content" (click)="stopPropagation($event)">
+            <div class="modal-header">
+              <h2>Edit Details</h2>
+              <button class="closePopup" (click)="isEditVisible = false">×</button>
+            </div>
+
+            <div class="modal-body" *ngIf="selectedProject">
+              <!-- Project Name (Read-only) -->
+              <div class="detail-row">
+                <label>Project Name</label>
+                <div class="detail-value">{{ selectedProject.name }}</div>
+              </div>
+
+              <div class="detail-row">
+                <label>Owner</label>
+                <div class="detail-value">{{ selectedProject.owner }}</div>
+              </div>
+
+              <div class="detail-row">
+                <label>Status</label>
+                <div class="detail-value">{{ selectedProject.status }}</div>
+              </div>
+
+              <!-- Audit Responsibility (Read-only) -->
+              <div class="detail-row">
+                <label>Audit Responsibility</label>
+                <div class="detail-value">{{ selectedProject.audit }}</div>
+              </div>
+
+              <!-- Risk Area (Read-only) -->
+              <div class="detail-row">
+                <label>Risk Area</label>
+                <div class="detail-value">{{ selectedProject.risk }}</div>
+              </div>
+
+              <!-- Modules (Read-only) -->
+              <div class="detail-row">
+                <label>Modules</label>
+                <div class="detail-value">{{ selectedProject.modules }}</div>
+              </div>
+
+              <div class="full-width-row">
+                <label>Scope</label>
+                <textarea class="form-control text-scope" [(ngModel)]="selectedProject.scope" rows="3"
+                  placeholder="Enter scope"></textarea>
+              </div>
+
+              <!-- Data Range (Read-only) -->
+              <div class="detail-row">
+                <label>Data Range</label>
+                <div class="date-range" style="
+    display: flex;
+">
+                  <!-- Start Date (readonly) -->
+                  <input type="text" class="form-control mr-2" [value]="selectedProject.startDateDisplay" readonly />
+
+                  <span class="mx-2">-</span>
+
+                  <!-- End Date (editable) -->
+                  <input type="date" class="form-control" [(ngModel)]="selectedProject.endDateString" name="endDate" />
+                </div>
+              </div>
+            </div>
+
+            <div class="model-footer">
+              <button class="btn btn-clear" (click)="closeModal($event)">Cancel</button>
+              <button class="btn btn-save" (click)="save()">Save</button>
+            </div>
+          </div>
+        </div>

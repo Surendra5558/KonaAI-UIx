@@ -1,0 +1,416 @@
+<div>
+  <div>
+    <!-- Back Button (only shown in detail view) -->
+    <div *ngIf="showDetailView" class="mb-6">
+      <button 
+        (click)="handleBackToList()"
+        class="flex items-center text-blue-600 hover:text-blue-800 mb-4 transition-colors duration-200"
+      >
+       <i class="bi bi-arrow-left"></i>
+      </button>
+    </div>
+
+  
+    <!-- Detail View -->
+    <div *ngIf="showDetailView && selectedTest" class="bg-white rounded-lg shadow-sm">
+      <!-- Header Information Cards -->
+ 
+
+
+       <div class="info-cards">
+    <div class="info-card">
+      <h3>Test Information</h3>
+      <div class="info-row">
+        <span class="label">Test ID:</span>
+        <span class="value">{{ selectedTest.id }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Category:</span>
+        <span class="value">{{ selectedTest.category }}</span>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h3>Test Results</h3>
+      <div class="info-row">
+        <span class="label">Total Tested:</span>
+        <span class="value">{{ selectedTest.tested | number }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Flagged Percent:</span>
+        <span class="value flagged">{{ selectedTest.failed }}%</span>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h3>Financial Impact</h3>
+      <div class="info-row">
+        <span class="label">Total Amount:</span>
+        <span class="value">$50,840,877.00</span>
+      </div>
+      <div class="info-row">
+        <span class="label">At Risk:</span>
+        <span class="value at-risk">$40,672,701.60</span>
+      </div>
+    </div>
+  </div>
+      <!-- Search Controls -->
+      <div class="flex items-center justify-between p-4 bg-white border-b border-gray-200">
+        <div class="flex items-center space-x-4">
+          <div class="relative">
+           <i class="bi bi-search"></i>
+            <input
+              type="text"
+              placeholder="Search Columns"
+              class="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+          <select class="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            <option>All Groups</option>
+            <option>Group 1</option>
+            <option>Group 2</option>
+            <option>Group 3</option>
+          </select>
+        </div>
+        <div class="relative">
+          <button 
+            class="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-200"
+            (click)="toggleColumnDropdown($event)"
+          >
+            <i class="fas fa-columns mr-2 text-blue-600"></i>
+            <span class="text-blue-600 font-medium">Columns</span>
+          </button>
+
+          <!-- Column Management Dropdown -->
+          <div *ngIf="showColumnModal" class="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-xl w-96 border border-gray-200 z-50">
+            <!-- Dropdown Header -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-200">
+              <div>
+                <h3 class="text-lg font-semibold text-gray-900">Manage Columns</h3>
+                <p class="text-sm text-gray-600">Configure which columns to display and their settings</p>
+              </div>
+              <button 
+                class="text-gray-400 hover:text-gray-600 text-xl transition-colors duration-200"
+                (click)="closeColumnDropdown($event)"
+              >
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="p-4 border-b border-gray-200">
+              <div class="relative">
+                <input
+                  type="text" 
+                  placeholder= "Search Columns"
+                   class="bi bi-search"
+                  [(ngModel)]="columnSearchTerm"
+                  (input)="filterColumns()"
+                />
+              </div>
+              <button 
+                class="bi bi-layout-three-columns"
+                (click)="showAllColumns()" 
+              >
+                Show All
+              </button>
+            </div>
+
+            <!-- Column List -->
+            <div class="max-h-80 overflow-y-auto">
+              <div class="p-4 space-y-3">
+                <div 
+                  *ngFor="let column of filteredColumns"
+                  class="flex items-center justify-between p-3 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors duration-200"
+                >
+                  <div class="flex items-center space-x-3">
+                    <input
+                      type="checkbox"
+                      [checked]="column.visible"
+                      (change)="toggleColumnVisibility(column.key)"
+                      class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label 
+                      class="text-sm font-medium text-gray-900 cursor-pointer"
+                      (click)="toggleColumnVisibility(column.key)"
+                    >
+                      {{ column.label }}
+                    </label>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <button 
+                      [class]="'hover:text-gray-600 transition-colors duration-200 ' + (column.pinned ? 'text-blue-600' : 'text-gray-400')"
+                      (click)="toggleColumnPin(column.key)"
+                      title="Pin/Unpin Column"
+                    >
+                      <i class="fas fa-thumbtack"></i>
+                    </button>
+                    <button 
+                      class="text-gray-400 hover:text-gray-600 cursor-move"
+                      title="Drag to reorder"
+                    >
+                      <i class="fas fa-grip-vertical"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-blue-50 border-b border-gray-200">
+            <tr>
+              <th class="px-4 py-3 text-left">
+                <button class="flex items-center text-xs font-medium text-gray-700 uppercase tracking-wider hover:text-gray-900">
+                  Groups <i class="bi bi-chevron-down"></i>
+                </button>
+              </th>
+              <th class="px-4 py-3 text-left">
+                <button class="flex items-center text-xs font-medium text-gray-700 uppercase tracking-wider hover:text-gray-900">
+                  Vendor ID <i class="bi bi-chevron-down"></i>
+                </button>
+              </th>
+              <th class="px-4 py-3 text-left">
+                <button class="flex items-center text-xs font-medium text-gray-700 uppercase tracking-wider hover:text-gray-900">
+                  Vendor Name <i class="bi bi-chevron-down"></i>
+                </button>
+              </th>
+              <th class="px-4 py-3 text-left">
+                <span class="text-xs font-medium text-gray-700 uppercase tracking-wider">
+                  Invoice Description
+                </span>
+              </th>
+              <th class="px-4 py-3 text-left">
+                <button class="flex items-center text-xs font-medium text-gray-700 uppercase tracking-wider hover:text-gray-900">
+                  Physical Invoice <i class="bi bi-chevron-down"></i>
+                </button>
+              </th><i class="bi bi-chevron-down"></i>
+              <th class="px-4 py-3 text-left">
+                <button class="flex items-center text-xs font-medium text-gray-700 uppercase tracking-wider hover:text-gray-900">
+                  System Invoice <i class="bi bi-chevron-down"></i>
+                </button>
+              </th>
+              <th class="px-4 py-3 text-left">
+                <button class="flex items-center text-xs font-medium text-gray-700 uppercase tracking-wider hover:text-gray-900">
+                  Posting Date <i class="bi bi-chevron-down"></i>
+                </button>
+              </th>
+              <th class="px-4 py-3 text-left">
+                <span class="text-xs font-medium text-gray-700 uppercase tracking-wider">
+                  Currency
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 bg-white">
+            <tr *ngFor="let record of detailRecords" class="hover:bg-gray-50 transition-colors duration-150">
+              <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ record.group }}</td>
+              <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ record.vendorId }}</td>
+              <td class="px-4 py-3 text-sm text-gray-900">{{ record.vendorName }}</td>
+              <td class="px-4 py-3 text-sm text-gray-900">{{ record.invoiceDescription }}</td>
+              <td class="px-4 py-3 text-sm text-gray-900">{{ record.physicalInvoice }}</td>
+              <td class="px-4 py-3 text-sm text-gray-900">{{ record.systemInvoice }}</td>
+              <td class="px-4 py-3 text-sm text-gray-900">{{ record.postingDate }}</td>
+              <td class="px-4 py-3 text-sm text-gray-900">{{ record.currency }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Bottom Progress Bar and Pagination -->
+      <div class="border-t border-gray-200">
+        <!-- Progress bar -->
+        <div class="h-1 bg-gray-200">
+          <div class="h-1 bg-blue-500" style="width: 7.2%;"></div>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="flex items-center justify-between px-4 py-3 bg-white">
+          <div class="text-sm text-gray-700">Showing 1-15 of 2,069</div>
+          <div class="flex items-center space-x-2">
+            <button class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="px-3 py-1 text-sm border border-blue-600 bg-blue-600 text-white rounded">1</button>
+            <button class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-100">2</button>
+            <button class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-100">3</button>
+            <span class="px-2 text-gray-500">...</span>
+            <button class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-100">20</button>
+            <button class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-100">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+            <select class="ml-4 px-3 py-1 text-sm border border-gray-300 rounded">
+              <option>15</option>
+              <option>25</option>
+              <option>50</option>
+              <option>100</option>
+            </select>
+            <span class="text-sm text-gray-700 ml-2">Items per page</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- List View -->
+    <div *ngIf="!showDetailView" class="bg-white rounded-lg shadow-sm border border-gray-200">
+      <!-- Header -->
+      <div class="bg-blue-50 px-4 py-3 rounded-t-lg border-b border-gray-200">
+        <div class="flex items-center text-blue-600 text-sm">
+          <i class="bi bi-info-circle"></i>
+          Click on any test row to expand and view failed records immediately
+          <button class="ml-auto text-gray-400 hover:text-gray-600 transition-colors duration-200">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Test List -->
+     <div class="bg-white p-4 space-y-3">
+        <div 
+           *ngFor="let test of tests"
+            class="bg-white border border-slate-200 rounded-lg hover:shadow-sm transition-colors duration-200"
+        >
+          <!-- Main Row -->
+          <div 
+           class="px-6 py-4 cursor-pointer flex items-center justify-between"
+           (click)="toggleExpansion(test.id)"
+          >
+            <div class="flex items-center gap-3">
+              <button class="text-gray-500 hover:text-gray-700 transition-colors duration-200 flex-shrink-0">
+                <i  class="bi bi-chevron-compact-down"
+                  [class.fa-chevron-down]="!test.isExpanded"
+                  [class.fa-chevron-up]="test.isExpanded"
+                  [class.rotate-180]="test.isExpanded"
+                ></i> 
+              </button>
+              <div class="min-w-0 flex-1">
+                <div class="font-semibold text-gray-900 text-base leading-tight">
+                  {{ test.id }}
+                </div>
+                <div class="text-gray-600 text-sm mt-1 leading-relaxed">
+                  {{ test.description }}
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex items-center gap-16 flex-shrink-0 ml-8">
+              <div class="text-center">
+                <div class="flex items-center justify-center text-gray-500 text-sm mb-2">
+                 <i class="bi bi-check-circle"></i>
+                  <span>Tested</span>
+                </div>
+                <div class="font-semibold text-lg text-gray-900">
+                  {{ test.tested | number }}
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="flex items-center justify-center text-red-500 text-sm mb-2">
+                 <i class="bi bi-exclamation-triangle"></i>
+                  <span>Failed</span>
+                </div>
+                <div class="font-semibold text-lg text-red-600">
+                  {{ test.failed | number }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Expanded Content -->
+          <div 
+            class="overflow-hidden transition-all duration-300 ease-in-out"
+            [class.max-h-0]="!test.isExpanded"
+            [class.max-h-screen]="test.isExpanded"
+          >
+            <div *ngIf="test.isExpanded" class="px-6 pb-6 bg-gray-50">
+              <div class="flex justify-between mb-4 text-sm">
+                <div>
+                  <span class="font-medium text-gray-700">Category:</span>
+                  <span class="text-gray-900 ml-2">{{ test.category }}</span>
+                </div>
+                <div>
+                  <span class="font-medium text-gray-700">Last Run:</span>
+                  <span class="text-gray-900 ml-2">{{ test.lastRun }}</span>
+                </div>
+              </div>
+
+              <div *ngIf="test.records.length > 0; else noRecords" class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 border-b border-gray-200">
+              <div class="grid grid-cols-8 gap-2 px-4 py-3 text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <div class="flex items-center">
+                      <span>Vendor ID</span>
+                     <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="flex items-center">
+                      <span>Vendor Name</span>
+                     <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div>Invoice Description</div>
+                    <div class="flex items-center">
+                      <span>Physical Invoice</span>
+                     <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="flex items-center">
+                      <span>System Invoice</span>
+                     <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="flex items-center">
+                      <span>Posting Date</span>
+                     <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div>Currency</div>
+                    <div class="text-right flex items-center justify-end">
+                      <span>Amount</span>
+                      <i class="bi bi-chevron-down"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="divide-y divide-gray-100">
+                  <div 
+                    *ngFor="let record of test.records"
+                    class="px-4 py-3 text-sm  transition-colors duration-150"
+                  >
+                    <div class="grid grid-cols-8 gap-4">
+                      <div class="font-medium text-gray-900">{{ record.vendorId }}</div>
+                      <div class="text-gray-900">{{ record.vendorName }}</div>
+                      <div class="text-gray-900">{{ record.invoiceDescription }}</div>
+                      <div class="text-gray-900">{{ record.physicalInvoice }}</div>
+                      <div class="text-gray-900">{{ record.systemInvoice }}</div>
+                      <div class="text-gray-900">{{ record.postingDate }}</div>
+                      <div class="text-gray-900">{{ record.currency }}</div>
+                      <div class="text-right font-medium text-gray-900">${{ record.amount | number }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-white px-4 py-3 border-t border-gray-200 flex justify-between items-center">
+                  <span class="text-sm text-gray-600">
+                    Showing first {{ test.records.length }} of {{ test.failed | number }} flagged records
+                  </span>
+                  <button 
+                    class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors duration-200 inline-flex items-center"
+                    (click)="handleViewAllDetails(test); $event.stopPropagation()"
+                  >
+                    View All
+                    <i class="fas fa-arrow-right ml-2"></i>
+                  </button>
+                </div>
+              </div>
+
+              <ng-template #noRecords>
+                <div class="text-center py-8 text-gray-500">
+                  <i class="fas fa-database text-3xl mb-2 text-gray-400"></i>
+                  <p class="text-sm">No records available for {{ test.id }}</p>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

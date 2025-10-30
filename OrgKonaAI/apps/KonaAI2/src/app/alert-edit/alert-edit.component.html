@@ -1,0 +1,84 @@
+<div class="popup-overlay">
+  <div class="popup-content">
+    <div class="popup-header">
+      <h2>Edit Details</h2>
+    </div>
+    
+    <div class="popup-body">
+      <div class="section">
+        <h3>Add Auditors</h3>
+        
+        <div class="auditors-list">
+          <div class="auditor-item" *ngFor="let auditor of auditors">
+            <div class="checkbox-wrapper">
+              <input 
+                type="checkbox" 
+                [id]="auditor.id"
+                [checked]="auditor.selected"
+                (change)="onAuditorToggle(auditor)"
+                class="custom-checkbox">
+              <label [for]="auditor.id" class="auditor-label">{{auditor.name}}</label>
+            </div>
+            
+            <div class="assignment-section">
+              <div *ngIf="!auditor.selected || !auditor.assigned" class="assign-button-wrapper">
+                <button 
+                  class="assign-button"
+                  [disabled]="!auditor.selected">
+                  Assign {{auditor.name | lowercase}}s
+                </button>
+              </div>
+              
+              <div *ngIf="auditor.selected && auditor.assigned" class="assigned-user">
+                <span class="assigned-name">{{auditor.assigned}}</span>
+                <button class="remove-button" (click)="removeAssignedAuditor(auditor)">✕</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Start Date</label>
+          <div class="date-input-wrapper">
+            <input 
+              type="text" 
+              [(ngModel)]="startDate"
+              class="date-input"
+              readonly>
+            <span class="calendar-icon">📅</span>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="required">Start Date*</label>
+          <div class="date-input-wrapper">
+            <input 
+              type="text" 
+              [(ngModel)]="endDate"
+              placeholder="dd/mm/yy"
+              class="date-input">
+            <span class="calendar-icon">📅</span>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="required">Select Priority*</label>
+          <div class="select-wrapper">
+            <select [(ngModel)]="priority" class="priority-select">
+              <option value="" disabled>e.g. Low</option>
+              <option *ngFor="let p of priorities" [value]="p">{{p}}</option>
+            </select>
+            <span class="select-arrow">▼</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="popup-footer">
+      <button class="cancel-button" (click)="onCancel()">Cancel</button>
+      <button class="save-button" (click)="onSave()">Save</button>
+    </div>
+  </div>
+</div>

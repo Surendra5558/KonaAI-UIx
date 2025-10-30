@@ -1,0 +1,32 @@
+<div class="top-bar">
+    <div class="header">
+      
+      <div class="header-actions"style="border-outline:none">
+        <!-- <button class="clear-filters-btn" (click)="clearAllFilters()">Clear All Filters</button>
+        <button class="apply-filters-btn" (click)="saveGlobalFilters()">Apply to All Pages</button>  -->
+      </div>
+    </div>
+  </div>
+  
+  <!-- PowerBI Report Container -->
+  
+  
+  <div style="display:flex;height:100vh;border:none">
+      <!-- Sidebar with pages -->
+      <!-- <div class="sidebar">
+        <div class="sidebar-section">
+          <ul class="pages-list">
+             <li *ngFor="let page of pages; trackBy: trackByName" 
+                 class="page-item" 
+                 [class.active]="activePage?.name === page.name"
+                 (click)="goToPage(page)">
+               <span class="page-dot"></span>
+               <span class="page-label">{{ page.displayName }}</span>
+             </li>
+          </ul>
+        </div>
+      </div> -->
+    
+      <!-- Report Container -->
+      <div #reportContainer class="report-container" style="height:75vh; width:100%"></div>
+    </div>

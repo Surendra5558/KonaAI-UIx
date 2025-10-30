@@ -1,0 +1,103 @@
+<div class="topbar topbar-header">
+  <div class="topbar-content">
+    <button class="header-backbtn" (click)="onBackClick()">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <span class="header-title">BSAK-44</span>
+  </div>
+</div>
+<div class="report-container">
+  <!-- Header -->
+
+
+  <!-- Search Bar -->
+  <div class="searchbar">
+    <i class="bi bi-search search-icon"></i>
+    <input type="text" placeholder="What are you looking for?" [(ngModel)]="searchQuery" (ngModelChange)="onSearch()" />
+  </div>
+  <!-- Data Table -->
+  <div class="table-wrapper">
+    <table class="table-main">
+      <thead>
+        <tr class="table-header-row">
+          <th class="checkbox-column">
+            <input type="checkbox" [checked]="isAllSelected" [indeterminate]="isIndeterminate" (change)="toggleAll()"
+              class="checkbox">
+          </th>
+          <th>XBLNR</th>
+          <th>MANDT</th>
+          <th>BUKRS</th>
+          <th>LIFNR</th>
+          <th>UMSKS</th>
+          <th>UMSKZ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of filteredData" [class.selected]="row.selected" class="table-row">
+          <td class="checkbox-column">
+            <input type="checkbox" [checked]="row.selected" (change)="toggleRow(row)" class="checkbox">
+          </td>
+          <td>{{ row.xblnr }}</td>
+          <td>{{ row.mandt }}</td>
+          <td>{{ row.bukrs }}</td>
+          <td>{{ row.lifnr }}</td>
+          <td>{{ row.umsks }}</td>
+          <td>{{ row.umskz }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Selection Bar -->
+  <div class="selection-bar" *ngIf="hasSelectedItems">
+    <div class="selection-content">
+      <div class="select-class">
+        <button class="close-selection" (click)="closeSelection()">×</button>
+        <span class="selection-count">Selected ({{ selectedCount }})</span>
+      </div>
+      <div class="action-controls">
+        <span class="resolved-label">Resolved by:</span>
+        <label class="radio-option">
+          <input type="radio" name="action" value="archive" [(ngModel)]="selectedAction">
+          <span class="radio-text">Archive</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="action" value="ignore" [(ngModel)]="selectedAction">
+          <span class="radio-text">Ignore</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="action" value="delete" [(ngModel)]="selectedAction">
+          <span class="radio-text">Delete</span>
+        </label>
+        <button class="apply-btn" (click)="applyAction()">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer with Pagination -->
+  <div class="table-footer">
+    <div class="footer-left">
+      <span class="showing-text">Showing 1-15 of {{ totalItems | number }}</span>
+    </div>
+
+    <div class="pagination">
+      <button class="page-btn" [disabled]="currentPage === 1" (click)="previousPage()">
+         </button>
+
+          <button *ngFor="let page of pageNumbers" class="page-btn" [class.active]="currentPage === page"
+            (click)="goToPage(page)">
+            {{ page }}
+          </button>
+
+          <span *ngIf="totalPages > 5" class="page-dots">...</span>
+
+          <button class="page-btn" [class.active]="currentPage === 20" (click)="goToPage(20)">
+            20
+          </button>
+
+          <button class="page-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
+            >
+          </button>
+    </div>
+  </div>
+</div>

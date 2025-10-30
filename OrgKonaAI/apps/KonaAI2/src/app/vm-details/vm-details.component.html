@@ -1,0 +1,148 @@
+<!-- vm-details.component.html -->
+<div class="vm-container">
+  <!-- Header -->
+  <div class="header">
+    <button mat-icon-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span class="title">{{parentData}}</span>
+  </div>
+
+  <!-- Search -->
+  <mat-form-field class="search-field">
+    <mat-icon matPrefix>search</mat-icon>
+    <input matInput placeholder="What are you looking for?" [(ngModel)]="searchText">
+  </mat-form-field>
+
+  <!-- Info Banner -->
+  <div class="info-banner" *ngIf="showBanner">
+    <mat-icon>info</mat-icon>
+    Select one or more records to re-extract the data. Actions will appear once records are selected.
+    <button mat-icon-button (click)="showBanner=false">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Table -->
+  <table mat-table [dataSource]="dataSource">
+    <!-- Checkbox -->
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox></mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox (change)="toggleRowSelection(row, $event)"></mat-checkbox>
+      </td>
+    </ng-container>
+
+    <!-- Other Columns -->
+    <ng-container matColumnDef="XBLNR">
+      <th mat-header-cell *matHeaderCellDef>XBLNR</th>
+      <td mat-cell *matCellDef="let row">{{ row.XBLNR }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="MANDT">
+      <th mat-header-cell *matHeaderCellDef>MANDT</th>
+      <td mat-cell *matCellDef="let row">{{ row.MANDT }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="BUKRS">
+      <th mat-header-cell *matHeaderCellDef>BUKRS</th>
+      <td mat-cell *matCellDef="let row">{{ row.BUKRS }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="LIFNR">
+      <th mat-header-cell *matHeaderCellDef>LIFNR</th>
+      <td mat-cell *matCellDef="let row">{{ row.LIFNR }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="UMSKS">
+      <th mat-header-cell *matHeaderCellDef>UMSKS</th>
+      <td mat-cell *matCellDef="let row">{{ row.UMSKS }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="UMSKZ">
+      <th mat-header-cell *matHeaderCellDef>UMSKZ</th>
+      <td mat-cell *matCellDef="let row">{{ row.UMSKZ }}</td>
+    </ng-container>
+
+    <!-- Status -->
+    <!-- <ng-container matColumnDef="Status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let row">
+        <span class="status" [ngClass]="row.Status.toLowerCase()">
+          <mat-icon *ngIf="row.Status==='Passed'" class="passed">check_circle</mat-icon>
+          <mat-icon *ngIf="row.Status==='Failed'" class="failed">cancel</mat-icon>
+          {{ row.Status }}
+        </span>
+      </td>
+    </ng-container> -->
+    <ng-container matColumnDef="Status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let row" class="status-cell-content" style="padding:19px 16px">
+
+        <!-- Completed / Passed -->
+        <span *ngIf="row.Status === 'Passed'" class="status-badge completed">
+          <i class="far fa-thumbs-up"></i> Completed
+        </span>
+
+        <!-- Failed -->
+        <ng-container *ngIf="row.Status === 'Failed'">
+          <span class="status-badge failed">
+            <i class="fas fa-times-circle"></i> Failed
+          </span>
+
+        </ng-container>
+
+        <!-- Pending -->
+        <span *ngIf="row.Status === 'Pending'" class="status-badge pending">
+          <i class="far fa-hourglass"></i> Pending
+        </span>
+
+      </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <!-- Pagination -->
+  <mat-paginator [length]="dataSource.length" [pageSize]="10"></mat-paginator>
+</div>
+<div class="selection-bar" *ngIf="selectedCount > 0">
+
+  <div class="selection-content">
+
+    <div class="select-class">
+      <button class="close-selection" (click)="closePopup()">
+        &times;
+      </button>
+
+      <span class="selection-count">Selected ({{selectedCount}})</span>
+    </div>
+
+    <div class="selection-body-content">
+      <div class="popup-text">
+        <p>Your files will be re-extracted and saved locally. After reviewing them, you may restart the import. Existing
+          validated data will stay intact.</p>
+      </div>
+
+      <button class="reextract-btn" (click)="reExtract()">Re-Extract</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Toast Notification with Close Button -->
+<div class="blue-toast" *ngIf="showToast">
+  <div class="toast-header">
+    <span class="info-icon">ℹ️</span>
+    <div class="toast-title">Downloading Re-Extracted Data</div>
+    <button class="close-btn" (click)="closeToast()">×</button>
+  </div>
+  <div class="toast-body">
+    The re-extracted file is now downloading to your system.
+    Check your downloads folder once complete.
+  </div>
+</div>

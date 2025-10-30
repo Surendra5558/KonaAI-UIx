@@ -1,0 +1,156 @@
+<div class="billing-container">
+  <!-- Header -->
+  <div class="billing-header">
+    <h2>Billing</h2>
+    <p>View your current plan, track usage, and access invoices all in one place.</p>
+  </div>
+
+  <!-- Top Section -->
+  <div class="billing-summary">
+    <!-- Enterprise Plan -->
+    <div class="plan-card">
+      <h3>Enterprise Plan</h3>
+      <p class="subtitle">Your front plan (billed yearly)</p>
+      <ul>
+        <li><strong>Server:</strong> US-SPE-DEMO-WEB</li>
+        <li><strong>Users:</strong> 1000</li>
+        <li><strong>Modules:</strong> O2C (Order to cash), P2P (Procure to pay)</li>
+        <li><strong>Data Renewal:</strong> Every 3 months</li>
+      </ul>
+      <button class="btn-upgrade">Upgrade Plan</button>
+    </div>
+
+    <!-- Payment Details -->
+    <div class="payment-card">
+      <div class="header">
+        <h3>Payment Details</h3>
+        <button class="edit-btn" (click)="openPaymentModal()">✏️</button>
+      </div>
+
+      <ng-container *ngIf="!isEditing; else editForm">
+        <div class="card-info">
+          <span class="card-icon">💳</span>
+          <div>
+            <p>Master card</p>
+            <p>**** **** **** {{ card.last4 }}</p>
+            <p>Expires <strong>{{ card.expiry }}</strong></p>
+          </div>
+        </div>
+        <p class="billing-cycle">
+          Billed on the first day of every year. <br />
+          Next billing on <strong>January 01, 2026</strong>
+        </p>
+      </ng-container>
+
+      <ng-template #editForm>
+        <form [formGroup]="cardForm" class="card-form" (ngSubmit)="saveCard()">
+          <label>Card Number</label>
+          <input type="text" formControlName="number" placeholder="Enter card number" />
+
+          <label>Expiry Date</label>
+          <input type="text" formControlName="expiry" placeholder="MM/YY" />
+
+          <div class="actions">
+            <button type="submit" class="btn-save">Save</button>
+            <button type="button" class="btn-cancel" (click)="toggleEdit()">Cancel</button>
+          </div>
+        </form>
+      </ng-template>
+    </div>
+
+    <!-- Account Manager -->
+    <div class="account-card">
+      <h3>Account Manager / Customer Success Manager (CSM)</h3>
+      <ul>
+        <li><strong>Account Manager:</strong> Sarah Thompson</li>
+        <li><strong>Company:</strong> KonaAI</li>
+        <li><strong>Phone no:</strong> +1 (555) 789-0123</li>
+        <li><strong>Email:</strong> sarah.thompson@konaai.com</li>
+      </ul>
+      <div class="contact-box">
+        <p>Need assistance with your billing or plan?</p>
+        <a href="#">Contact →</a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Invoice Table -->
+  <div class="invoices">
+    <h3>Invoices</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Invoice Number</th>
+          <th>Total incl.tax</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let invoice of invoices">
+          <td>{{ invoice.number }}</td>
+          <td>{{ invoice.amount }}</td>
+          <td>{{ invoice.type }}</td>
+          <td>
+            <span class="status" [ngClass]="invoice.status.toLowerCase()">
+              {{ invoice.status }}
+            </span>
+          </td>
+          <td>{{ invoice.date }}</td>
+          <td><button class="menu-btn">⋮</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="modal show" *ngIf="showPaymentModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="cardForm" (ngSubmit)="saveCard()">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Payment Details</h5>
+          <button type="button" class="close" (click)="closePaymentModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <label>Name on card</label>
+          <input type="text" formControlName="name" placeholder="John Doe" required />
+
+          <label>Card Number</label>
+          <input type="text" formControlName="number" placeholder="1234 5676 6545 3435" required />
+
+          <div class="row-fields">
+            <div>
+              <label>CVV</label>
+              <input type="text" formControlName="cvv" placeholder="000" required />
+            </div>
+            <div>
+              <label>Expiry</label>
+              <input type="text" formControlName="expiry" placeholder="MM/YY" required />
+            </div>
+          </div>
+
+          <label>Billing Address</label>
+          <input type="text" formControlName="address" placeholder="123 Business Street, Suite 500" required />
+
+          <label>City, State, ZIP</label>
+          <input type="text" formControlName="state" placeholder="New York, NY 10001" required />
+
+          <label>Country</label>
+          <select formControlName="country" required>
+            <option value="US">United States</option>
+            <!-- Add more as needed -->
+          </select>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-secondary" (click)="closePaymentModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop" *ngIf="showPaymentModal"></div>

@@ -1,0 +1,26 @@
+<div class="header-bar">
+  <span class="header-icon"></span>
+  <span class="header-title">Questionnaire Builder</span>
+  <span class="header-desc">
+    Add and customise questionnaires for investigations and assessments.
+  </span>
+</div>
+
+<div *ngIf="questionnaires.length === 0" class="centered-content">
+  <h2>No Questions Added Yet</h2>
+  <p>
+    Build a structured questionnaire to streamline investigations and assessments
+  </p>
+  <div class="questionnaire-graphic">
+    <!-- Optionally use an image or icon similar to your screenshot -->
+    <img src="assets\images\loginImages\Questionaaire.png" alt="Questionnaire Graphic" />
+  </div>
+  <button class="create-btn" (click)="createQuestionnaire()">
+    Create your First Questionnaire
+  </button>
+</div>
+
+<!-- Add questionnaire list here when available -->
+<div *ngIf="questionnaires.length > 0">
+  <!-- Your list rendering code -->
+</div>

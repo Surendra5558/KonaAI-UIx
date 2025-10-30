@@ -1,0 +1,410 @@
+<!-- edit-scenario.component.html -->
+<div class="edit-scenario-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <button class="back-btn" (click)="goBack()">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <h1 class="title">{{Scenario}} Scenario</h1>
+    </div>
+    <div class="header-right">
+      <button class="btn btn-clear" (click)="preview()">
+        <i class="bi bi-eye mr-2"></i>
+        Preview
+      </button>
+      <div class="save-dropdown">
+        <button class="btn btn-save" (click)="save()">
+          {{button}}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div style="overflow-y: auto; height: 90vh;">
+    <!-- Main Content -->
+  <div class="main-content">
+    <!-- Top Section -->
+    <div class="top-section">
+      <div class="form-group">
+        <label for="scenarioName">Scenario Name</label>
+        <input type="text" id="scenarioName" [(ngModel)]="scenarioName" placeholder="High-Value Vendor Spend"
+          class="form-input" />
+      </div>
+
+      <div class="form-group">
+        <label for="comments">Comments</label>
+        <input type="text" id="comments" [(ngModel)]="comments"
+          placeholder="Vendors with cumulative monthly spending above ₹10,00,000" class="form-input" />
+      </div>
+
+      <div class="form-group">
+        <label for="frequency">Frequency</label>
+        <div class="frequency-controls">
+          <div class="automate-toggle">
+            <label class="toggle-label">
+              <span>Automate Scenario</span>
+              <div class="toggle-switch">
+                <input type="checkbox" [(ngModel)]="automateScenario" class="toggle-input" />
+                <span class="toggle-slider"></span>
+              </div>
+            </label>
+          </div>
+          <select class="form-select" [(ngModel)]="triggerSchedule">
+            <option value="">Set trigger schedule</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab" [class.active]="activeTab === 'data'" (click)="setActiveTab('data')">
+        Data
+      </button>
+      <button class="tab" [class.active]="activeTab === 'tests'" (click)="setActiveTab('tests')">
+        Tests
+      </button>
+    </div>
+
+    <!-- Data Tab Content -->
+    <div class="tab-content" *ngIf="activeTab === 'data'">
+      <div class="conditions-section">
+        <div class="condition-row" *ngFor="let condition of conditions; let i = index">
+          <div class="condition-fields">
+            <div class="field-group">
+              <span class="field-label" *ngIf="i === 0">Select</span>
+              <div class="logic-operator-wrapper" *ngIf="i > 0">
+                <select class="form-select logic-operator-dropdown" [(ngModel)]="condition.logicOperator"
+                  name="logicOperator_{{i}}">
+                  <option value="and">and</option>
+                  <option value="or">or</option>
+                </select>
+              </div>
+              <select class="form-select" [(ngModel)]="condition.field">
+                <option value="invoiceAmount">Invoice Amount</option>
+                <option value="vendorName">Vendor Name</option>
+                <option value="category">Category</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <select class="form-select" [(ngModel)]="condition.operator">
+                <option value="greater than">greater than</option>
+                <option value="equal to">equal to</option>
+                <option value="less than">less than</option>
+                <option value="contains">contains</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <input type="text" class="form-input" [(ngModel)]="condition.value"
+                [placeholder]="getPlaceholder(condition.field)" />
+            </div>
+
+            <button class="delete-btn" *ngIf="conditions.length > 1" (click)="removeCondition(i)">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+        </div>
+
+        <button class="btn btn-clear" (click)="addCondition()">
+          <i class="bi bi-plus-lg mr-2"></i>
+          Add Condition
+        </button>
+      </div>
+
+      <div class="bottom-controls">
+        <div style="display: flex;gap: 16px;">
+          <div class="control-group">
+            <label class="toggle-label">
+              <span>Exclude Transactions with Alerts</span>
+              <div class="toggle-switch">
+                <input type="checkbox" [(ngModel)]="excludeTransactionsWithAlerts" class="toggle-input" />
+                <span class="toggle-slider"></span>
+              </div>
+            </label>
+          </div>
+
+          <div class="control-group">
+            <label class="toggle-label">
+              <span>Generate Alerts</span>
+              <div class="toggle-switch">
+                <input type="checkbox" [(ngModel)]="generateAlerts" (change)="onToggleChange($event)"
+                  class="toggle-input" />
+                <span class="toggle-slider"></span>
+              </div>
+            </label>
+            <button class="settings-btn" *ngIf="generateAlerts">
+              <i class="bi bi-gear"></i>
+            </button>
+          </div>
+        </div>
+        <button class="btn btn-clear" (click)="getResults()">
+          Get Results
+        </button>
+      </div>
+    </div>
+    <!-- Tests Tab Content -->
+    <div class="tab-content" *ngIf="activeTab === 'tests'">
+      <div class="tests-section">
+        <h3 class="section-title">Test Configuration</h3>
+        <div *ngFor="let block of testBlocks; let blockIndex = index" class="test-selection-block">
+          <div class="add-test-block">
+            <!-- Test Selection Dropdown -->
+            <div class="test-selection">
+              <select class="form-control test-select" [(ngModel)]="block.selectedTest"
+                (change)="onTestSelectionChange(blockIndex)">
+                <option value="">Select Tests</option>
+                <option value="PMTONINT">PMTONINT - Payments made to officers</option>
+                <option value="DUPVEND">DUPVEND - Duplicate vendor analysis</option>
+                <option value="BENFORD">BENFORD - Benford's law analysis</option>
+              </select>
+
+              <button class="btn btn-clear" (click)="addParameter(blockIndex)"
+                [disabled]="!block.selectedTest || !block.isParametersEnabled">
+                <i class="bi bi-plus-lg mr-2"></i>
+                Add Parameters
+              </button>
+            </div>
+            <!-- Parameters Section -->
+            <div class="parameters-section" *ngIf="block.parameters.length > 0">
+              <div class="parameter-row" *ngFor="let parameter of block.parameters; let i = index">
+                <div class="parameter-controls">
+                  <span class="parameter-label">Parameter {{ i + 1 }}</span>
+
+                  <select class="form-control column-select" [(ngModel)]="parameter.column">
+                    <option value="">Column ID</option>
+                    <option value="vendorId">Vendor ID</option>
+                    <option value="amount">Amount</option>
+                    <option value="date">Date</option>
+                    <option value="description">Description</option>
+                  </select>
+
+                  <select class="form-control condition-select" [(ngModel)]="parameter.condition">
+                    <option value="">Condition</option>
+                    <option value="equals">Equals</option>
+                    <option value="contains">Contains</option>
+                    <option value="greater_than">Greater Than</option>
+                    <option value="less_than">Less Than</option>
+                  </select>
+
+                  <input type="text" class="form-control parameter-value" [(ngModel)]="parameter.value"
+                    placeholder="Value">
+
+                  <button class="remove-parameter-button" (click)="removeParameter(blockIndex, i)">
+                    <i class="bi bi-trash3"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <button class="remove-parameter-button" (click)="removeTest(blockIndex)">
+            <i class="bi bi-trash3"></i>
+          </button>
+        </div>
+        <!-- Add Test Button -->
+        <button class="btn btn-clear" (click)="addTest()">
+          <i class="bi bi-plus-lg mr-2"></i>
+          Add Test
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="results-table-container" *ngIf="isShowResults">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+        <h3> Results</h3>
+        <div style="display: flex; gap: 25px; align-items: center;">
+          <div class="searchbar"> 
+          <i class="bi bi-search search-icon"></i> 
+          <input type="text" placeholder="Search Users" /> 
+        </div>
+        <button class="btn btn-clear"><i class="bi bi-layout-three-columns mr-2"></i>Columns</button>
+        </div>
+      </div>
+      <table class="table-main results-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" [(ngModel)]="allSelected" (change)="toggleSelectAll()" /></th>
+            <th>System Invoice No</th>
+            <th>Vendor Number</th>
+            <th>Vendor Name</th>
+            <th>System Invoice Line No</th>
+            <th>Physical Invoice No</th>
+            <th>System Invoice Date</th>
+            <th>Tag</th>
+            <th>
+              <span class="alerts-header">
+                Alerts
+                <i class="alert-icon">&#9888;</i>
+              </span>
+            </th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of results">
+            <td><input type="checkbox" [(ngModel)]="row.selected" /></td>
+            <td>{{row.systemInvoiceNo}}</td>
+            <td>{{row.vendorNumber}}</td>
+            <td>{{row.vendorName}}</td>
+            <td>{{row.systemInvoiceLineNo}}</td>
+            <td>{{row.physicalInvoiceNo}}</td>
+            <td>{{row.systemInvoiceDate}}</td>
+            <td>
+              <span class="tag" [ngClass]="{
+              'flag': row.tag === 'Flagged for Review',
+              'prioritise': row.tag === 'Prioritise Review'
+            }">
+                {{row.tag}}
+              </span>
+            </td>
+            <td>
+              <span class="alerts-cell">
+                <i class="alert-icon" [ngClass]="{'alert': row.alerts>0}">
+                  &#9888;
+                </i>
+                {{row.alerts}}
+              </span>
+            </td>
+            <td>
+              <button class="ellipsis-btn">&#8942;</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div *ngIf="showPopup" class="generate-alerts-popup-bg" (click)="closePopup()">
+  <div class="generate-alerts-popup" (click)="$event.stopPropagation()">
+    <h2>Generate Alerts Automatically</h2>
+
+    <p class="info-text">
+      These fields define the core information of your alert. Please review and complete them to ensure accurate context
+      for the investigation.
+      Alert ID, Risk Score & Risk Amount will be automatically filled based on selected transactions.
+    </p>
+
+    <!-- Alert Type Radio Group -->
+    <div class="field-group">
+      <label>Alert Type*</label>
+      <div class="alert-type-group">
+        <label>
+          <input type="radio" name="alertType" value="transactions" [(ngModel)]="alertType" />
+          <strong>Transactions</strong><br />
+          <small>One per transaction</small>
+        </label>
+        <label>
+          <input type="radio" name="alertType" value="multi-transactions" [(ngModel)]="alertType" />
+          <strong>Multi-transactions</strong><br />
+          <small>One for all selected</small>
+        </label>
+        <label>
+          <input type="radio" name="alertType" value="entity" [(ngModel)]="alertType" />
+          <strong>Entity</strong><br />
+          <small>Based on involved entities</small>
+        </label>
+      </div>
+    </div>
+
+    <!-- Core Inputs -->
+    <div class="fields-row">
+      <div class="field">
+        <label>Include Top Transactions*</label>
+        <input type="number" placeholder="e.g., 5" [(ngModel)]="topTransactions" />
+      </div>
+      <div class="field">
+        <label>Investigation Days*</label>
+        <input type="number" placeholder="e.g., 7" [(ngModel)]="investigationDays" />
+      </div>
+      <div class="field">
+        <label>Select Priority*</label>
+        <select [(ngModel)]="priority">
+          <option value="" disabled selected>Choose Priority</option>
+          <option>Low</option>
+          <option>Medium</option>
+          <option>High</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Auto-generated Fields -->
+    <div class="fields-row">
+      <div class="field">
+        <label>Alert ID</label>
+        <input type="text" [value]="alertId" disabled />
+      </div>
+      <div class="field">
+        <label>Risk Score</label>
+        <input type="text" [value]="riskScore" disabled />
+      </div>
+      <div class="field">
+        <label>Risk Amount</label>
+        <input type="text" [value]="riskAmount" disabled />
+      </div>
+    </div>
+
+    <!-- Comments -->
+    <div class="field">
+      <label>Comments</label>
+      <textarea placeholder="Share your thoughts or findings" [(ngModel)]="comments"></textarea>
+    </div>
+
+    <!-- Add Auditors -->
+    <div class="field-group auditors-group">
+      <label>Assign Auditors</label>
+      <div class="auditors-list">
+        <label>
+          <input type="checkbox" [(ngModel)]="auditors.l1" (change)="onAuditorChange('l1')" /> L1 Auditor
+        </label>
+        <button [disabled]="l1AssignDisabled">Assign L1 Auditors</button>
+
+        <label>
+          <input type="checkbox" [(ngModel)]="auditors.l2" (change)="onAuditorChange('l2')" /> L2 Auditor
+        </label>
+        <button [disabled]="l2AssignDisabled">Assign L2 Auditors</button>
+
+        <label>
+          <input type="checkbox" [(ngModel)]="auditors.l3" (change)="onAuditorChange('l3')" /> L3 Auditor
+        </label>
+        <button [disabled]="l3AssignDisabled">Assign L3 Auditors</button>
+      </div>
+    </div>
+
+    <!-- Questionnaire Selection and Assignment -->
+    <div class="questionnaires-section">
+      <div class="questionnaires-list">
+        <label>Questionnaires</label>
+        <div *ngFor="let q of questionnaires" class="questionnaire-card">
+          {{ q.name }}
+          <button title="More options">⋮</button>
+        </div>
+      </div>
+      <div class="auditor-questionnaires">
+        <div class="auditor-q-card">
+          <span>L1 Auditor Questionnaire</span>
+          <div class="drop-area" draggable="true">Drag and drop questionnaire here<br /><small>Limit: 1</small></div>
+        </div>
+        <div class="auditor-q-card">
+          <span>L2 Auditor Questionnaire</span>
+          <div class="drop-area" draggable="true">Drag and drop questionnaire here<br /><small>Limit: 1</small></div>
+        </div>
+        <div class="auditor-q-card">
+          <span>L3 Auditor Questionnaire</span>
+          <div class="drop-area" draggable="true">Drag and drop questionnaire here<br /><small>Limit: 1</small></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="popup-actions">
+      <button type="button" class="btn-clear" (click)="closePopup()">Cancel</button>
+      <button type="button" class="save-btn">Save</button>
+    </div>
+  </div>
+</div>

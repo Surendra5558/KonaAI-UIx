@@ -1,0 +1,144 @@
+/* Header styling */
+.top-bar {
+  background: #2c3e50;
+  color: white;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.clear-filters-btn {
+  padding: 8px 16px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.apply-filters-btn {
+  padding: 8px 16px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Sidebar styling */
+.sidebar {
+  width: 250px;
+  background: white;
+  padding: 20px 16px;
+  overflow: auto;
+  border-right: 1px solid #dee2e6;
+  height: 100vh;
+}
+
+.sidebar-section {
+  margin-bottom: 24px;
+}
+
+.sidebar-title {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #495057;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pages-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.page-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+}
+
+.page-item:hover {
+  background: transparent;
+}
+
+.page-item.active {
+  background: transparent;
+  color: #007bff;
+}
+
+.page-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: transparent;
+  flex-shrink: 0;
+  display: block; /* Always take up space */
+}
+
+.page-item.active .page-dot {
+  background: #007bff;
+}
+
+.page-label {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.page-item.active .page-label {
+  font-weight: 700;
+  color: #007bff;
+}
+
+/* Alert State Controls */
+.alert-state-controls {
+  margin-top: 8px;
+}
+
+.alert-state-dropdown {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background: white;
+  font-size: 14px;
+  color: #495057;
+}
+
+.alert-state-dropdown:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}

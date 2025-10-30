@@ -1,0 +1,440 @@
+/* Import Figtree font */
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap');
+
+/* Main container to prevent horizontal overflow */
+.data-quality-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  box-sizing: border-box;
+}
+
+/* Content area to prevent overflow */
+.data-quality-container .p-8 {
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Responsive category cards */
+.category-cards {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+  flex-wrap: wrap; /* Allow cards to wrap on smaller screens */
+}
+
+.category-card {
+  flex: 1;
+  min-width: 250px; /* Minimum width for cards */
+  max-width: 315px; /* Maximum width for cards */
+}
+
+/* Responsive search bar */
+.search-container {
+  width: 100%;
+  max-width: 380px;
+  margin-bottom: 2rem;
+}
+
+/* Tabs styling to match provided design */
+.tabs {
+  display: flex;
+  gap: 28px; /* slight spacing like image */
+  border-bottom: 1px solid #E5E7EB; /* light gray baseline */
+}
+
+.tab {
+  position: relative;
+  padding: 0 0 0.5rem 0; /* 0.5rem bottom padding per request */
+  margin-bottom: -1px; /* sit on baseline */
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: #6B7280; /* gray-500 */
+  font-weight: 600; /* semi-bold like image */
+}
+
+.tab.tab--active {
+  color: #2563EB; /* blue-600 */
+}
+
+.tab.tab--active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px; /* slim underline */
+  background: #2563EB; /* blue */
+  border-radius: 2px;
+}
+
+/* Table styling to match the provided design exactly */
+.data-table {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #E5E7EB;
+  font-family: 'Figtree', sans-serif;
+  max-width: 100%; /* Ensure table doesn't exceed container width */
+  box-sizing: border-box; /* Include padding and border in width calculation */
+}
+
+/* Header section with light blue background - exact Figma colors */
+.table-header {
+  background-color: #dceafc; /* Primary/Teal 10 from Figma */
+  padding: 12px 16px;
+  border-bottom: 1px solid #E5E7EB;
+  height: 41px;
+}
+
+.table-header-row {
+  display: grid;
+  gap: 0; /* Remove gap to ensure exact column widths */
+  align-items: center;
+  height: 17px;
+}
+
+.table-header-cell {
+  font-weight: 700; /* Bold font for headers - H3 Bold 14px from Figma */
+  font-size: 14px;
+  color: #1c1c1c; /* Black from Figma */
+  text-align: left;
+  font-family: 'Figtree', sans-serif;
+  line-height: 100%;
+}
+
+/* Data rows section */
+.table-body {
+  background-color: #ffffff;
+}
+
+.table-row {
+  display: grid;
+  gap: 0; /* Remove gap to ensure exact column widths */
+  align-items: center;
+  padding: 16px 12px; /* Adjust padding to match Figma */
+  border-bottom: 1px solid #dde3e9; /* Neutrals/Grey 10 from Figma */
+  min-height: 50px; /* Consistent row height */
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.table-row:hover {
+  background-color: #f9fafb; /* Light hover effect */
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-cell {
+  font-size: 14px;
+  color: #1c1c1c; /* Black text for data */
+  font-weight: 500; /* Medium weight for data - Body Medium 14px from Figma */
+  font-family: 'Figtree', sans-serif;
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 100%;
+  padding: 0 8px; /* Add horizontal padding for cell content */
+  white-space: nowrap; /* Prevent text wrapping to avoid height issues */
+  min-width: 0; /* Allow grid items to shrink below content size */
+}
+
+/* Global styling for all table cells to match Figma design */
+.data-table .table-cell {
+  font-family: 'Figtree', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 100% !important;
+  color: #1c1c1c !important;
+}
+
+.data-table .table-cell.text-right {
+  text-align: right !important;
+}
+
+/* Ensure proper text overflow handling */
+.data-table .table-cell {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* Impact badges styling - exact Figma colors */
+.impact-high {
+  background-color: #feeaeb !important; /* Semantic/Red/10 from Figma */
+  color: #b20000 !important; /* Semantic/Red/40 from Figma */
+  font-family: 'Figtree', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 500 !important; /* Body 4 Medium 12px from Figma */
+  line-height: 100% !important;
+  padding: 10px !important;
+  border-radius: 12px !important;
+}
+
+.impact-medium {
+  background-color: #fff1d2 !important; /* Semantic/Yellow/10 from Figma */
+  color: #bb860f !important; /* Semantic/Yellow/50 from Figma */
+  font-family: 'Figtree', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 500 !important; /* Body 4 Medium 12px from Figma */
+  line-height: 100% !important;
+  padding: 10px !important;
+  border-radius: 12px !important;
+}
+
+.impact-low {
+  background-color: #e5f3ff !important; /* Light blue for low impact */
+  color: #0066cc !important; /* Blue for low impact */
+  font-family: 'Figtree', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 100% !important;
+  padding: 10px !important;
+  border-radius: 12px !important;
+}
+
+/* Status badges styling - exact Figma colors */
+.status-pending {
+  background-color: #fff1d2 !important; /* Semantic/Yellow/10 from Figma */
+  color: #bb860f !important; /* Semantic/Yellow/50 from Figma */
+  font-family: 'Figtree', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 500 !important; /* Body 4 Medium 12px from Figma */
+  line-height: 100% !important;
+  padding: 10px !important;
+  border-radius: 12px !important;
+}
+
+/* Ensure proper spacing and alignment with responsive column widths */
+.data-table .table-row {
+  /* Use responsive column widths that fit within container */
+  grid-template-columns:
+    80px  /* DQC_Id - fixed width */
+    1fr   /* Issue Description - flexible */
+    100px /* Record Count - fixed width */
+    100px /* Impact - fixed width */
+    1fr   /* Possible Fix - flexible */
+    100px /* Status - fixed width */
+    60px  /* Action - fixed width */ !important;
+  height: 50px !important;
+  border-bottom: 1px solid #dde3e9 !important; /* Neutrals/Grey 10 from Figma */
+  position: relative !important;
+}
+
+.data-table .table-header-row {
+  grid-template-columns:
+    80px  /* DQC_Id - fixed width */
+    1fr   /* Issue Description - flexible */
+    100px /* Record Count - fixed width */
+    100px /* Impact - fixed width */
+    1fr   /* Possible Fix - flexible */
+    100px /* Status - fixed width */
+    60px  /* Action - fixed width */ !important;
+  height: 17px !important;
+  align-items: center !important;
+}
+
+/* Specific column alignments */
+.data-table .table-row .table-cell:nth-child(1) { /* DQC_Id */
+  text-align: left !important;
+}
+
+.data-table .table-row .table-cell:nth-child(2) { /* Issue Description */
+  text-align: left !important;
+}
+
+.data-table .table-row .table-cell:nth-child(3) { /* Record Count */
+  text-align: right !important;
+}
+
+.data-table .table-row .table-cell:nth-child(4) { /* Impact */
+  text-align: center !important;
+}
+
+.data-table .table-row .table-cell:nth-child(5) { /* Possible Fix */
+  text-align: left !important;
+}
+
+.data-table .table-row .table-cell:nth-child(6) { /* Status */
+  text-align: center !important;
+}
+
+.data-table .table-row .table-cell:nth-child(7) { /* Action */
+  text-align: center !important;
+}
+
+/* Header column alignments */
+.data-table .table-header-row .table-header-cell:nth-child(1) { /* DQC_Id */
+  text-align: left !important;
+}
+
+.data-table .table-header-row .table-header-cell:nth-child(2) { /* Issue Description */
+  text-align: left !important;
+}
+
+.data-table .table-header-row .table-header-cell:nth-child(3) { /* Record Count */
+  text-align: right !important;
+}
+
+.data-table .table-header-row .table-header-cell:nth-child(4) { /* Impact */
+  text-align: center !important;
+}
+
+.data-table .table-header-row .table-header-cell:nth-child(5) { /* Possible Fix */
+  text-align: left !important;
+}
+
+.data-table .table-header-row .table-header-cell:nth-child(6) { /* Status */
+  text-align: center !important;
+}
+
+.data-table .table-header-row .table-header-cell:nth-child(7) { /* Action */
+  text-align: center !important;
+}
+
+/* Status column styling */
+.status-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-archived {
+  color: #bb860f; /* Yellow color for archived status */
+  background-color: transparent;
+}
+
+.status-deleted {
+  color: #b20000; /* Red color for deleted status */
+  background-color: transparent;
+}
+
+/* Redirect arrow button styling to match Figma design exactly */
+.redirect-arrow {
+  position: absolute;
+  left: 1304px;
+  top: 17px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: opacity 0.2s ease;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+  
+  svg {
+    width: 100%;
+    height: 100%;
+    color: #6b7280; // text-gray-600 equivalent
+  }
+}
+
+/* Resolved tab table styling */
+.data-table.resolved-table .table-row {
+  grid-template-columns:
+    100px /* XBLNR - fixed width */
+    80px  /* MANDT - fixed width */
+    80px  /* BUKRS - fixed width */
+    100px /* LIFNR - fixed width */
+    80px  /* UMSKS - fixed width */
+    80px  /* UMSKZ - fixed width */
+    100px /* Status - fixed width */ !important;
+}
+
+.data-table.resolved-table .table-header-row {
+  grid-template-columns:
+    100px /* XBLNR - fixed width */
+    80px  /* MANDT - fixed width */
+    80px  /* BUKRS - fixed width */
+    100px /* LIFNR - fixed width */
+    80px  /* UMSKS - fixed width */
+    80px  /* UMSKZ - fixed width */
+    100px /* Status - fixed width */ !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .table-header-row,
+  .table-row {
+    grid-template-columns: 1.5fr 0.8fr 0.8fr 1.5fr 0.8fr 0.8fr 1fr;
+    gap: 12px;
+  }
+  
+  .table-header,
+  .table-row {
+    padding: 12px;
+  }
+  
+  .category-cards {
+    gap: 1rem;
+  }
+  
+  .category-card {
+    min-width: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-header-row,
+  .table-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .table-header-cell,
+  .table-cell {
+    font-size: 13px;
+  }
+  
+  .table-header-cell::before {
+    content: attr(data-label) ": ";
+    font-weight: 600;
+  }
+  
+  .category-cards {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .category-card {
+    min-width: 100%;
+    max-width: 100%;
+  }
+  
+  .search-container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .data-table {
+    font-size: 12px;
+  }
+  
+  .table-header,
+  .table-row {
+    padding: 8px;
+  }
+  
+  .category-cards {
+    gap: 0.5rem;
+  }
+}
+

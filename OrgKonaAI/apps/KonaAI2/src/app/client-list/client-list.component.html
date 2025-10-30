@@ -1,0 +1,111 @@
+<div class="main-topbar">
+  <div class="main-header">
+    <div class="main-nav-container">
+      <div class="main-tab-wrapper">
+        <!-- Organisation Tab -->
+        <div class="main-tab-item" [class.active]="activeTab === 'organisation'" (click)="selectTab('organisation')">
+          <i class="bi bi-diagram-3"></i>
+          <span>Organisation</span>
+        </div>
+
+        <!-- Projects Tab -->
+        <div class="main-tab-item" [class.active]="activeTab === 'projects'" (click)="selectTab('projects')"
+          [ngClass]="{'disabled': isProjectsDisabled}" [attr.disabled]="isProjectsDisabled ? true : null">
+          <i class="bi bi-bar-chart"></i>
+          <span>Projects</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="content">
+  <div class="header-block">
+    <div>
+      <h2>Clients</h2>
+      <p>Manage all clients and platform configurations</p>
+    </div>
+    <div>
+      <button type="button" class="btn btn-save" (click)="openClientModal()">
+        <i class="bi bi-plus-lg mr-2"></i> New Client
+      </button>
+    </div>
+  </div>
+  <div class="list-grid-view">
+    <div class="toolbar-actions">
+    <button class="toolbar-btn list-btn" [class.active]="viewMode === 'list'" (click)="viewMode = 'list'"
+      aria-label="List view">
+      <i class="bi bi-filter-right fs-1"></i>
+    </button>
+    <button class="toolbar-btn grid-btn" [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'"
+      aria-label="Grid view">
+      <i class="bi bi-grid fs-2"></i>
+    </button>
+  </div>
+  </div>
+  <!-- Grid View -->
+  <div *ngIf="viewMode === 'grid'" class="clients-grid">
+    <div *ngFor="let client of filteredClients" class="client-card" (click)="goToClientSummary(client.clientId)">
+      <!-- Same grid card as before -->
+      <div class="client-content">
+        <div class="card-header">
+          <h3>{{ client.name }}</h3>
+          <p class="client-domain">{{ client.domain }}</p>
+        </div>
+        <hr />
+        <div class="row-item">
+          <label>Modules</label>
+          <div class="modules-list">
+            <span *ngFor="let module of client.modules" class="module-chip">{{ module }}</span>
+          </div>
+        </div>
+        <div class="row-two-cols">
+          <div>
+            <label>Projects</label>
+            <span>{{ client.projects }}</span>
+          </div>
+          <div>
+            <label>Users</label>
+            <span>{{ client.users }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="status-footer" [ngClass]="client.licenseStatus.toLowerCase().replace(' ', '-')">
+        {{ client.licenseStatus }}
+      </div>
+    </div>
+  </div>
+
+  <!-- List View -->
+  <div *ngIf="viewMode === 'list'" class="clients-list">
+    <table class="table-main">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Domain</th>
+          <th>Modules</th>
+          <th>Projects</th>
+          <th>Users</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let client of filteredClients" (click)="goToClientSummary(client.clientId)">
+          <td (click)="goToClientSummary(client.clientId)" style="cursor: pointer;">{{ client.name }}</td>
+          <td>{{ client.domain }}</td>
+          <td>
+            <span *ngFor="let module of client.modules" class="module-chip">{{ module }}</span>
+          </td>
+          <td>{{ client.projects }}</td>
+          <td>{{ client.users }}</td>
+          <td>
+            <span [ngClass]="getStatusClass(client.licenseStatus)">
+              {{ client.licenseStatus }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+</div>

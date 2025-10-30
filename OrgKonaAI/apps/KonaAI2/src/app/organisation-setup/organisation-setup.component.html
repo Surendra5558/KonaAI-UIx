@@ -1,0 +1,72 @@
+<div class="organisation-setup">
+  <div class="main-content">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-left">
+        <h1 class="page-title">Organisation Setup</h1>
+        <p class="page-subtitle">Create new roles and manage permissions to control access across the platform.</p>
+      </div>
+      <div class="header-right">
+        <button class="btn-secondary" (click)="defineDataRenewalFrequency()">Define Data Renewal Frequency</button>
+        <button class="btn-primary" (click)="publish()">Publish</button>
+      </div>
+    </div>
+    <div class="setup-content">
+      <!-- Nodes Section -->
+      <div class="content-area">
+        <h2 class="section-title">Nodes</h2>
+        <div class="nodes-container">
+          <div class="node-item" *ngFor="let node of nodes" [class.expanded]="isExpanded(node.id)">
+            <div style="display: flex; width: 100%;">
+              <div class="node-icon" [style.background]="node.color">{{ node.icon }}</div>
+              <span class="node-label">{{ node.label }}</span>
+
+              <!-- Expand button for nodes with children -->
+              <span *ngIf="node.children" (click)="toggleExpand(node.id)">
+                <i class="bi bi-chevron-down" [class.rotated]="!isExpanded(node.id)"></i>
+              </span>
+
+              <!-- Add button -->
+              <span *ngIf="!node.children" (click)="addNode(node.type)">
+                <i class="bi bi-plus-circle"></i>
+              </span>
+            </div>
+
+            <!-- Sub-nodes -->
+            <div class="sub-nodes" *ngIf="isExpanded(node.id)">
+              <div class="sub-node-item" *ngFor="let child of node.children" [class.disabled]="child.disabled">
+                <div class="node-icon" [style.background]="child.color">{{ child.icon }}</div>
+                <span class="node-label">{{ child.label }}</span>
+                <button class="add-btn" [disabled]="child.disabled" (click)="addNode(child.type)">
+                  <i class="plus-icon">+</i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <div class="controls-icons">
+          <button class="control-btn" (click)="zoomIn()">
+            <i class="bi bi-zoom-in"></i>
+            <span class="label">Zoom In</span>
+          </button>
+          <button class="control-btn" (click)="zoomOut()">
+            <i class="bi bi-zoom-out"></i>
+            <span class="label">Zoom Out</span>
+          </button>
+          <button class="control-btn" (click)="fitToView()">
+            <i class="bi bi-aspect-ratio"></i>
+            <span class="label">Fit to View</span>
+          </button>
+          <button class="control-btn" (click)="arrangeNodes()">
+            <i class="bi bi-columns-gap"></i>
+            <span class="label">Arrange Nodes</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

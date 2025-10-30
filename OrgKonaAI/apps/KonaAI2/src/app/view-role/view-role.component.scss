@@ -1,0 +1,412 @@
+// Colors from Figma design
+$primary-blue-70: #082d78;
+$primary-blue-50: #2951c6;
+$primary-blue-20: #c4dbfa;
+$primary-teal-10: #dceafc;
+$black: #1c1c1c;
+$grey-50: #344151;
+$grey-40: #65717d;
+$grey-20: #c9d6e0;
+$grey-10: #dde3e9;
+
+// Component container
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+// Header Section
+.view-role-header {
+  padding: 24px;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .back-button {
+    background-color: $primary-blue-20;
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: $black;
+
+    &:hover {
+      background-color: darken($primary-blue-20, 10%);
+    }
+  }
+
+  .title-section {
+    flex: 1;
+    margin-left: 24px;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 16px;
+
+    .delete-button {
+      background-color: transparent;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 23px;
+      font-family: 'Figtree', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      color: $primary-blue-70;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $grey-10;
+      }
+    }
+
+    .edit-button {
+      background-color: $primary-blue-70;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 23px;
+      font-family: 'Figtree', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      &:hover {
+        background-color: darken($primary-blue-70, 10%);
+      }
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}
+
+// Role Information Section
+.role-info-section {
+  padding: 24px;
+  display: flex;
+  gap: 16px;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+
+  .info-group {
+    .info-item {
+      .info-label {
+        font-family: 'Figtree', sans-serif;
+        font-weight: 500;
+        font-size: 12px;
+        color: $grey-40;
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .info-value {
+        font-family: 'Figtree', sans-serif;
+        font-weight: 500;
+        font-size: 14px;
+        color: $black;
+      }
+    }
+  }
+}
+
+// Permissions Section
+.permissions-section {
+  padding: 0 24px 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  .permissions-header {
+    margin-bottom: 32px;
+
+    .permissions-title {
+      font-family: 'Figtree', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      line-height: 1;
+      color: $black;
+      margin: 0 0 8px 0;
+    }
+
+    .permissions-description {
+      font-family: 'Figtree', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 1;
+      color: $grey-50;
+      margin: 0;
+      max-width: 646px;
+    }
+  }
+
+  .permissions-content {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+}
+
+// Categories Sidebar
+.categories-sidebar {
+  width: 321px;
+  border-top: 1px solid $grey-20;
+  overflow: hidden;
+
+  .category-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    border-bottom: 1px solid $grey-10;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: lighten($grey-10, 5%);
+    }
+
+    &.active {
+      .category-content {
+        .category-name {
+          color: $primary-blue-50;
+          font-weight: 800;
+        }
+      }
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .category-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .category-indicator {
+        width: 6px;
+        height: 6px;
+        background-color: $primary-blue-50;
+        border-radius: 50%;
+      }
+
+      .category-name {
+        font-family: 'Figtree', sans-serif;
+        font-weight: 500;
+        font-size: 14px;
+        color: $grey-50;
+        transition: all 0.2s ease;
+
+        &.active-text {
+          color: $primary-blue-50;
+          font-weight: 800;
+        }
+      }
+    }
+
+    .category-arrow {
+      color: $black;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+
+      &.visible {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+// Permissions Table
+.permissions-table-container {
+  flex: 1;
+}
+
+.header-text {
+  padding-left: 6px;
+}
+
+// Edit Role Form Section
+.edit-role-section {
+  padding: 5px 24px 24px 24px;
+  display: flex;
+  gap: 16px;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+
+  .form-group {
+    width: 30%;
+
+    .form-label {
+      font-family: 'Figtree', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      color: $grey-50;
+      display: block;
+      margin-bottom: 4px;
+
+      .required {
+        color: #e01010;
+      }
+    }
+
+    .form-input {
+      width: 100%;
+      height: 36px;
+      padding: 6px 12px;
+      border: 1px solid $grey-20;
+      border-radius: 8px;
+      font-family: 'Figtree', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: $black;
+      transition: border-color 0.2s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $primary-blue-50;
+      }
+
+      &::placeholder {
+        color: $grey-40;
+      }
+    }
+  }
+}
+
+// Required asterisk styling
+.required {
+  color: #e01010;
+}
+
+// Edit Actions Section
+.edit-actions {
+  position: sticky;
+  bottom: 0;
+  border-top: 1px solid $grey-20;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 10;
+
+  .actions-container {
+    display: flex;
+    gap: 12px;
+
+    .cancel-button {
+      background-color: transparent;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 23px;
+      font-family: 'Figtree', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      color: $primary-blue-70;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: $grey-10;
+      }
+    }
+  }
+}
+
+// Enhanced checkbox styling for edit mode
+.permissions-table-container {
+
+  .header-checkbox,
+  input[type="checkbox"] {
+    transition: all 0.2s ease;
+
+    &:not(:disabled) {
+      cursor: pointer;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+
+      &:checked {
+        background-color: $primary-blue-50;
+        border-color: $primary-blue-50;
+      }
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Component naturally adjusts with main content layout
+
+// Responsive Design
+@media (max-width: 1400px) {
+
+  .view-role-header .header-content,
+  .role-info-section,
+  .permissions-section {
+    max-width: none;
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .view-role-header {
+    .header-content {
+      flex-direction: column;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .title-section {
+      margin-left: 0;
+    }
+
+    .action-buttons {
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }
+
+  .role-info-section {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .permissions-content {
+    flex-direction: column;
+  }
+
+  .categories-sidebar {
+    width: 100%;
+  }
+
+  .permissions-table-container {
+    border-left: 1px solid $grey-20;
+    border-radius: 8px;
+
+    .table-header,
+    .table-row {
+      grid-template-columns: 1fr auto auto auto;
+    }
+  }
+}

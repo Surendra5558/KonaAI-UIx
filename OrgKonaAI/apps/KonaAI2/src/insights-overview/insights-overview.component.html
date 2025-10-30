@@ -1,0 +1,295 @@
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Header with filters -->
+      <div class="content-header">
+        <i class="bi bi-funnel"></i>
+        
+        <div class="reporting-currency">
+          <div class="currency-info">
+            <span class="currency-label">Reporting Currency: {{reportingCurrency}}</span>
+          </div>
+          <div class="currency-actions">
+            <button class="refresh-btn" (click)="refreshData()" title="Refresh Data">
+              <i class="bi bi-arrow-clockwise"></i>
+            </button>
+            <button class="settings-btn" (click)="openCurrencySettings()" title="Currency Settings">
+              <i class="bi bi-gear"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Stats Bar -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-category">
+            <span class="stat-title">Vendors Flagged</span>
+            <span class="stat-percentage">78.5%</span>
+          </div>
+          <div class="stat-values">
+            <div class="stat-detail">
+              <span class="stat-label">Total Vendors</span>
+              <span class="stat-number">{{formatNumber(totalVendors)}}</span>
+            </div>
+            <div class="stat-detail">
+              <span class="stat-label">Flagged Vendors</span>
+              <span class="stat-number">{{formatNumber(flaggedVendors)}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-category">
+            <span class="stat-title">Invoices Flagged</span>
+            <span class="stat-percentage orange">53.9%</span>
+          </div>
+          <div class="stat-values">
+            <div class="stat-detail">
+              <span class="stat-label">Total Invoices</span>
+              <span class="stat-number">{{formatNumber(totalInvoices)}}</span>
+            </div>
+            <div class="stat-detail">
+              <span class="stat-label">Flagged Invoices</span>
+              <span class="stat-number">{{formatNumber(flaggedInvoices)}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-category">
+            <span class="stat-title">Inv Lines Flagged</span>
+            <span class="stat-percentage orange">54%</span>
+          </div>
+          <div class="stat-values">
+            <div class="stat-detail">
+              <span class="stat-label">Total Inv Lines</span>
+              <span class="stat-number">{{formatNumber(totalInvLines)}}</span>
+            </div>
+            <div class="stat-detail">
+              <span class="stat-label">Flagged Inv Lines</span>
+              <span class="stat-number">{{formatNumber(flaggedInvLines)}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-category">
+            <span class="stat-title">Inv Amt Flagged</span>
+            <span class="stat-percentage blue">29.6%</span>
+          </div>
+          <div class="stat-values">
+            <div class="stat-detail">
+              <span class="stat-label">Total Inv Amt</span>
+              <span class="stat-number">515.49B</span>
+            </div>
+            <div class="stat-detail">
+              <span class="stat-label">Flagged Inv Amt</span>
+              <span class="stat-number">54.57B</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="charts-section">
+        <!-- Left Chart Container -->
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3>Flagged vs Total Invoice Amount Over Time</h3>
+            <div class="chart-controls">
+              <button 
+                class="chart-btn" 
+                [class.active]="leftChartView === 'chart'"
+                (click)="toggleLeftView()">
+                <i class="bi bi-bar-chart-line"></i>
+              </button>
+              <button 
+                class="chart-btn" 
+                [class.active]="leftChartView === 'table'"
+                (click)="toggleLeftView()">
+                <i class="bi bi-list-task"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="chart-content">
+            <!-- Chart View -->
+            <div *ngIf="leftChartView === 'chart'" class="chart-wrapper">
+              <canvas #barChart></canvas>
+            </div>
+            
+            <!-- Table View -->
+            <div *ngIf="leftChartView === 'table'" class="table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Year</th>
+                    <th>Total Amount <i class="bi bi-arrow-down"></i></th>
+                    <th>Flagged Amount <i class="bi bi-arrow-down"></i></th>
+                    <th>YoY Change <i class="bi bi-arrow-down"></i></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of invoiceData">
+                    <td class="year-cell">{{ item.year }}</td>
+                    <td class="amount-cell">
+                      <div class="amount-main">{{ formatAmount(item.totalAmount) }}</div>
+                      <div class="amount-sub">{{ formatCurrency(item.totalAmount) }}</div>
+                    </td>
+                    <td class="flagged-cell">
+                      <div class="flagged-amount" [class.negative]="item.flaggedAmount < 0">
+                        {{ formatCurrency(item.flaggedAmount) }}
+                      </div>
+                      <div class="flagged-bar" [class.negative]="item.flaggedAmount < 0"></div>
+                    </td>
+                    <td class="change-cell" [class.positive]="item.yoyChange.includes('+')">
+                      {{ item.yoyChange }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Chart Container -->
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3>Geographical Risk Distribution</h3>
+            <div class="chart-controls">
+              <button 
+                class="chart-btn" 
+                [class.active]="rightChartView === 'chart'"
+                (click)="toggleRightView()">
+                <i class="bi bi-bar-chart-line"></i>
+              </button>
+              <button 
+                class="chart-btn" 
+                [class.active]="rightChartView === 'table'"
+                (click)="toggleRightView()">
+                <i class="bi bi-list-task"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="chart-content">
+            <!-- Chart View -->
+            <div *ngIf="rightChartView === 'chart'" class="chart-wrapper">
+              <div class="map-legend">
+                <div class="legend-item">
+                  <span class="legend-color high"></span>
+                  Score > 8.0
+                </div>
+                <div class="legend-item">
+                  <span class="legend-color medium"></span>
+                  Score > 5.0 and ≤ 8.0
+                </div>
+                <div class="legend-item">
+                  <span class="legend-color low"></span>
+                  Score ≤ 5.0
+                </div>
+              </div>
+              <canvas #geoChart></canvas>
+            </div>
+            
+            <!-- Table View -->
+            <div *ngIf="rightChartView === 'table'" class="table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Region</th>
+                    <th>Risk Score <i class="bi bi-arrow-down"></i></th>
+                    <th>Risk Level</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of geoData">
+                    <td class="region-cell">{{ item.region }}</td>
+                    <td class="score-cell">{{ item.riskScore }}</td>
+                    <td class="risk-cell">
+                      <span class="risk-indicator" [class]="item.color">
+                        {{ item.color | titlecase }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Section -->
+      <div class="bottom-section">
+        <div class="vendor-risk-container">
+          <div class="section-header">
+            <h3>Vendor Risk Exposure</h3>
+            <div class="section-controls">
+              <button 
+                class="chart-btn" 
+                [class.active]="vendorView === 'chart'"
+                (click)="toggleVendorView()">
+                <i class="bi bi-bar-chart-line"></i>
+              </button>
+              <button 
+                class="chart-btn" 
+                [class.active]="vendorView === 'table'"
+                (click)="toggleVendorView()">
+                <i class="bi bi-list-task"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="risk-summary">
+            <div class="risk-total">
+              <span>Total Amount: <strong>$43,070,355</strong></span>
+              <span>Flagged Amount: <strong>$20,892,825</strong></span>
+            </div>
+          </div>
+
+          <div class="vendor-table">
+            <div class="table-header">
+              <div class="col">Vendor ID</div>
+              <div class="col">Vendor Name</div>
+              <div class="col">Total Amount</div>
+              <div class="col">Flagged Amount</div>
+              <div class="col">Risk Level</div>
+            </div>
+            
+            <div class="table-row" *ngFor="let vendor of vendorRiskData">
+              <div class="col">{{vendor.id}}</div>
+              <div class="col">{{vendor.name}}</div>
+              <div class="col">{{formatCurrency(vendor.totalAmount)}}</div>
+              <div class="col">{{formatCurrency(vendor.flaggedAmount)}}</div>
+              <div class="col">
+                <span class="risk-badge" [ngClass]="getRiskLevelClass(vendor.riskLevel)">
+                  {{vendor.riskLevel}}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="invoice-insights-container">
+          <div class="section-header">
+            <h3>Invoice Type Insights</h3>
+          </div>
+          
+          <div class="chart-content">
+            <canvas #pieChart></canvas>
+          </div>
+
+          <div class="insights-tabs">
+            <button class="tab-btn active" (click)="navigateToOverview()">Overview</button>
+            <button class="tab-btn" (click)="navigateToTrends()">Trends</button>
+            <button class="tab-btn" (click)="navigateToVendors()">Vendors</button>
+          </div>
+
+          <div class="analytics-prompt">
+            <div class="prompt-icon">💡</div>
+            <p>Select a segment from the chart to see detailed analytics, trends, and vendor information.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  

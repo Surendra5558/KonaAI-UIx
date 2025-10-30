@@ -1,0 +1,296 @@
+<div class="transaction-details-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="header-left">
+      <button class="back-button" (click)="goBack()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M10 4L6 8L10 12" stroke="#2951C6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <h1 class="header-title">Transaction Details</h1>
+    </div>
+    
+    <div class="header-center">
+      <div class="header-tabs">
+        <button class="tab-button">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <rect x="2" y="3" width="12" height="10" rx="2" stroke="#1C1C1C" stroke-width="1.5" fill="none"/>
+            <path d="M6 1V5M10 1V5" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        
+        <button class="tab-button">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2 8L8 2L14 8" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 7V13C3 13.5523 3.44772 14 4 14H12C12.5523 14 13 13.5523 13 13V7" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        
+        <button class="tab-button active">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 13L8 3L13 13" stroke="#2951C6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5.5 10H10.5" stroke="#2951C6" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span>Transaction Details</span>
+        </button>
+        
+        <button class="tab-button">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="3" stroke="#1C1C1C" stroke-width="1.5" fill="none"/>
+            <path d="M8 1V3M8 13V15M15 8H13M3 8H1M12.95 12.95L11.54 11.54M4.46 4.46L3.05 3.05M12.95 3.05L11.54 4.46M4.46 11.54L3.05 12.95" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <div class="header-right">
+      <!-- Empty space for balance -->
+    </div>
+  </div>
+
+  <!-- Transaction Details Section -->
+  <div class="transaction-section">
+    <div class="transaction-header">
+      <h2 class="transaction-title">Transaction Details</h2>
+      <p class="transaction-description">Review all transactions associated with selected entities for detailed analysis.</p>
+    </div>
+    
+    <div class="transaction-controls">
+      <div class="search-filters">
+        <div class="search-bar">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="9" cy="9" r="6" stroke="#8597A4" stroke-width="1.5" fill="none"/>
+            <path d="M15 15L19 19" stroke="#8597A4" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <input type="text" placeholder="Search Transactions" [(ngModel)]="searchTerm">
+        </div>
+        
+        <select class="risk-dropdown" [(ngModel)]="selectedRiskCategory">
+          <option value="">Select Risk Category</option>
+          <option value="high">High Risk</option>
+          <option value="medium">Medium Risk</option>
+          <option value="low">Low Risk</option>
+        </select>
+        
+        <button class="columns-button">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="3" y="3" width="4" height="14" stroke="#082D78" stroke-width="1.5" fill="none"/>
+            <rect x="9" y="3" width="4" height="14" stroke="#082D78" stroke-width="1.5" fill="none"/>
+            <rect x="15" y="3" width="2" height="14" stroke="#082D78" stroke-width="1.5" fill="none"/>
+          </svg>
+          <span>Columns</span>
+        </button>
+      </div>
+      
+      <button class="report-button">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M10 1V13M10 13L7 10M10 13L13 10" stroke="#FCFCFC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 17H16" stroke="#FCFCFC" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span>Export Report</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Information Toast -->
+  <div class="info-toast">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="8" stroke="#8CAAFE" stroke-width="1.5" fill="none"/>
+      <path d="M10 6V10M10 14H10.01" stroke="#8CAAFE" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <span class="toast-message">Showing transactions for {{ selectedVendors.length }} selected entities. Use filters to refine results.</span>
+    <button class="toast-close">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M12 4L4 12M4 4L12 12" stroke="#3538CD" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="main-content">
+    <!-- Left Sidebar -->
+    <div class="left-sidebar">
+      <div class="sidebar-header">
+        <h3>Visualisations</h3>
+        <button class="expand-button">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M4 6L8 10L12 6" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="sidebar-menu">
+        <div class="menu-item">
+          <span>Entity View</span>
+        </div>
+        <div class="menu-item active">
+          <div class="menu-indicator"></div>
+          <span>Transaction View</span>
+        </div>
+        <div class="menu-item">
+          <span>Scenario Manager</span>
+        </div>
+        <div class="menu-item">
+          <span>Similar Transaction</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Content Area -->
+    <div class="right-content">
+      <!-- Transaction Details Table -->
+      <div class="data-table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th class="checkbox-column">
+                <input type="checkbox" class="select-all" (change)="toggleSelectAll($event)">
+              </th>
+              <th class="sortable">System Invoice</th>
+              <th class="sortable">Vendor Name</th>
+              <th class="sortable">Invoice Type</th>
+              <th class="sortable">Invoice Description</th>
+              <th class="sortable">Amount</th>
+              <th class="sortable">Date</th>
+              <th class="sortable">Status</th>
+              <th class="sortable">Tag</th>
+              <th class="sortable">Alerts</th>
+              <th class="sortable">OCR</th>
+              <th class="actions-column"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let tx of transactions; let i = index" [class.selected]="tx.selected">
+              <td class="checkbox-column">
+                <input type="checkbox" [(ngModel)]="tx.selected" (change)="onTransactionSelectionChange()">
+              </td>
+              <td class="system-invoice">{{ tx.systemInvoice }}</td>
+              <td class="vendor-name">{{ tx.vendorName }}</td>
+              <td class="invoice-type">{{ tx.invoiceType }}</td>
+              <td class="invoice-description">{{ tx.invoiceDescription }}</td>
+              <td class="amount">{{ formatCurrency(tx.amount || 0) }}</td>
+              <td class="date">{{ tx.date }}</td>
+              <td class="status">
+                <span class="status-badge" [ngClass]="tx.status?.toLowerCase()">{{ tx.status }}</span>
+              </td>
+              <td class="tag-column">
+                <span *ngIf="tx.tag" class="tag" [ngClass]="tx.tagClass">{{ tx.tag }}</span>
+              </td>
+              <td class="alerts-column alerts-cell">
+                <div class="alert-info" [class.inactive]="tx.alerts === 0">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M8 1L15 14H1L8 1Z" [attr.stroke]="tx.alerts > 0 ? '#B20000' : '#8597A4'" stroke-width="1.5" fill="none"/>
+                    <path d="M8 6V9M8 12H8.01" [attr.stroke]="tx.alerts > 0 ? '#FFF' : '#8597A4'" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                  <span>{{ tx.alerts }}</span>
+                </div>
+              </td>
+              <td class="ocr-column text-center">
+                <svg *ngIf="tx.hasOcr" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g transform="rotate(-90 12 12)">
+                    <path d="M21.44 11.05l-7.07 7.07a5 5 0 01-7.07-7.07l8.49-8.49a3.5 3.5 0 114.95 4.95l-9.19 9.19a2 2 0 11-2.83-2.83l8.49-8.49" stroke="#082D78" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </g>
+                </svg>
+              </td>
+              <td class="actions-column actions-cell">
+                <button class="action-menu">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <circle cx="10" cy="5" r="1" fill="#1C1C1C"/>
+                    <circle cx="10" cy="10" r="1" fill="#1C1C1C"/>
+                    <circle cx="10" cy="15" r="1" fill="#1C1C1C"/>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-container">
+        <div class="pagination-info">
+          <span>Showing 1-{{ transactions.length }} of {{ transactions.length }}</span>
+        </div>
+        
+        <div class="pagination-controls">
+          <button class="page-nav" [disabled]="currentPage === 1">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M10 4L6 8L10 12" stroke="#65717D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          
+          <button class="page-number active">1</button>
+          
+          <button class="page-nav">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M6 4L10 8L6 12" stroke="#65717D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="items-per-page">
+          <span>Items per page</span>
+          <select [(ngModel)]="itemsPerPage">
+            <option value="15">15</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Selection Popup -->
+  <div class="selection-popup" *ngIf="getSelectedCount() > 0">
+    <div class="popup-header">
+      <div class="popup-title">
+        <button class="popup-close" (click)="clearAllSelections()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M12 4L4 12M4 4L12 12" stroke="#FCFCFC" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <span class="popup-title-text">Selected Transactions ({{ getSelectedCount() }})</span>
+      </div>
+    </div>
+    
+    <div class="popup-content">
+      <div class="popup-left">
+        <div class="add-tag-section">
+          <span class="add-tag-label">Add Tag:</span>
+          <div class="tag-options">
+            <label class="tag-option">
+              <input type="radio" name="selectedTag" value="prioritise" (click)="applyTag('prioritise')">
+              <span class="radio-button"></span>
+              <span class="tag-text">Prioritise Review</span>
+            </label>
+            
+            <label class="tag-option">
+              <input type="radio" name="selectedTag" value="flag" (click)="applyTag('flag')">
+              <span class="radio-button"></span>
+              <span class="tag-text">Flag For Review</span>
+            </label>
+            
+            <label class="tag-option">
+              <input type="radio" name="selectedTag" value="downgrade" (click)="applyTag('downgrade')">
+              <span class="radio-button"></span>
+              <span class="tag-text">Downgrade</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="popup-separator"></div>
+      
+      <div class="popup-right">
+        <div class="action-buttons">
+          <button class="new-alert-button" (click)="createNewAlert()">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 2L18 17H2L10 2Z" stroke="#2844A5" stroke-width="1.5"/>
+              <path d="M10 7V11M10 14H10.01" stroke="#2844A5" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span>New Alert</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

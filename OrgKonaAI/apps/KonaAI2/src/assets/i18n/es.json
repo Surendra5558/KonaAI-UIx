@@ -1,0 +1,54 @@
+{
+  "LOGIN_FORM": {
+    "KONA": "Kona",
+    "AI": "AI",
+    "LOGO_TITLE": "¿Listo para tu próxima tarea de auditoría?",
+    "LOGO_SUB_TITLE": "Tu espacio de trabajo de auditoría inteligente está listo. Utiliza alertas de IA y flujos de trabajo optimizados para investigar con confianza.",
+    "TITLE": "Iniciar sesión en tu cuenta",
+    "SUB-TITLE": "Crea nuevos roles y gestiona los permisos para controlar el acceso en toda la plataforma.",
+    "EMAIL": "Identificación de correo electrónico",
+    "PASSWORD": "Contraseña",
+    "SUBMIT-DB": "Iniciar sesión",
+    "SUBMIT-SSO": "Iniciar sesión con SSO",
+    "FORGOT-PASSWORD-TEXT": "¿Olvidó su contraseña?",
+    "OR-TEXT": "o con"
+  },
+   "Projects": {
+    "CreateTitle": "Crear Proyecto",
+    "EditTitle": "Editar Proyecto",
+    "Name": "Proyecto Nombre",
+    "Audit_Response": "Auditoría Responsabilidad",
+    "RiskArea": "Riesgo Área",
+    "Scope": "Proyecto Alcance",
+    "StartDate": "Comenzar Fecha",
+    "EndDate": "Fin Fecha",
+    "Module": "Seleccionar Módulo",
+    "P2P": "P2P",
+    "O2C": "O2C",
+    "T_E": "T&E",
+    "Country": "País",
+    "BusinessUnit": "Negocio Unidad",
+    "BusinessDept": "Negocio Departamento"
+  },
+  "Buttons": {
+    "Cancel": "Cancelar",
+    "Save": "Ahorrar",
+    "Clear": "Clara",
+    "Yes": "Sí",
+    "No": "No"
+  },
+  "Placeholders": {
+    "Project_Name": "Dale un nombre relevante a tu proyecto",
+    "Audit_Response": "Elige la línea de defensa",
+    "Risk_Area": "Seleccione el área de enfoque de la prueba de auditoría",
+    "Date": "dd-mm-aaaa",
+    "Country": "seleccionar país",
+    "BusinessUnit": "Especificar unidad de negocio",
+    "Business_Depts": "Seleccionar departamentos"
+  },
+  "Messages": {
+    "Project_Required": "El nombre del proyecto es obligatorio.",
+    "StartDate_Error": "La fecha de inicio debe ser anterior a la fecha de finalización.",
+    "EndDate_Error": "La fecha de finalización debe ser posterior a la fecha de inicio."
+  }
+}

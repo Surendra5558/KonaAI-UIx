@@ -1,0 +1,297 @@
+.vm-container {
+  padding: 16px;
+
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+  }
+
+  .search-field {
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .info-banner {
+    display: flex;
+    align-items: center;
+    background: #eaf1ff;
+    color: #2b3a67;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+
+    mat-icon {
+      margin-right: 6px;
+    }
+
+    button {
+      margin-left: auto;
+    }
+  }
+
+  // .status {
+  //   display: flex;
+  //   align-items: center;
+
+  //   &.passed {
+  //     color: green;
+  //   }
+
+  //   &.failed {
+  //     color: red;
+  //   }
+
+  //   mat-icon {
+  //     margin-right: 4px;
+  //   }
+  // }
+}
+
+
+.bottom-popup {
+  position: fixed;
+  bottom: 0;
+  right: 35px   ;
+  background: #0d47a1;
+  color: white;
+  padding: 12px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.popup-text {
+  max-width: 70%;
+}
+
+.reextract-btn {
+  background: white;
+  color: #0d47a1;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.blue-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #004c97; /* Deep blue */
+  color: white;
+  width: 350px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+  padding: 16px;
+  font-family: Arial, sans-serif;
+  animation: slideIn 0.3s ease;
+}
+
+.toast-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.info-icon {
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.toast-title {
+  font-weight: bold;
+  flex: 1;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.toast-body {
+  font-size: 14px;
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+/* --- Base Styles for all Status Badges --- */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 9999px; /* Pill shape */
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.status-badge i {
+  margin-right: 5px;
+  font-size: 14px;
+}
+
+/* Completed / Passed Badge */
+.status-badge.completed {
+  color: #2e7d32;
+  background-color: #e8f5e9;
+  border: 1px solid #c8e6c9;
+}
+
+/* Failed Badge */
+.status-badge.failed {
+  color: #c62828;
+  background-color: #ffebee;
+  border: 1px solid #ef9a9a;
+}
+
+/* Pending Badge */
+.status-badge.pending {
+  color: #f9a825;
+  background-color: #fff8e1;
+  border: 1px solid #ffecb3;
+}
+
+/* Retry Action Button */
+.action-link.retry-action {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1976d2;
+  text-decoration: underline;
+  margin-left: 10px;
+  transition: color 0.2s;
+}
+
+.action-link.retry-action:hover {
+  color: #0d47a1;
+}
+
+.action-link.retry-action i {
+  margin-right: 4px;
+  font-size: 14px;
+}
+
+/* Cell Layout */
+.status-cell-content {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+/* Base container: Fixed position and width (from your provided CSS) */
+.selection-bar {
+    position: fixed;
+    bottom: 50px; 
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    /* Removed border-radius here since it's on the content container */
+    color: white; /* Applies white text color to the header */
+    z-index: 1000;
+}
+
+/* Content Container: Centers the actual popup, applies shadow and border (from your provided CSS) */
+.selection-content {
+    width: 35%; /* Fixed width for the internal popup box */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 12px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    background-color: #f1f7ff; /* Light blue/gray background for the body */
+    border: 1px solid #dceafc;
+}
+
+/* Dark Blue Header Bar (from your provided CSS) */
+.select-class {
+    display: flex;
+    background-color: #2951C6; /* Dark Blue */
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 12px 12px 0px 0px;
+    align-items: center; /* Vertically align items */
+    gap: 15px; /* Spacing between close icon and text */
+}
+
+/* Close Icon Button (from your provided CSS) */
+.close-selection {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Selection Count Text (from your provided CSS) */
+.selection-count {
+    font-size: 16px;
+    font-weight: 600; /* Added font weight for emphasis */
+}
+
+/* --- Body Content Styles (Added to complete the visual) --- */
+
+/* Body Content wrapper (light section) */
+.selection-body-content {
+    background-color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    gap: 20px;
+    width: 100%; /* Ensure it spans the full width of .selection-content */
+}
+
+/* Descriptive text area */
+.popup-text {
+    flex-grow: 1;
+    font-size: 13px;
+    color: #4b5563; 
+    line-height: 1.4;
+    margin: 0;
+}
+
+.popup-text p {
+    margin: 0;
+}
+
+/* Re-Extract Button (Styled to match the light-bordered button in the image) */
+.reextract-btn {
+    background-color: transparent;
+    color: #2951C6; /* Blue text */
+    border: 1px solid #a8c8f8; /* Light blue border */
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+}
+
+.reextract-btn:hover {
+    background-color: #f0f7ff;
+}

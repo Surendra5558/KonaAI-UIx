@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "firstName": "Alice",
+    "lastName": "Johnson",
+    "email": "alice.johnson@example.com",
+    "phoneCode": "+1",
+    "phoneNumber": "5551234567",
+    "role": "Investigator(L1)",
+    "status": "Active",
+    "projectName": "Default Project"
+  },
+  {
+    "id": 2,
+    "firstName": "Bob",
+    "lastName": "Singh",
+    "email": "bob.singh@example.com",
+    "phoneCode": "+91",
+    "phoneNumber": "9876543210",
+    "role": "Data Manager",
+    "status": "Active",
+    "projectName": "Default Project"
+  }
+]

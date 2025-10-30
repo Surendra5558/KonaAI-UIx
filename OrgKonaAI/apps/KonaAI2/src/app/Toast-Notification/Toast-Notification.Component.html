@@ -1,0 +1,15 @@
+<div class="toast-container" *ngIf="show" [ngClass]="type">
+  <div class="toast-header">
+    <span class="icon">
+      <ng-container [ngSwitch]="type">
+        <span *ngSwitchCase="'success'"><i class="bi bi-check"></i></span>
+        <span *ngSwitchCase="'warning'"><i class="bi bi-exclamation-triangle"></i></span>
+        <span *ngSwitchCase="'error'"><i class="bi bi-x-circle"></i></span>
+        <span *ngSwitchCase="'info'"><i class="bi bi-info-circle"></i></span>
+      </ng-container>
+    </span>
+    <div class="toast-title">{{ title }}</div>
+    <button class="close-btn" (click)="onClose()">×</button>
+  </div>
+  <div class="toast-body">{{ message }}</div>
+</div>

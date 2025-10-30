@@ -1,0 +1,394 @@
+<div class="ocr-container">
+  <!-- Top Navigation Bar -->
+  <div class="top-nav">
+    <div class="nav-content">
+      <div class="document-info">
+        <div class="title-row">
+          <button class="back-btn" (click)="goBack()" aria-label="Back">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <div class="file-name">{{ documentInfo.fileName }}</div>
+        </div>
+        <div class="document-type">{{ documentInfo.documentType }}</div>
+      </div>
+      <div class="nav-actions">
+        <button class="btn btn-clear" type="button" (click)="deleteDocument()" title="Delete Document">
+          <i class="bi bi-trash3 mr-2"></i>
+          <span>Document</span>
+        </button>
+        <button class="btn btn-save" type="button" (click)="downloadDocument()" title="Download">
+          <i class="bi bi-download mr-2"></i>Download
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <!-- Left Panel - OCR Analysis -->
+    <div class="left-panel">
+      <!-- Basic Information Section -->
+      <div class="analysis-section">
+        <h3 class="section-title">Basic Information</h3>
+        <div class="info-list">
+          <div class="info-item"
+               *ngFor="let item of getCurrentBasicInfo() | keyvalue"
+               [class.selected]="selectedFieldKey === item.key || editingFieldKey === item.key"
+               (click)="selectField(item.key)"
+               (mouseenter)="hoverFieldKey = item.key"
+               (mouseleave)="hoverFieldKey = null">
+            <div class="info-label">
+              <i [class]="getStatusIconClass(item.value.status)" 
+                 [style.color]="getStatusColor(item.value.status)"></i>
+              <span class="label-text">{{ item.value.confidence }}% {{ item.key }}</span>
+            </div>
+
+            <div class="info-value">{{ item.value.value }}</div>
+
+            <div class="info-actions" *ngIf="isActionsVisible(item.key)" (click)="$event.stopPropagation()">
+              <!-- <i class="bi bi-check-circle" title="Verify" (click)="verifyField(item.key)"></i>
+              <i class="bi bi-x-circle" title="Reject" (click)="rejectField(item.key)"></i> -->
+              <i class="bi" [ngClass]="editingFieldKey === item.key ? 'bi-pencil-fill' : 'bi-pencil'"
+                 title="Edit" (click)="editField(item.key)"></i>
+               <i class="bi bi-trash3" title="Delete" (click)="rejectField(item.key)"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-width">
+          <button class="btn btn-clear" (click)="addHeader()">
+            <i class="bi bi-plus-lg mr-2"></i>Add Header</button>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="divider"></div>
+
+      <!-- Parameters Section -->
+      <div class="analysis-section">
+        <h3 class="section-title">Parameters</h3>
+        <div class="parameter-item" (click)="toggleParameter()">
+          <span class="parameter-name">Parameter 1</span>
+          <div class="parameter-controls">
+            <span class="parameter-count">{{ getCurrentParameterOptions().length }}</span>
+            <i class="bi" [ngClass]="isParameterExpanded ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+          </div>
+        </div>
+        <div class="parameter-dropdown" *ngIf="isParameterExpanded">
+          <div class="parameter-table-wrapper" (click)="$event.stopPropagation()">
+            <table class="table-main table-font">
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  <th>Quantity</th>
+                  <th class="text-right">Unit Price</th>
+                  <th class="text-right">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let opt of getCurrentParameterOptions(); let i = index">
+                  <td>
+                    <div class="left description-cell">
+                      <ng-container *ngIf="editingDescriptionIndex !== i; else editDesc">
+                        <span class="label">{{ opt.description }}</span>
+                        <button class="edit-btn" title="Edit" (click)="startEditDescription(i)">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                      </ng-container>
+                      <ng-template #editDesc>
+                        <div class="edit-desc-wrap">
+                          <input class="edit-input" type="text" [(ngModel)]="editedDescription"
+                                 (keydown.enter)="confirmEditDescription(i)"
+                                 (keydown.escape)="cancelEditDescription()" />
+                          <button class="confirm-btn" title="Save" (click)="confirmEditDescription(i)">
+                            <i class="bi bi-check-lg"></i>
+                          </button>
+                          <button class="cancel-btn" title="Cancel" (click)="cancelEditDescription()">
+                            <i class="bi bi-x-lg"></i>
+                          </button>
+                        </div>
+                      </ng-template>
+                    </div>
+                  </td>
+                  <td class="value-cell">{{ opt.quantity }}</td>
+                  <td class="text-right">{{ opt.unitPrice }}</td>
+                  <td class="text-right">{{ opt.amount }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <button class="btn-width btn btn-clear" (click)="addParameter()">
+          <i class="bi bi-plus-lg mr-2"></i>Add Parameter </button>
+      </div>
+    </div>
+
+    <!-- Center Panel - Document Viewer -->
+    <div class="center-panel">
+      <div class="document-viewer">
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+          <div class="tab-item" 
+               [class.active]="activeTab === 'original'"
+               (click)="setActiveTab('original')">
+            <span class="tab-dot" [class.active]="activeTab === 'original'"></span>
+            <span class="tab-label">Original Document</span>
+          </div>
+          <div class="tab-item" 
+               [class.active]="activeTab === 'translated'"
+               (click)="setActiveTab('translated')">
+            <span class="tab-dot" [class.active]="activeTab === 'translated'"></span>
+            <span class="tab-label">Translated Document</span>
+          </div>
+        </div>
+
+        <!-- Document Content -->
+        <div class="document-content">
+          <!-- Invoice Information (Translated) -->
+          <div class="content-section" *ngIf="activeTab === 'translated'">
+            <h4 class="section-header">Invoice Information</h4>
+            <div class="info-grid">
+              <div class="info-column">
+                <div class="info-row">
+                  <span class="label">Invoice Number</span>
+                  <span class="value" id="doc-invoicenumber" [class.doc-highlight]="isFieldHighlighted('invoicenumber')">
+                    <ng-container *ngIf="editingFieldKey !== 'invoicenumber'; else edit_invoicenumber">
+                      {{ getCurrentBasicInfo()['invoicenumber']?.value }}
+                    </ng-container>
+                    <ng-template #edit_invoicenumber>
+                      <div class="edit-inline">
+                        <input class="edit-input" [(ngModel)]="tempEditedValue" />
+                        <button class="icon-btn" (click)="confirmEditField('invoicenumber')"><i class="bi bi-check-lg"></i></button>
+                        <button class="icon-btn" (click)="cancelEditField()"><i class="bi bi-x-lg"></i></button>
+                      </div>
+                    </ng-template>
+                  </span>
+                </div>
+
+                <div class="info-row">
+                  <span class="label">Invoice Date</span>
+                  <span class="value" id="doc-invoicedate" [class.doc-highlight]="isFieldHighlighted('invoicedate')">
+                    <ng-container *ngIf="editingFieldKey !== 'invoicedate'; else edit_invoicedate">
+                      {{ getCurrentBasicInfo()['invoicedate']?.value }}
+                    </ng-container>
+                    <ng-template #edit_invoicedate>
+                      <div class="edit-inline">
+                        <input class="edit-input" [(ngModel)]="tempEditedValue" />
+                        <button class="icon-btn" (click)="confirmEditField('invoicedate')"><i class="bi bi-check-lg"></i></button>
+                        <button class="icon-btn" (click)="cancelEditField()"><i class="bi bi-x-lg"></i></button>
+                      </div>
+                    </ng-template>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spanish Invoice Information (Original) -->
+          <div class="content-section" *ngIf="activeTab === 'original'">
+            <h4 class="section-header">Información de Factura</h4>
+            <div class="info-grid">
+              <div class="info-column">
+                <div class="info-row">
+                  <span class="label">Número de Factura</span>
+                  <span class="value" id="doc-invoicenumber" [class.doc-highlight]="isFieldHighlighted('invoicenumber')">
+                    <ng-container *ngIf="editingFieldKey !== 'invoicenumber'; else edit_invoicenumber_orig">
+                      {{ getCurrentBasicInfo()['invoicenumber']?.value }}
+                    </ng-container>
+                    <ng-template #edit_invoicenumber_orig>
+                      <div class="edit-inline">
+                        <input class="edit-input" [(ngModel)]="tempEditedValue" />
+                        <button class="icon-btn" (click)="confirmEditField('invoicenumber')"><i class="bi bi-check-lg"></i></button>
+                        <button class="icon-btn" (click)="cancelEditField()"><i class="bi bi-x-lg"></i></button>
+                      </div>
+                    </ng-template>
+                  </span>
+                </div>
+
+                <div class="info-row">
+                  <span class="label">Fecha de Factura</span>
+                  <span class="value" id="doc-invoicedate" [class.doc-highlight]="isFieldHighlighted('invoicedate')">
+                    <ng-container *ngIf="editingFieldKey !== 'invoicedate'; else edit_invoicedate_orig">
+                      {{ getCurrentBasicInfo()['invoicedate']?.value }}
+                    </ng-container>
+                    <ng-template #edit_invoicedate_orig>
+                      <div class="edit-inline">
+                        <input class="edit-input" [(ngModel)]="tempEditedValue" />
+                        <button class="icon-btn" (click)="confirmEditField('invoicedate')"><i class="bi bi-check-lg"></i></button>
+                        <button class="icon-btn" (click)="cancelEditField()"><i class="bi bi-x-lg"></i></button>
+                      </div>
+                    </ng-template>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Common Risk Assessment Section (both tabs share same keys; we show edit where header exists) -->
+          <div class="content-section">
+            <h4 class="section-header" *ngIf="activeTab === 'translated'">Common Risk Assessment</h4>
+            <h4 class="section-header" *ngIf="activeTab === 'original'">Evaluación Común de Riesgos</h4>
+            <div class="info-grid">
+              <div class="info-column">
+                <div class="info-row">
+                  <span class="label" *ngIf="activeTab === 'translated'">Billing Address</span>
+                  <span class="label" *ngIf="activeTab === 'original'">Dirección de Facturación</span>
+
+                  <span class="value" id="doc-companyname" [class.doc-highlight]="isFieldHighlighted('companyname')">
+                    <ng-container *ngIf="editingFieldKey !== 'companyname'; else edit_companyname">
+                      {{ getCurrentBasicInfo()['companyname']?.value }}
+                    </ng-container>
+                    <ng-template #edit_companyname>
+                      <div class="edit-inline">
+                        <input class="edit-input" [(ngModel)]="tempEditedValue" />
+                        <button class="icon-btn" (click)="confirmEditField('companyname')"><i class="bi bi-check-lg"></i></button>
+                        <button class="icon-btn" (click)="cancelEditField()"><i class="bi bi-x-lg"></i></button>
+                      </div>
+                    </ng-template>
+                  </span>
+                </div>
+
+                <div class="info-row">
+                  <span class="label" *ngIf="activeTab === 'translated'">Customer</span>
+                  <span class="label" *ngIf="activeTab === 'original'">Cliente</span>
+
+                  <span class="value" id="doc-customer" [class.doc-highlight]="isFieldHighlighted('customer')">
+                    <ng-container *ngIf="editingFieldKey !== 'customer'; else edit_customer">
+                      <span [innerHTML]="getCurrentBasicInfo()['customer']?.value"></span>
+                    </ng-container>
+                    <ng-template #edit_customer>
+                      <div class="edit-inline">
+                        <input class="edit-input" [(ngModel)]="tempEditedValue" />
+                        <button class="icon-btn" (click)="confirmEditField('customer')"><i class="bi bi-check-lg"></i></button>
+                        <button class="icon-btn" (click)="cancelEditField()"><i class="bi bi-x-lg"></i></button>
+                      </div>
+                    </ng-template>
+                  </span>
+                </div>
+              </div>
+
+              <div class="info-column">
+                <div class="info-row">
+                  <span class="label">GSTIN</span>
+                  <span class="value" id="doc-gstin" [class.doc-highlight]="isFieldHighlighted('gstin')">
+                    <ng-container *ngIf="editingFieldKey !== 'gstin'; else edit_gstin">
+                      {{ getCurrentBasicInfo()['gstin']?.value }}
+                    </ng-container>
+                    <ng-template #edit_gstin>
+                      <div class="edit-inline">
+                        <input class="edit-input" [(ngModel)]="tempEditedValue" />
+                        <button class="icon-btn" (click)="confirmEditField('gstin')"><i class="bi bi-check-lg"></i></button>
+                        <button class="icon-btn" (click)="cancelEditField()"><i class="bi bi-x-lg"></i></button>
+                      </div>
+                    </ng-template>
+                  </span>
+                </div>
+
+                <div class="info-row">
+                  <span class="label">PAN</span>
+                  <span class="value">AAACY1234Q</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flight Booking Details Section -->
+          <div class="content-section">
+            <h4 class="section-header" *ngIf="activeTab === 'translated'">Flight Booking Details</h4>
+            <h4 class="section-header" *ngIf="activeTab === 'original'">Detalles de Reserva de Vuelo</h4>
+            <div class="table-container">
+              <table class="table-main">
+                <thead>
+                  <tr>
+                    <th>S.No</th>
+                    <th *ngIf="activeTab === 'translated'">Passenger Name</th>
+                    <th *ngIf="activeTab === 'original'">Nombre del Pasajero</th>
+                    <th *ngIf="activeTab === 'translated'">Airline</th>
+                    <th *ngIf="activeTab === 'original'">Aerolínea</th>
+                    <th *ngIf="activeTab === 'translated'">Ticket Number</th>
+                    <th *ngIf="activeTab === 'original'">Número de Boleto</th>
+                    <th *ngIf="activeTab === 'translated'">Travel Date</th>
+                    <th *ngIf="activeTab === 'original'">Fecha de Viaje</th>
+                    <th *ngIf="activeTab === 'translated'">From</th>
+                    <th *ngIf="activeTab === 'original'">Desde</th>
+                    <th *ngIf="activeTab === 'translated'">To</th>
+                    <th *ngIf="activeTab === 'original'">Hasta</th>
+                    <th>Fare (INR)</th>
+                    <th>Taxes (INR)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let flight of getCurrentFlightDetails(); let fi = index" [class.row-highlight]="highlightedFlightIndex === fi">
+                    <td>{{ flight.sno }}</td>
+                    <td>{{ flight.passengerName }}</td>
+                    <td>{{ flight.airline }}</td>
+                    <td>{{ flight.ticketNumber }}</td>
+                    <td>{{ flight.travelDate }}</td>
+                    <td>{{ flight.from }}</td>
+                    <td>{{ flight.to }}</td>
+                    <td class="text-right">{{ flight.fare | number }}</td>
+                    <td class="text-right">{{ flight.taxes | number }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Invoice Summary Section -->
+          <div class="content-section">
+            <h4 class="section-header" *ngIf="activeTab === 'translated'">Invoice Summary</h4>
+            <h4 class="section-header" *ngIf="activeTab === 'original'">Resumen de Factura</h4>
+            <div class="summary-grid">
+              <div class="summary-column">
+                <div class="summary-row">
+                  <span class="label" *ngIf="activeTab === 'translated'">Subtotal</span>
+                  <span class="label" *ngIf="activeTab === 'original'">Subtotal</span>
+                  <span class="value">₹{{ getCurrentInvoiceSummary().subtotal | number }}</span>
+                </div>
+                <div class="summary-row">
+                  <span class="label" *ngIf="activeTab === 'translated'">Total Taxes</span>
+                  <span class="label" *ngIf="activeTab === 'original'">Total de Impuestos</span>
+                  <span class="value">₹{{ getCurrentInvoiceSummary().totalTaxes | number }}</span>
+                </div>
+                <div class="summary-row total">
+                  <span class="label" *ngIf="activeTab === 'translated'">Grand Total</span>
+                  <span class="label" *ngIf="activeTab === 'original'">Total General</span>
+                  <span class="value">₹{{ getCurrentInvoiceSummary().grandTotal | number }}</span>
+                </div>
+              </div>
+              <div class="summary-column">
+                <div class="summary-row">
+                  <span class="label" *ngIf="activeTab === 'translated'">Amount in Words</span>
+                  <span class="label" *ngIf="activeTab === 'original'">Cantidad en Palabras</span>
+                  <span class="value">{{ getCurrentInvoiceSummary().amountInWords }}</span>
+                </div>
+                <div class="summary-row">
+                  <span class="label" *ngIf="activeTab === 'translated'">Payment in Terms</span>
+                  <span class="label" *ngIf="activeTab === 'original'">Términos de Pago</span>
+                  <span class="value">{{ getCurrentInvoiceSummary().paymentTerms }}</span>
+                </div>
+                <div class="summary-row">
+                  <span class="label" *ngIf="activeTab === 'translated'">Bank Details</span>
+                  <span class="label" *ngIf="activeTab === 'original'">Detalles Bancarios</span>
+                  <span class="value" [innerHTML]="getCurrentInvoiceSummary().bankDetails | safe:'html'"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Page Navigation -->
+        <div class="page-navigation">
+          <button class="nav-btn" (click)="previousPage()" [disabled]="currentPage === 1">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <span class="page-info">Page {{ currentPage }}/{{ totalPages }}</span>
+          <button class="nav-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

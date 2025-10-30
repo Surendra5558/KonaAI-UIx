@@ -1,0 +1,116 @@
+<app-top-bar *ngIf="isDataManager"[activeTab]="activateTab" (tabChanged)="onTabChanged($event)"></app-top-bar>
+
+<div class="topbar topbar-header">
+  <div class="header-left">
+    <button class="header-backbtn" (click)="goBack()">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <h2 class="page-title">Archived</h2>
+  </div>
+</div>
+<!-- archived.component.html -->
+<div class="archived-container">
+  <!-- Header Section -->
+
+
+  <!-- Tab Navigation -->
+  <div class="tab-navigation">
+    <button *ngFor="let tab of tabs" class="tab-btn" [class.active]="activeTab === tab.key"
+      (click)="setActiveTab(tab.key)">
+      {{tab.label}}
+    </button>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="search-filter-section">
+    <div class="searchbar">
+      <i class="bi bi-search search-icon"></i>
+      <input type="text" placeholder="What are you looking for?" [(ngModel)]="searchTerm" (input)="onSearch()" />
+    </div>
+    <div class="dropdown-container">
+      <div class="dropdown-button" (click)="toggleDropdown()">
+        <span>{{ selectedOption }}</span>
+        <div class="dropdown-arrows">
+          <i class="bi bi-chevron-down"></i>
+        </div>
+      </div>
+
+      <div class="dropdown-menu" [class.show]="isOpen">
+        <div class="dropdown-item" [class.selected]="selectedOption === 'Project'" (click)="selectOption('Project')">
+          Project
+        </div>
+        <div class="dropdown-item" [class.selected]="selectedOption === 'Module'" (click)="selectOption('Module')">
+          Module
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="table-container">
+    <table class="table-main">
+      <thead>
+        <tr>
+          <th (click)="sort('projectName')">
+            Project Name
+          </th>
+          <th (click)="sort('submodule')">
+            Submodule
+          </th>
+          <th>Source System</th>
+          <th>File Name</th>
+          <th (click)="sort('uploadedOn')">
+            Uploaded On
+          </th>
+          <th (click)="sort('modifiedOn')">
+            Modified On
+          </th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filteredData" class="table-row">
+          <td class="project-name">{{item.projectName}}</td>
+          <td class="submodule">{{item.submodule}}</td>
+          <td class="source-system">{{item.sourceSystem}}</td>
+          <td class="file-name">{{item.fileName}}</td>
+          <td class="date">{{item.uploadedOn | date:'d MMM yyyy'}}</td>
+          <td class="date">{{item.modifiedOn | date:'d MMM yyyy'}}</td>
+          <td class="status">
+            <span class="status-badge" [ngClass]="getStatusClass(item.status)">
+              <i class="bi bi-exclamation-triangle"></i>{{item.status}}
+            </span>
+          </td>
+          <td class="actions">
+            <button class="action-btn" (click)="openActionMenu(item)" [attr.data-tooltip]="'More options'">
+              <i class="bi bi-arrow-up-right"></i>
+            </button>
+            <button class="action-btn delete-btn" (click)="deleteItem(item)" [attr.data-tooltip]="'Delete'">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <div class="pagination-info">
+      Showing {{startIndex}}-{{endIndex}} of {{totalItems}}
+    </div>
+    <div class="pager">
+      <button class="page-btn" [disabled]="pageIndex===0" (click)="prevPage()">&lt;</button>
+      <button class="page-btn" [class.active]="pageIndex===i"
+        *ngFor="let i of [].constructor(totalPages); let idx=index" (click)="goToPage(idx)">{{ idx+1 }}</button>
+      <button class="page-btn" [disabled]="pageIndex===totalPages-1" (click)="nextPage()">&gt;</button>
+    </div>
+    <div class="page-size">Items per page
+      <select [(ngModel)]="pageSize">
+        <option *ngFor="let s of pageSizeOptions" [value]="s">{{ s }}</option>
+      </select>
+    </div>
+  </div>
+</div>
+<app-delete-popup *ngIf="showDeletePopup" [data]="deleteData" (result)="handleDeleteResult($event)"></app-delete-popup>

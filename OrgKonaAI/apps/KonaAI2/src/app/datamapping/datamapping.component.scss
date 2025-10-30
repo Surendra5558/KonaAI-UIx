@@ -1,0 +1,170 @@
+
+.container {
+    width:100%;
+    margin: auto;
+}
+ 
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+ 
+h3 {
+     font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin-left: 4px;
+}
+ 
+
+.status-indicators {
+ display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 2px solid;
+    border-radius: 30px;
+    width: 159px;
+    border-color: skyblue;
+    justify-content: space-between;
+    padding: 4px;
+}
+
+.status-icon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.status-icon i {
+  font-size: 15px;
+  font-weight: 400; /* ensure outline version */
+  background: none;
+  border-radius: 50%;
+}
+
+/* Outline colors */
+.status-icon.success i {
+  color: green; /* outline green */
+}
+
+.status-icon.error i {
+  color: red; /* outline red */
+}
+
+.status-icon.pending i {
+  color: orange; /* outline yellow/orange */
+}
+
+ 
+.status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+ 
+.status.completed {
+    background-color: #e6f7ec;
+    color: #21a46d;
+}
+
+ /* Status Badge */
+.status-badge.completed {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 9999px;  /* pill shape */
+  font-size: 12px;
+  font-weight: 500;
+  color: #2e7d32;          /* text color */
+  background-color: #e8f5e9; /* light green */
+}
+
+/* Only apply to the thumbs-up icon inside completed badge */
+.status-badge.completed i {
+  font-family: "Font Awesome 5 Free";  /* ensure FA is used */
+  font-weight: 400;                    /* 400 = regular = outline */
+  font-style: normal;
+  color: #2e7d32;                      /* match badge text color */
+  background: transparent;             /* ensure no fill */
+  font-size: 16px;
+  margin-right: 6px;
+}
+.bottom-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  /* pagination center, execute right */
+  align-items: center;
+  padding: 8px 16px;
+  z-index: 999;
+  border-radius: 8px;
+}
+
+/* Pagination buttons container */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  gap: 8px;
+}
+
+.pagination-controls button {
+  background-color: white;
+  color: #333;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 8px 5px;
+  min-width: 35px;
+  height: 29px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 200;
+  transition: all 0.2s ease-in-out;
+}
+
+.pagination-controls button.active {
+  background-color: #e6f0ff;
+  color: #007bff;
+  border-color: #b3d4ff;
+  font-weight: bold;
+}
+
+.pagination-controls button:not(.active):hover:not(:disabled) {
+  background-color: #f0f0f0;
+}
+
+.pagination-controls button:disabled {
+  color: #ccc;
+  border-color: #eee;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Execute button */
+.execute {
+  margin-left: 40px;
+}
+
+.btn-execute {
+  background-color: #082d78;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.btn-execute:hover {
+  background-color: #0056b3;
+}

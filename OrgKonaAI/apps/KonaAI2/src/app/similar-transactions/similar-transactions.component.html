@@ -1,0 +1,263 @@
+<!-- similar-transactions.component.html -->
+ <div>
+<div class="similar-transactions-container">
+  <!-- Header Controls -->
+  <div class="header-controls">
+    <div class="filters">
+      <div class="filter-group">
+        <select class="form-select" [(ngModel)]="selectedRiskCategory">
+          <option value="">Select Risk Category</option>
+          <option *ngFor="let category of riskCategories" [value]="category.value">
+            {{category.label}}
+          </option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <select class="form-select" [(ngModel)]="selectedTests">
+          <option value="">Select Tests</option>
+          <option *ngFor="let test of tests" [value]="test.value">
+            {{test.label}}
+          </option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="view-controls">
+      <button class="btn btn-outline-secondary columns-btn" style="color: rgb(109, 109, 230);border: none;" (click)="toggleColumnsPanel()">
+        <i class="bi bi-layout-three-columns"></i> Columns
+      </button>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="table-container">
+    <table class="table table-hover table-sm">
+      <thead>
+        <tr>
+          <th class="checkbox-column">
+            <input type="checkbox" [checked]="isAllSelected" (change)="toggleSelectAll($event)">
+          </th>
+          <th class="sortable" (click)="sort('vendorNumber')">
+            Vendor Number
+            <i class="bi bi-chevron-down" [class.bi-chevron-up]="sortColumn === 'vendorNumber' && sortDirection === 'asc'"
+               [class.bi-chevron-down]="sortColumn === 'vendorNumber' && sortDirection === 'desc'"></i>
+          </th>
+          <th class="sortable" (click)="sort('vendorName')" style="width:181px;">
+            Vendor Name
+            <i class="fa bi-chevron" [class.bi-chevron-up]="sortColumn === 'vendorName' && sortDirection === 'asc'"
+               [class.bi-chevron-down]="sortColumn === 'vendorName' && sortDirection === 'desc'"></i>
+          </th>
+          <th class="sortable" (click)="sort('systemInvoiceNo')">
+            System Invoice no
+            <i class="bi bi-chevron-down" [class.bi-chevron-up]="sortColumn === 'systemInvoiceNo' && sortDirection === 'asc'"
+               [class.bi-chevron-down]="sortColumn === 'systemInvoiceNo' && sortDirection === 'desc'"></i>
+          </th>
+          <th class="sortable" (click)="sort('systemInvoiceLineNo')">
+            System Invoice line no
+            <i class="bi bi-chevron-down" [class.bi-chevron-up]="sortColumn === 'systemInvoiceLineNo' && sortDirection === 'asc'"
+               [class.chevron-down]="sortColumn === 'systemInvoiceLineNo' && sortDirection === 'desc'"></i>
+          </th>
+          <th class="sortable" (click)="sort('physicalInvoiceNo')">
+            Physical Invoice no
+            <i class="bi bi-chevron-down" [class.bi-chevron-up]="sortColumn === 'physicalInvoiceNo' && sortDirection === 'asc'"
+               [class.bi-chevron-down]="sortColumn === 'physicalInvoiceNo' && sortDirection === 'desc'"></i>
+          </th>
+          <th>Tag</th>
+          <th class="sortable" (click)="sort('alerts')">
+            Alerts
+            <i class="bi bi-chevron-down" [class.bi-chevron-up]="sortColumn === 'alerts' && sortDirection === 'asc'"
+               [class.bi-chevron-down]="sortColumn === 'alerts' && sortDirection === 'desc'"></i>
+          </th>
+          <th>OCR</th>
+          <th class="actions-column"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Group Headers -->
+        <ng-container *ngFor="let group of paginatedGroups; let groupIndex = index">
+          <tr class="group-header" [class.expanded]="group.expanded">
+            <td colspan="10">
+              <div class="group-header-content" (click)="toggleGroup(group)">
+                <i class="bi" [class.bi-chevron-up]="group.expanded" [class.bi-chevron-down]="!group.expanded"></i>
+                <span class="group-title">{{group.name}} ({{group.transactions.length}})</span>
+                <div class="group-badges" *ngIf="getGroupBadges(group).length > 0">
+                  <span *ngFor="let badge of getGroupBadges(group)" 
+                        class="badge" 
+                        [class.badge-warning]="badge.type === 'flag'"
+                        [class.badge-danger]="badge.type === 'priority'">
+                    {{badge.text}}
+                  </span>
+                </div>
+                <div class="group-stats">
+                  <span class="alert-count" *ngIf="getGroupAlertCount(group) > 0">
+                    <i class="bi bi-exclamation-triangle text-warning" style="color:red;"></i> {{getGroupAlertCount(group)}}
+                  </span>
+                  <span class="ocr-count" *ngIf="getGroupOcrCount(group) > 0">
+                    <i class="bi bi-paperclip"></i> {{getGroupOcrCount(group)}}
+                  </span>
+                </div>
+              </div>
+            </td>
+          </tr>
+          
+          <!-- Group Transactions -->
+          <tr *ngFor="let transaction of group.transactions; let i = index" 
+              class="transaction-row" 
+              [class.hidden]="!group.expanded"
+              [class.selected]="transaction.selected">
+            <td>
+              <input type="checkbox" 
+                     [(ngModel)]="transaction.selected" 
+                     (change)="updateSelectionState()">
+            </td>
+            <td>{{transaction.vendorNumber}}</td>
+            <td style="width: 171px;">{{transaction.vendorName}}</td>
+            <td>{{transaction.systemInvoiceNo}}</td>
+            <td>{{transaction.systemInvoiceLineNo}}</td>
+            <td>{{transaction.physicalInvoiceNo}}</td>
+            <td>
+              <span *ngIf="transaction.tag" 
+                    class="badge" 
+                    [class.badge-warning]="transaction.tag === 'Flag for Review'"
+                    [class.badge-danger]="transaction.tag === 'Prioritise Review'"
+                    [class.badge-success]="transaction.tag === 'Downgrade'">
+                {{transaction.tag}}
+              </span>
+            </td>
+            <td>
+              <div class="alerts-cell" *ngIf="transaction.alerts > 0">
+                <i class="bi bi-exclamation-triangle text-warning" style="color:yellow;"></i>
+                <span class="alert-count">{{transaction.alerts}}</span>
+              </div>
+            </td>
+            <td>
+              <div class="ocr-cell" *ngIf="transaction.hasOcr">
+                <i class="fas fa-file-text text-primary"></i>
+              </div>
+              <div class="ocr-cell" *ngIf="transaction.hasExternalLink">
+                <i class="fas fa-external-link text-muted"></i>
+              </div>
+            </td>
+            <td class="actions-cell">
+              <div class="dropdown">
+                <button class="btn btn-link btn-sm" 
+                      (click)="showPopup()">
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                 <!-- <button class="btn btn-link btn-sm" 
+                        data-bs-toggle="dropdown" 
+                        aria-expanded="false">
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button> -->
+                <!-- <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#" (click)="viewTransaction(transaction)">View Details</a></li>
+                  <li><a class="dropdown-item" href="#" (click)="editTransaction(transaction)">Edit</a></li>
+                  <li><a class="dropdown-item" href="#" (click)="flagTransaction(transaction)">Flag for Review</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item text-danger" href="#" (click)="deleteTransaction(transaction)">Delete</a></li>
+                </ul> -->
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        
+        <!-- Empty State -->
+        <tr *ngIf="paginatedGroups.length === 0" class="empty-state">
+          <td colspan="10" class="text-center py-4">
+            <div class="empty-message">
+              <i class="fas fa-search fa-2x text-muted mb-3"></i>
+              <p class="text-muted">No transactions found matching your criteria</p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination-container" *ngIf="totalItems > 0">
+    <div class="pagination-info">
+      Showing {{startItem}}-{{endItem}} of {{totalItems | number}}
+    </div>
+    
+    <div class="pagination-controls">
+      <div class="items-per-page">
+        <label>Items per page</label>
+        <select class="form-select form-select-sm" [(ngModel)]="itemsPerPage" (change)="onItemsPerPageChange()">
+          <option value="15">15</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+      
+      <nav aria-label="Table pagination">
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <a class="page-link" href="#" (click)="goToPage(currentPage - 1)" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          
+          <li *ngFor="let page of getVisiblePages()" 
+              class="page-item" 
+              [class.active]="page === currentPage"
+              [class.disabled]="page === '...'">
+            <a class="page-link" href="#" (click)="goToPage(page)" *ngIf="page !== '...'">{{page}}</a>
+            <span class="page-link" *ngIf="page === '...'">{{page}}</span>
+          </li>
+          
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <a class="page-link" href="#" (click)="goToPage(currentPage + 1)" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<!-- Columns Panel (Offcanvas) -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="columnsPanel" *ngIf="showColumnsPanel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Manage Columns</h5>
+    <button type="button" class="btn-close" (click)="toggleColumnsPanel()"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="column-list">
+      <div *ngFor="let column of availableColumns" class="form-check">
+        <input class="form-check-input" 
+               type="checkbox" 
+               [id]="'col-' + column.key"
+               [(ngModel)]="column.visible">
+        <label class="form-check-label" [for]="'col-' + column.key">
+          {{column.label}}
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="custom-backdrop" *ngIf="isOpen" (click)="closeModal()"></div>
+
+<div class="custom-modal" *ngIf="isOpen">
+  <div class="custom-header">
+   <button class="close-btn" (click)="closeModal()">✖</button> <span>Selected Transactions (2)</span>
+    
+  </div>
+
+  <div class="custom-body">
+    <label><input type="checkbox"> Prioritise Review</label>
+    <label><input type="checkbox"> Flag For Review</label>
+    <label><input type="checkbox"> Downgrade</label>
+    <a href="#">Apply</a>
+  </div>
+
+  <div class="custom-footer">
+    <button (click)="viewDetails()">👁 View Transaction Details</button>
+    <button (click)="newAlert()"><i class="bi bi-plus-lg"></i>New Alert</button>
+  </div>
+</div>

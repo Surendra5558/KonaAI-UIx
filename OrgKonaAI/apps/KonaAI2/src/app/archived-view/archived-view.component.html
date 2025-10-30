@@ -1,0 +1,119 @@
+<div class="topbar topbar-header">
+  <div class="topbar-content">
+    <button class="header-backbtn" (click)="onBackClick()">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <h3 class="title">Numera- Privilaged & Confidential- Appendix_Updated.xlsx</h3>
+  </div>
+</div>
+<div class="archived-view-container">
+  <!-- Header -->
+
+
+  <!-- Navigation Tabs -->
+  <div class="nav-tabs">
+    <button class="nav-tab" [class.active]="activeTab === 'Open'" (click)="setActiveTab('Open')">
+      Open
+    </button>
+    <button class="nav-tab" [class.active]="activeTab === 'Resolved'" (click)="setActiveTab('Resolved')">
+      Resolved
+    </button>
+  </div>
+
+  <!-- Filter Tags -->
+  <div class="filter-section" >
+    <div class="filter-tags"*ngIf="activeTab === 'Open'">
+      <div class="filter-tag" [class.active]="activeFilter === 'important'" (click)="setActiveFilter('important')">
+        <span class="filter-name">Important</span>
+        <span class="count">{{ importantCount }}</span>
+      </div>
+
+      <div class="filter-tag" [class.active]="activeFilter === 'critical'" (click)="setActiveFilter('critical')">
+        <span class="filter-name">Critical</span>
+        <span class="count">{{ criticalCount }}</span>
+      </div>
+
+      <div class="filter-tag" [class.active]="activeFilter === 'impacts'" (click)="setActiveFilter('impacts')">
+        <span class="filter-name">Impacts Reporting</span>
+        <span class="count">{{ impactsReportingCount }}</span>
+      </div>
+    </div>
+    <div class="search-container">
+      <div class="searchbar">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" placeholder="What are you looking for?" [(ngModel)]="searchQuery"
+          (input)="onSearchChange()" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="table-container">
+    <!-- Open Table -->
+    <table class="table-main" *ngIf="activeTab === 'Open'">
+      <thead>
+        <tr>
+          <th>DQC_id</th>
+          <th>Issue Description</th>
+          <th>Record Count</th>
+          <th>
+            Impact <i class="bi bi-chevron-down"></i>
+          </th>
+          <th>Possible Fix</th>
+          <th>
+            Status <i class="bi bi-chevron-down"></i>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let record of filteredRecords" class="table-row">
+          <td class="doc-id" (click)="reportView()">{{record.docId}}</td>
+          <td class="issue-description">{{record.issueDescription}}</td>
+          <td class="record-count">{{formatNumber(record.recordCount)}}</td>
+          <td class="impact">
+            <span class="impact-badge" [ngClass]="getImpactClass(record.impact)">
+              {{record.impact}}
+            </span>
+          </td>
+          <td class="possible-fix">{{record.possibleFix}}</td>
+          <td class="status">
+            <span class="status-badge" [ngClass]="getStatusClass(record.status)">
+              ⏳{{record.status}}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Resolved Table -->
+    <table class="table-main" *ngIf="activeTab === 'Resolved'">
+      <thead>
+        <tr>
+          <th>XBLNR</th>
+          <th>MANDT</th>
+          <th>BUKRS</th>
+          <th>LIFNR</th>
+          <th>UMSKS</th>
+          <th>UMSKZ</th>
+          <th>Fix type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let record of resolvedRecords" class="table-row">
+          <td>{{record.xblnr}}</td>
+          <td>{{record.mandt}}</td>
+          <td>{{record.bukrs}}</td>
+          <td>{{record.lifnr}}</td>
+          <td>{{record.umskS}}</td>
+          <td>{{record.umskZ}}</td>
+          <td class="fix-type">
+            <span [ngClass]="getFixTypeClass(record.fixType)">
+              {{record.fixType}}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

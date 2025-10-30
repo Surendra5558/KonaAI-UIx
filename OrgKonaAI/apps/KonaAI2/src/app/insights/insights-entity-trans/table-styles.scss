@@ -1,0 +1,333 @@
+// Data Table Styles
+.data-table-container {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid $grey-10;
+  margin-bottom: 24px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  .data-table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    background-color: $white;
+    table-layout: fixed; // Ensure consistent column widths
+
+    thead {
+      background-color: $primary-teal-10;
+
+      tr {
+        th {
+          padding: 4px 8px !important;
+          text-align: left;
+          font-size: 14px;
+          font-weight: 700;
+          color: $black;
+          border-bottom: 1px solid $grey-10;
+          height: 32px;
+
+          &.checkbox-column {
+            width: 45px;
+            min-width: 45px;
+            max-width: 45px;
+            text-align: center;
+            border-top-left-radius: 4px;
+          }
+
+          &.vendor-id-column {
+            width: 12%;
+            min-width: 100px;
+          }
+
+          &.vendor-name-column {
+            width: 25%;
+            min-width: 150px;
+          }
+
+          &.vendor-country-column {
+            width: 15%;
+            min-width: 100px;
+          }
+
+          &.risk-ranking-column {
+            width: 10%;
+            min-width: 80px;
+            text-align: center;
+          }
+
+          &.risk-score-column {
+            width: 10%;
+            min-width: 80px;
+            text-align: center;
+          }
+
+          &.tag-column {
+            width: 15%;
+            min-width: 100px;
+          }
+
+          &.alerts-column {
+            width: 8%;
+            min-width: 60px;
+            text-align: center;
+          }
+
+          &.actions-column {
+            width: 5%;
+            min-width: 40px;
+            text-align: center;
+          }
+
+          &.sortable {
+            cursor: pointer;
+            position: relative;
+
+            svg {
+              width: 16px;
+              height: 16px;
+              margin-left: 4px;
+              vertical-align: middle;
+            }
+          }
+
+          &:last-child {
+            border-top-right-radius: 4px;
+          }
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        transition: all 0.2s ease;
+
+        &:hover {
+          background-color: #f8f9fa;
+        }
+
+        &.selected {
+          background-color: rgba(41, 81, 198, 0.05);
+        }
+
+        td {
+          padding: 4px 8px !important;
+          border-bottom: 1px solid $grey-10;
+          font-size: 14px;
+          font-weight: 500;
+          color: $grey-50;
+          height: 32px;
+
+          &.checkbox-column {
+            text-align: center;
+            width: 45px;
+
+            input[type="checkbox"] {
+              width: 20px;
+              height: 20px;
+              border: 1px solid $primary-blue-50;
+              border-radius: 3px;
+              cursor: pointer;
+            }
+          }
+
+          &.vendor-name {
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          &.text-center {
+            text-align: center;
+          }
+
+          &.risk-score {
+            color: $black;
+            font-weight: 500;
+          }
+
+          .tag {
+            display: inline-block;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1;
+
+            &.flag-review {
+              background-color: $yellow-10;
+              color: $yellow-50;
+            }
+
+            &.prioritise-review {
+              background-color: $red-10;
+              color: $red-40;
+            }
+
+            &.downgrade {
+              background-color: $green-10;
+              color: $green-40;
+            }
+          }
+
+          &.alerts-cell {
+            .alert-info {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              justify-content: flex-end;
+
+              &.inactive {
+                span {
+                  color: $grey-30;
+                }
+              }
+
+              svg {
+                width: 16px;
+                height: 16px;
+              }
+
+              span {
+                font-size: 14px;
+                font-weight: 500;
+                color: $black;
+              }
+            }
+          }
+
+          &.actions-cell {
+            text-align: center;
+            width: 45px;
+
+            .action-menu {
+              background: none;
+              border: none;
+              cursor: pointer;
+              padding: 4px;
+
+              svg {
+                width: 20px;
+                height: 20px;
+              }
+            }
+          }
+        }
+
+        &:last-child td {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+}
+
+// Pagination Styles
+.pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+
+  .pagination-info {
+    font-size: 14px;
+    font-weight: 500;
+    color: $grey-40;
+  }
+
+  .pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    .page-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background-color: $white;
+      border: 1px solid $grey-10;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover:not(:disabled) {
+        background-color: #f8f9fa;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    .page-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background-color: $white;
+      border: 1px solid $grey-10;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333333;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &.active {
+        background-color: $primary-teal-10;
+        color: $primary-blue-50;
+        border-color: transparent;
+      }
+
+      &:hover:not(.active) {
+        background-color: #f8f9fa;
+      }
+    }
+
+    .page-ellipsis {
+      padding: 0 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #333333;
+    }
+  }
+
+  .items-per-page {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    span {
+      font-size: 14px;
+      font-weight: 500;
+      color: $grey-40;
+    }
+
+    select {
+      padding: 12px 16px;
+      border: 1px solid $grey-20;
+      border-radius: 8px;
+      background-color: $white;
+      font-size: 14px;
+      font-weight: 500;
+      color: $black;
+      cursor: pointer;
+
+      &:focus {
+        outline: none;
+        border-color: $primary-blue-50;
+      }
+    }
+  }
+}

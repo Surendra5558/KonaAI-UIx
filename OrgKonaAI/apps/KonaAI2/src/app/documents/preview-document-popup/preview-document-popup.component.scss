@@ -1,0 +1,251 @@
+/* Modal Overlay - Centers the modal in the middle of the screen */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+/* Modal Content - Following Figma Design */
+.modal-content {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 2px 24px 0px rgba(41, 82, 225, 0.25);
+  width: 90%;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow: hidden;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Header Section */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 16px 24px;
+  position: relative;
+}
+
+.header-title h2 {
+  font-family: 'Figtree', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  line-height: 100%;
+  color: #0e0e0e;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background-color: #f3f4f6;
+  }
+  
+  i {
+    font-size: 16px;
+    color: #1c1c1c;
+  }
+}
+
+/* Document Info Section */
+.document-info {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 24px 16px 24px;
+}
+
+.file-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  i {
+    font-size: 16px;
+  }
+}
+
+.file-name {
+  font-family: 'Figtree', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 100%;
+  color: #2c2c2c;
+  white-space: nowrap;
+}
+
+/* Divider Line */
+.divider {
+  height: 1px;
+  background-color: #dde3e9;
+  margin: 0 24px;
+}
+
+/* Document Content Area */
+.document-content {
+  position: relative;
+  padding: 24px;
+  max-height: 60vh;
+  overflow: hidden;
+}
+
+.content-scroll {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.content-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 140%;
+  color: #2c2c2c;
+  
+  .document-title {
+    font-family: 'Figtree', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 100%;
+    color: #2c2c2c;
+    margin: 0 0 16px 0;
+  }
+  
+  .section-title {
+    font-family: 'Figtree', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 100%;
+    color: #2c2c2c;
+    margin: 16px 0 8px 0;
+    
+    &:first-of-type {
+      margin-top: 0;
+    }
+  }
+  
+  .subsection-title {
+    font-family: 'Figtree', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 100%;
+    color: #2c2c2c;
+    margin: 16px 0 8px 0;
+  }
+  
+  .section-text {
+    margin: 0 0 16px 0;
+  }
+  
+  .section-list {
+    margin: 8px 0 16px 0;
+    padding-left: 20px;
+    
+    li {
+      margin-bottom: 4px;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+/* Scrollbar */
+.scrollbar {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  width: 3px;
+  height: 70px;
+  background-color: #8597a4;
+  border-radius: 4px;
+}
+
+/* Custom scrollbar for webkit browsers */
+.content-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.content-scroll::-webkit-scrollbar-thumb {
+  background-color: #8597a4;
+  border-radius: 3px;
+}
+
+.content-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #6b7c89;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    max-height: 90vh;
+    margin: 20px;
+  }
+  
+  .modal-header {
+    padding: 20px 20px 12px 20px;
+  }
+  
+  .document-info {
+    padding: 0 20px 12px 20px;
+  }
+  
+  .divider {
+    margin: 0 20px;
+  }
+  
+  .document-content {
+    padding: 20px;
+  }
+  
+  .header-title h2 {
+    font-size: 18px;
+  }
+  
+  .file-name {
+    font-size: 13px;
+  }
+}

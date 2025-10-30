@@ -1,0 +1,220 @@
+<div class="uploaded-data-wrapper" *ngIf="!showPaymentsScreen && !showPaymentsDetailsScreen">
+
+  <div class="projects-table-outer">
+    <table class="table-main">
+      <thead>
+        <tr>
+          <th>Submodule</th>
+          <th>Record Count</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of tableData" (click)="onRowClick(row)">
+          <td>{{ row.Submodule }}</td>
+          <td>{{ row.RecordCount }}</td>
+          <td>
+            <span *ngIf="row.status === 'In-Progress'" class="status-badge in-progress">
+              <i class="fa fa-spinner fa-spin"></i> In-Progress
+            </span>
+            <span *ngIf="row.status === 'Failed'" class="status-badge failed">
+              <i class="far fa-times-circle"></i> Failed
+            </span>
+            <span *ngIf="row.status === 'Completed'" class="status-badge completed">
+              <i class="far fa-thumbs-up"></i> Completed
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <i class="bi bi-download" (click)="onDownload(row); $event.stopPropagation()" title="Download"></i>
+              <span (click)="openFullScreenPayments(row); $event.stopPropagation()" title="Validations"
+                class="action-icon-wrapper">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 11L11 1M11 1V11M11 1H1" stroke="#2196f3" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+              </span>
+            </div>
+          </td>
+
+
+        </tr>
+      </tbody>
+    </table>
+    <!-- Pagination Controls -->
+    <div class="bottom-bar">
+      <!-- Pagination Buttons (centered) -->
+      <div class="pagination-controls">
+        <!-- Previous Button -->
+        <button class="pagination-arrow" (click)="onPageChange('prev')" [disabled]="page === 1">‹</button>
+
+        <!-- Page Numbers -->
+        <button *ngFor="let p of getPages()" (click)="goToPage(p)" [class.active]="page === p">
+          {{ p }}
+        </button>
+
+        <!-- Next Button -->
+        <button class="pagination-arrow" (click)="onPageChange('next')" [disabled]="page === totalPages">›</button>
+      </div>
+
+      <!-- Execute Button (right) -->
+      <div class="execute">
+        <button class="btn-execute" style="margin-left: -25%;">Execute</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- Payments Modal -->
+<div class="payments-container" *ngIf="showPaymentsScreen" [class.sidebar-pinned]="isSidebarPinned"
+  [class.sidebar-unpinned]="!isSidebarPinned">
+  <!-- Header -->
+  <div class="payments-header">
+    <button class="back-btn" (click)="closeFullScreen()">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+    <h2>Payments</h2>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-section">
+    <button class="tab" [class.active]="activeTab === 'open'" (click)="activeTab = 'open'">Open</button>
+    <button class="tab" [class.active]="activeTab === 'passed'" (click)="activeTab = 'passed'">Passed</button>
+  </div>
+
+  <!-- Top Filters -->
+  <div class="filter-section" *ngIf="activeTab === 'open'">
+    <div class="filter-tags">
+      <div class="filter-tag active">
+        <span class="filter-name">Important</span>
+        <span class="count">1</span>
+      </div>
+      <div class="filter-tag">
+        <span class="filter-name">Critical</span>
+        <span class="count">16</span>
+      </div>
+      <div class="filter-tag">
+        <span class="filter-name">Impacts Reporting</span>
+        <span class="count">17</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="activeTab === 'open'" style="
+    margin-left: 25px;
+    margin-bottom: 25px;
+    height: 25px;
+    width: 29px;
+">
+    <!-- <input type="text" placeholder="What are you looking for?" [(ngModel)]="searchText"> -->
+    <div class="searchbar">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" placeholder="What are you looking for?" [(ngModel)]="searchText" />
+    </div>
+
+  </div>
+
+  <!-- Table -->
+  <div class="table-container" *ngIf="activeTab === 'open'">
+    <table class="table-main">
+      <thead>
+        <tr>
+          <th>DCC_ID</th>
+          <th>DCC Description</th>
+          <th>Hit Count</th>
+          <th>Total Count</th>
+          <th>Hit Percentage</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let record of paginatedPayments">
+          <td>{{ record.dccId }}</td>
+          <td>{{ record.description }}</td>
+          <td>{{ record.hitCount }}</td>
+          <td>{{ record.totalCount }}</td>
+          <td>{{ record.hitPercentage }}</td>
+          <td>
+            <span *ngIf="record.status === 'Failed'" class="status-badge failed">
+              <i class="far fa-times-circle"></i> Failed
+            </span>
+            <span *ngIf="record.status === 'Passed'" class="status-badge completed">
+              <i class="far fa-thumbs-up"></i> Completed
+            </span>
+            <span *ngIf="record.status === 'In-Progress'" class="status-badge in-progress">
+              <i class="fa fa-spinner fa-spin"></i> In-Progress
+            </span>
+          </td>
+          <td class="icon-cell">
+            <span (click)="openFullScreenPaymentsDetails(record); $event.stopPropagation()" class="action-icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"
+                style="cursor: pointer;">
+                <path d="M1 11L11 1M11 1V11M11 1H1" stroke="#2196f3" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="filter-section" *ngIf="activeTab === 'passed'">
+    <!-- <button class="filter-btn important">Important <span>1</span></button>
+    <button class="filter-btn critical">Critical <span>16</span></button>
+    <button class="filter-btn impact">Impacts Reporting <span>17</span></button> -->
+    <div class="searchbar">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" placeholder="What are you looking for?" [(ngModel)]="searchText" />
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-container" *ngIf="activeTab === 'passed'">
+    <table class="table-main">
+      <thead>
+        <tr>
+          <th>DCC_ID</th>
+          <th>DCC Description</th>
+          <th>Hit Count</th>
+          <th>Total Count</th>
+          <th>Hit Percentage</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let record of filteredPayments">
+          <td>{{ record.dccId }}</td>
+          <td>{{ record.description }}</td>
+          <td>{{ record.hitCount }}</td>
+          <td>{{ record.totalCount }}</td>
+          <td>{{ record.hitPercentage }}</td>
+          <td>
+            <span class="status-badge completed">
+              <i class="fa fa-thumbs-up"></i> Passed
+            </span>
+          </td>
+          <td class="icon-cell">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"
+              style="cursor: pointer;">
+              <path d="M1 11L11 1M11 1V11M11 1H1" stroke="#2196f3" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+<div *ngIf="showPaymentsDetailsScreen" class="vm-details-fullscreen-overlay" [class.sidebar-pinned]="isSidebarPinned"
+  [class.sidebar-unpinned]="!isSidebarPinned">
+  <app-vm-details [parentData]="rowId" (dataToParent)="handleChildEvent($event)">
+  </app-vm-details>
+</div>

@@ -1,0 +1,59 @@
+<div class="container">
+  <!-- Left Card -->
+  <div class="card">
+    <div class="card-header">
+      <span>Visual Keyword Landscape</span>
+      <div class="toggle">
+        <label><input type="radio" name="mode" checked (change)="mode='count'"> Count</label>
+        <label><input type="radio" name="mode" (change)="mode='amount'"> Amount</label>
+      </div>
+    </div>
+ 
+    <div class="cloud">
+      <span *ngFor="let k of keywords"
+            [style.fontSize.px]="mode==='count' ? (12 + k.count) : (12 + (k.amount/1000000))"
+            [style.color]="selectedKeyword && selectedKeyword!==k.word ? '#d0d5dd' : k.color"
+            (click)="selectKeyword(k.word)">
+        {{k.word}}
+      </span>
+    </div>
+  </div>
+ 
+  <!-- Right Card -->
+  <div class="card">
+    <div class="card-header">
+      <span>Keyword Insights Summary</span>
+    </div>
+ 
+    <div class="amounts">
+      <div>Total Amount: <b>$1,54,86,238.62K</b></div>
+      <div>Flagged Amount: <b class="flagged">$5,61,860.53K</b></div>
+    </div>
+ 
+    <table>
+      <thead>
+        <tr>
+          <th>Keyword</th>
+          <th>Count</th>
+          <th>Failed</th>
+          <th>Total Amount</th>
+          <th>Flagged Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of summary"
+            [class.active]="selectedKeyword===row.keyword"
+            (click)="selectKeyword(row.keyword)">
+          <td>{{row.keyword}}</td>
+          <td>{{row.count}}</td>
+          <td>{{row.failed}}</td>
+          <td>{{row.total | currency:'USD':true}}</td>
+          <td class="flagged">
+            {{row.flagged | currency:'USD':true}}
+            <div class="bar" [style.width.%]="(row.flagged/row.total)*100"></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

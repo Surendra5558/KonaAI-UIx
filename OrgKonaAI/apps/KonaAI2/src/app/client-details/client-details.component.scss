@@ -1,0 +1,167 @@
+// .client-admin-home {
+//   width: 83%;
+//   display: flex;
+//   align-items: flex-start;
+//   justify-content: center;
+//   // padding: 20px 40px;
+//   box-sizing: border-box;
+// }
+
+// Content area styling
+// .content {
+//   width: 100%;
+//   max-width: 1800px;
+//   display: flex;
+//   flex-direction: column;
+//   gap: 20px;
+// }
+
+// Client Info Card
+.client-info-card {
+  border-radius: 12px;
+  // padding: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+// Section Headers
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+
+  i {
+    color: #3b82f6;
+    font-size: 18px;
+  }
+
+  h3 {
+    margin: 0;
+  }
+}
+
+// Client Details Section
+.client-details-section {
+  margin-bottom: 20px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin: 0;
+  }
+
+  .detail-value {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 400;
+  }
+}
+
+.modules-section {
+  grid-column: 1 / -1;
+}
+
+.module-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.module-tag {
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid #bfdbfe;
+}
+
+// Section Divider
+.section-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 20px 0;
+}
+
+// Billing Section
+.billing-section {
+  .section-header {
+    margin-bottom: 16px;
+  }
+}
+
+.billing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.billing-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin: 0;
+  }
+
+  .billing-value {
+    font-size: 14px;
+    color: #1f2937;
+    font-weight: 600;
+  }
+}
+
+// Information Message
+.info-message {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+
+  i {
+    color: #6b7280;
+    font-size: 16px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  span {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.5;
+  }
+}

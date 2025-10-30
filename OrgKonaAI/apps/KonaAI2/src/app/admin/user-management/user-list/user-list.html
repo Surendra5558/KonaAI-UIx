@@ -1,0 +1,9 @@
+<button (click)="reload()">Reload</button>
+
+@if (users$ | async; as users) {
+<ul>
+    @for (u of users; track u.id) {
+    <li>{{ u.name }} - {{ u.email }}</li>
+    }
+</ul>
+}

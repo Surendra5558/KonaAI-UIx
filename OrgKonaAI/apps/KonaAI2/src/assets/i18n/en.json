@@ -1,0 +1,54 @@
+{
+  "LOGIN_FORM": {
+    "KONA": "Kona",
+    "AI": "AI",
+    "LOGO_TITLE": "Ready for your next audit task?",
+    "LOGO_SUB_TITLE": "Your intelligent audit workspace is ready. Use AI alerts and streamlined workflows to investigate with confidence.",
+    "TITLE": "Sign In for your Account",
+    "SUB-TITLE": "Create new roles and manage permissions to control access across the platform.",
+    "EMAIL": "Email ID",
+    "PASSWORD": "Password",
+    "SUBMIT-DB": "Sign In",
+    "SUBMIT-SSO": "Sign In with SSO",
+    "FORGOT-PASSWORD-TEXT": "Forgot Password ?",
+    "OR-TEXT": "or with"
+  },
+  "Projects": {
+    "CreateTitle": "Create Project",
+    "EditTitle": "Edit Project",
+    "Name": "Project Name",
+    "Audit_Response": "Audit Responsibility",
+    "RiskArea": "Risk Area",
+    "Scope": "Project Scope",
+    "StartDate": "Start Date",
+    "EndDate": "End Date",
+    "Module": "Select Module",
+    "P2P": "P2P",
+    "O2C": "O2C",
+    "T_E": "T&E",
+    "Country": "Country",
+    "BusinessUnit": "Business Unit",
+    "BusinessDept": "Business Department"
+  },
+  "Buttons": {
+    "Cancel": "Cancel",
+    "Save": "Save",
+    "Clear": "Clear",
+    "Yes": "Yes",
+    "No": "No"
+  },
+  "Placeholders": {
+    "Project_Name": "Give your project a relevant name",
+    "Audit_Response": "Choose the line of defence",
+    "Risk_Area": "Select the audit test focus area",
+    "Date": "dd-mm-yyyy",
+    "Country": "Select Country",
+    "BusinessUnit": "Specify Business Unit",
+    "Business_Depts": "Select Departments"
+  },
+  "Messages": {
+    "Project_Required": "Project Name is required.",
+    "StartDate_Error": "Start Date must be before the End Date.",
+    "EndDate_Error": "End Date must be after the Start Date."
+  }
+}

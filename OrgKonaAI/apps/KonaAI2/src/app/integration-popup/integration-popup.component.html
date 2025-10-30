@@ -1,0 +1,69 @@
+<!-- integration-popup.component.html -->
+<div class="popup-container">
+  <div class="popup-header">
+    <h2 class="popup-title">API Data Connector</h2>
+  </div>
+
+  <form [formGroup]="dataForm" class="popup-form">
+    <!-- Connector Name -->
+    <div class="form-field">
+      <label class="field-label" style="padding-top: 21px;">Connector Name</label>
+      <mat-form-field appearance="outline" class="compact-field">
+        <mat-select formControlName="connectorName" placeholder="Select Connector">
+          <mat-option *ngFor="let connector of connectors" [value]="connector">
+            {{connector}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Date Fields Row -->
+    <div class="date-row">
+      <div class="form-field">
+        <label class="field-label">From Date</label>
+        <mat-form-field appearance="outline" class="compact-field date-field">
+          <input matInput 
+                 [matDatepicker]="fromPicker" 
+                 formControlName="fromDate"
+                 placeholder="dd/mm/yyyy"
+                 readonly>
+          <mat-datepicker-toggle matSuffix [for]="fromPicker">
+            <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+          </mat-datepicker-toggle>
+          <mat-datepicker #fromPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="form-field">
+        <label class="field-label">To Date</label>
+        <mat-form-field appearance="outline" class="compact-field date-field">
+          <input matInput 
+                 [matDatepicker]="toPicker" 
+                 formControlName="toDate"
+                 placeholder="dd/mm/yyyy"
+                 readonly>
+          <mat-datepicker-toggle matSuffix [for]="toPicker">
+            <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+          </mat-datepicker-toggle>
+          <mat-datepicker #toPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+
+  <!-- Action Buttons -->
+  <div class="popup-actions">
+    <button mat-stroked-button 
+            class="cancel-btn" 
+            (click)="onCancel()">
+      Cancel
+    </button>
+    <button mat-raised-button 
+            class="pull-data-btn" 
+            color="primary"
+            (click)="onPullData()"
+            [disabled]="!dataForm.valid">
+      Pull Data
+    </button>
+  </div>
+</div>

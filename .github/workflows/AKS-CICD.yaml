@@ -1,0 +1,52 @@
+name: 'Build and Deploy to AKS'
+on:
+  workflow_dispatch:  # Manual trigger from GitHub Actions UI
+
+jobs:
+  setup-build-publish-deploy:
+    name: 'Setup, Build, Publish, and Deploy'
+    runs-on: ubuntu-latest
+    environment: Dev
+
+    steps:
+      # Step 1: Checkout code
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+
+      # Step 2: Azure Login
+      - name: 'Login to Azure'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      # Step 3: 
+      - name: 'Login to Azure Container Registry'
+        run: |
+         az acr login --name ${{ secrets.ACR_NAME }} 
+         
+    # Step 4: Build and push Docker image
+      - name: 'Build and Push Docker Image'
+        run: |
+          IMAGE=${{ secrets.ACR_LOGIN_SERVER }}/konaai-2.0/ui
+          docker build -f OrgKonaAI/Dockerfile -t $IMAGE:${{ github.sha }} .
+          docker push $IMAGE:${{ github.sha }}
+
+          # Optional: also push "latest"
+          docker tag $IMAGE:${{ github.sha }} $IMAGE:latest
+          docker push $IMAGE:latest
+          
+    # Step 5: Get AKS credentials
+      - name: 'Get AKS Credentials'
+        run: |
+          az aks get-credentials \
+            --resource-group ${{ secrets.AKS_RESOURCE_GROUP }} \
+            --name ${{ secrets.AKS_CLUSTER_NAME }}
+          
+      # Step 6: Deploy to AKS using kubectl
+      - name: 'Deploy to AKS with manifests'
+        run: |
+          kubectl apply -f Deployments/Cert-Manager/cert-manager.yaml 
+          kubectl apply -f Deployments/Env-Variables/ui-var.yaml
+          kubectl apply -f Deployments/Deployment/Deployment.yaml
+          kubectl rollout status deployment/ui-deployment
+          kubectl apply -f Deployments/Ingress-Deployment/ui-ingress.yaml

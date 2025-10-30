@@ -1,0 +1,242 @@
+/* Header Row Layout */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin-top: -4px;
+  margin-left: -20px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Action Icons spacing */
+.action-icons {
+  display: flex;
+  align-items: center;
+  // justify-content: center; /* optional, centers icons in the cell */
+  gap: 10px;
+  /* adjust this value to control spacing between icons */
+}
+
+/* Export Button */
+.export-btn {
+  //background: #003585;
+  color: #003585;
+  border: none;
+  background: none transparent;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+// .export-btn:hover {
+//   background: #0046a0;
+// }
+
+/* Status Indicators */
+.status-indicators {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 2px solid skyblue;
+  border-radius: 30px;
+  width: 159px;
+  justify-content: space-between;
+  padding: 4px;
+}
+
+.status-icon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.status-icon i {
+  font-size: 15px;
+  font-weight: 400;
+  background: none;
+  border-radius: 50%;
+}
+
+.status-icon.success i {
+  color: green;
+}
+
+.status-icon.error i {
+  color: red;
+}
+
+.status-icon.pending i {
+  color: orange;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  /* pill shape */
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  vertical-align: middle;
+}
+
+.status-badge i {
+  margin-right: 6px;
+  font-size: 16px;
+  font-weight: 100;
+  /* makes icon thinner */
+  opacity: 0.85;
+
+}
+
+/* Completed / Passed (Green) */
+.status-badge.completed {
+  color: #2e7d32;
+  /* Dark green text/icon */
+  background-color: #e8f5e9;
+  /* Light green background */
+  // border: 1px solid #c8e6c9;    /* Subtle border */
+}
+
+/* Failed (Red) */
+.status-badge.failed {
+  color: #c62828;
+  /* Dark red */
+  background-color: #ffebee;
+  /* Light red background */
+  //border: 1px solid #ffcdd2;
+}
+
+/* In-Progress (Blue) */
+.status-badge.in-progress {
+  color: #1565c0;
+  /* Dark blue */
+  background-color: #e3f2fd;
+  /* Light blue background */
+  //  border: 1px solid #bbdefb;
+}
+
+/* Pending (Amber/Orange) */
+.status-badge.pending {
+  color: #ef6c00;
+  /* Dark orange */
+  background-color: #fff3e0;
+  /* Light orange background */
+  //  border: 1px solid #ffe0b2;
+}
+
+
+.bi-download {
+  font-size: 1rem;
+  -webkit-text-stroke: 0.5px currentColor;
+}
+
+.bi-archive {
+  font-size: 1rem;
+  -webkit-text-stroke: 0.5px currentColor;
+
+}
+
+.detail-icon {
+  color: #1565c0;
+  /* blue */
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.detail-icon:hover {
+  color: #0d47a1;
+  /* darker blue on hover */
+}
+
+.bottom-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between; /* pagination center, execute right */
+  align-items: center;
+  padding: 8px 16px;
+  z-index: 999;
+  border-radius: 8px;
+}
+
+/* Pagination buttons container */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  gap: 8px;
+}
+
+.pagination-controls button {
+  background-color: white;
+  color: #333;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 8px 5px;
+  min-width: 35px;
+  height: 29px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 200;
+  transition: all 0.2s ease-in-out;
+}
+
+.pagination-controls button.active {
+  background-color: #e6f0ff;
+  color: #007bff;
+  border-color: #b3d4ff;
+  font-weight: bold;
+}
+
+.pagination-controls button:not(.active):hover:not(:disabled) {
+  background-color: #f0f0f0;
+}
+
+.pagination-controls button:disabled {
+  color: #ccc;
+  border-color: #eee;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Execute button */
+.execute {
+  margin-left: 16px;
+}
+
+.btn-execute {
+  background-color: #082D78;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.btn-execute:hover {
+  background-color: #0056b3;
+}
+

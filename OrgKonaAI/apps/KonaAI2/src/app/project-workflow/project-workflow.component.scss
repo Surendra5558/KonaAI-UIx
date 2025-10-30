@@ -1,0 +1,120 @@
+.container {
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top bar - full width, no side padding */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 12px 0;
+  border-radius: 8px;
+  gap: 250px;
+
+  h1 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-left: 18px;
+  }
+}
+
+.nav-container {
+  padding: 6px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e1e5f0;
+}
+
+.tab-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tab-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: transparent;
+
+  &:hover {
+    background-color: #e5e7eb;
+  }
+
+  &.active {
+    background-color: #C4DBFA;
+    color: #2951C6;
+
+    i {
+      color: #2951C6;
+    }
+  }
+
+  i {
+    font-size: 16px;
+    transition: color 0.2s ease;
+  }
+
+  span {
+    white-space: nowrap;
+  }
+}
+
+// Remove the old additional-icons styles since they're now tab-items
+.additional-icons {
+  display: none; // Hide the old structure
+}
+
+/* Icon styles - you can replace these with your preferred icon library */
+.icon-overview::before {
+  content: "📋";
+}
+
+.icon-workflow::before {
+  content: "⚙️";
+}
+
+// Content area styling
+.content {
+  flex: 1;
+  // overflow-y: auto;
+
+
+  .insights-content {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 16px;
+      color: #1f2937;
+    }
+
+    p {
+      color: #6b7280;
+      font-size: 16px;
+    }
+  }
+}
+
+.tab-item.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}

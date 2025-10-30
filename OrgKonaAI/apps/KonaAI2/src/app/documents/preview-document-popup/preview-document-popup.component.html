@@ -1,0 +1,91 @@
+<!-- Modal Overlay -->
+<div *ngIf="popupData.isOpen" class="modal-overlay" (click)="close()">
+  <!-- Modal Content - Following Figma Design -->
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <!-- Header Section -->
+    <div class="modal-header">
+      <div class="header-title">
+        <h2>Preview</h2>
+      </div>
+      <div class="header-actions">
+        <button class="action-btn download-btn" (click)="download()" title="Download">
+          <i class="bi bi-download"></i>
+        </button>
+        <button class="action-btn close-btn" (click)="close()" title="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Document Info Section -->
+    <div class="document-info">
+      <div class="file-icon">
+        <i [class]="getFileIcon(popupData.documentType || '')" 
+           [style.color]="getFileTypeColor(popupData.documentType || '')"></i>
+      </div>
+      <div class="file-name">
+        {{ popupData.documentName || 'Document.docx' }}
+      </div>
+    </div>
+
+    <!-- Divider Line -->
+    <div class="divider"></div>
+
+    <!-- Document Content Area -->
+    <div class="document-content">
+      <div class="content-scroll">
+        <!-- Sample document content based on Figma design -->
+        <div class="content-text">
+          <h3 class="document-title">Procurement Policies & Procedures</h3>
+          
+          <h4 class="section-title">1. Introduction</h4>
+          <p class="section-text">
+            This document outlines the procurement policies and procedures to ensure transparency, efficiency, and
+            compliance with company regulations.
+          </p>
+          
+          <h4 class="section-title">2. Procurement Principles</h4>
+          <ul class="section-list">
+            <li>Fair competition</li>
+            <li>Cost-effectiveness</li>
+            <li>Compliance with legal and ethical standards</li>
+            <li>Transparency and accountability</li>
+          </ul>
+          
+          <h4 class="section-title">3. Procurement Process</h4>
+          
+          <h5 class="subsection-title">3.1 Needs Identification</h5>
+          <ul class="section-list">
+            <li>Departments submit procurement requests with detailed specifications.</li>
+          </ul>
+          
+          <h5 class="subsection-title">3.2 Vendor Selection</h5>
+          <ul class="section-list">
+            <li>Prequalified vendors are considered.</li>
+            <li>Requests for Proposals (RFP) or Quotations (RFQ) may be issued.</li>
+            <li>Evaluation based on cost, quality, and compliance.</li>
+          </ul>
+          
+          <h5 class="subsection-title">3.3 Purchase Order (PO) Issuance</h5>
+          <ul class="section-list">
+            <li>Approved vendors receive POs with terms and conditions.</li>
+          </ul>
+          
+          <h5 class="subsection-title">3.4 Goods/Services Delivery & Inspection</h5>
+          <ul class="section-list">
+            <li>Delivery confirmation and quality checks are conducted before acceptance.</li>
+          </ul>
+          
+          <h5 class="subsection-title">3.5 Invoice Processing & Payment</h5>
+          <ul class="section-list">
+            <li>Invoices are matched with POs and delivery confirmations.</li>
+            <li>Payments are processed as per agreed terms.</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Scrollbar indicator -->
+      <div class="scrollbar"></div>
+    </div>
+  </div>
+</div>

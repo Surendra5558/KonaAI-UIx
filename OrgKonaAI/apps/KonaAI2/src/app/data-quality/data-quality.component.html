@@ -1,0 +1,86 @@
+<!-- Main Container -->
+<div class="main-container" *ngIf="!showHolisticView">
+    <!-- Table Section -->
+    <div class="table-section ">
+      <table class="table-main">
+        <thead>
+          <tr>
+            <th>Submodule</th>
+            <th>Source System</th>
+            <th>Record Count</th>
+            <th>File Name</th>
+            <th>Uploaded On</th>
+            <th>Modified On</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let row of pagedRows">
+            <td>{{ row.submodule }}</td>
+            <td>{{ row.sourceSystem }}</td>
+            <td>{{ row.recordCount.toLocaleString() }}</td>
+            <td>{{ row.fileName }}</td>
+            <td>{{ row.uploadedOn }}</td>
+            <td>{{ row.modifiedOn }}</td>
+            <td>
+              <span *ngIf="row.status === 'failed'" class="status-badge failed">
+                <i class="far fa-times-circle"></i> Failed
+              </span>
+              <span *ngIf="row.status === 'completed'" class="status-badge completed">
+                <i class="far fa-thumbs-up"></i> Completed
+              </span>
+              <span *ngIf="row.status === 'in-progress'" class="status-badge in-progress">
+                <i class="fa fa-spinner fa-spin"></i> In-Progress
+              </span>
+            </td>
+            <td>
+              <div class="action-icons" style="gap:20px">
+                <span *ngIf="row.hasExport" class="text-black hover:text-gray-600" title="Download">
+                  <i class="bi bi-download"></i>
+                </span>
+                <span *ngIf="row.hasArchive" (click)="openArchivePopup(row.fileName)"
+                  class="text-black hover:text-gray-600" title="Archive">
+                  <i class="bi bi-archive"></i>
+                </span>
+                <span *ngIf="row.hasDetail" title="Validations">
+                  <svg (click)="navigateToDetail(row.detailId); $event.stopPropagation()"
+                    xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"
+                    style="cursor: pointer;">
+                    <path d="M1 11L11 1M11 1V11M11 1H1" stroke="#2196f3" stroke-width="1.5" stroke-linecap="round" />
+                  </svg>
+                </span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+
+      <!-- Pagination Controls -->
+      <div class="bottom-bar">
+        <!-- Pagination Buttons (centered) -->
+        <div class="pagination-controls">
+          <button class="pagination-arrow" (click)="onPageChange('prev')" [disabled]="page === 1">‹</button>
+
+          <button *ngFor="let p of getPages()" (click)="goToPage(p)" [class.active]="page === p">
+            {{ p }}
+          </button>
+
+          <button class="pagination-arrow" (click)="onPageChange('next')" [disabled]="page === totalPages">›</button>
+        </div>
+
+        <!-- Execute Button (right) -->
+        <div class="execute">
+          <button class="btn-execute" (click)="onExecuteClick()" style="margin-left: -25%;">Execute</button>
+        </div>
+
+
+    </div>
+
+    <!-- Popups -->
+    <app-export-popup></app-export-popup>
+    <app-archive-popup *ngIf="showPopup" [data]="popupData" (result)="handlePopupResult($event)">
+    </app-archive-popup>
+  </div>

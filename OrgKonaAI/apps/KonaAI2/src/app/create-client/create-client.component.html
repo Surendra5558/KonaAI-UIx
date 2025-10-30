@@ -1,0 +1,93 @@
+<div class="project-creation-container topbar-header">
+    <h2>Create Client</h2>
+    <h4 (click)="closePopup()" class="closePopup" title="Close" tabindex="0">X</h4>
+</div>
+
+<div class="project-creation-content">
+    <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="project-form">
+
+        <!-- Client Name and URL -->
+        <div class="form-row">
+            <div class="form-group half-width">
+                <label for="clientName" class="form-label required">
+                    Client Name <span class="star-required">*</span>
+                </label>
+                <input type="text" id="clientName" formControlName="clientName" class="form-input"
+                    placeholder="Give your client a relevant name">
+                <div class="error-message" *ngIf="f['clientName'].touched && f['clientName'].invalid">
+                    <small *ngIf="f['clientName'].errors?.['required']">Client Name is required.</small>
+                    <small *ngIf="f['clientName'].errors?.['maxlength']">Client Name cannot exceed 100
+                        characters.</small>
+                    <small *ngIf="f['clientName'].errors?.['leadingSpace']">Client Name cannot start with a
+                        space.</small>
+                </div>
+            </div>
+
+            <div class="form-group half-width">
+                <label for="clientUrl" class="form-label required">URL</label>
+                <input type="text" id="clientUrl" formControlName="URL" class="form-input"
+                    placeholder="Give the Client URL">
+            </div>
+
+            <div class="form-group half-width">
+                <label for="csm" class="form-label required">CSM</label>
+                <input type="text" id="csm" formControlName="csm" class="form-input" tabindex="3"
+                    placeholder="Customer Support Member">
+            </div>
+        </div>
+
+        <!-- Primary Contact -->
+        <label class="form-label mt-2">Primary Contact:</label>
+        <div class="form-row">
+            <div class="form-group half-width">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" id="name" formControlName="name" class="form-input" placeholder="Name">
+            </div>
+
+            <div class="form-group half-width">
+                <label for="emailId" class="form-label">Email</label>
+                <input type="email" id="emailId" formControlName="email" class="form-input" placeholder="Email Address">
+            </div>
+
+            <div class="form-group half-width">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="text" id="phone" formControlName="phone" class="form-input" placeholder="Phone Number">
+            </div>
+        </div>
+
+         <!-- Modules & Sources -->
+<div class="form-row mt-2" formGroupName="modules">
+  <ng-container *ngFor="let module of modulesList">
+    <div class="form-group half-width">
+      <div class="module-group">
+        <div class="module-header">
+          <!-- Checkbox always visible -->
+          <input type="checkbox" [formControlName]="module.key"
+            (change)="onModuleChange(module.key, $event.target.checked)" class="module-checkbox"
+            [tabindex]="module.tabIndex">
+          <label [for]="module.id" class="module-label">{{ module.label }}</label>
+        </div>
+      </div>
+
+      <!-- Source dropdown: disabled if module not checked -->
+      <label class="form-label">Source</label>
+      <select [formControlName]="module.sourceControl" class="form-select"
+        [disabled]="!projectForm.get('modules.' + module.key)?.value" [tabindex]="module.tabIndex + 3">
+        <option value="">Select Source</option>
+        <option *ngFor="let src of module.sources" [value]="src.value">{{ src.label }}</option>
+        
+      </select>
+    </div>
+  </ng-container>
+  
+</div>
+
+
+        <!-- Footer -->
+        <div class="model-footer mt-3">
+            <button type="button" class="btn btn-clear" (click)="onClear()" tabindex="13">Clear</button>
+            <button type="submit" class="btn btn-save" tabindex="14"
+                [disabled]="!projectForm.valid || !anyModuleSelected()">Save</button>
+        </div>
+    </form>
+</div>

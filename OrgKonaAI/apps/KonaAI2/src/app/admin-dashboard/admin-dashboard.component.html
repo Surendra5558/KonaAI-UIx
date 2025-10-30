@@ -1,0 +1,303 @@
+<div class="header" style="background: #EFF6FF;border-bottom: 2px solid #C4DBFA;">
+    <div class="header-section" style="margin-left:13px;">
+    <h1>Dashboard</h1>
+    <p>Manage users, roles, projects, metadata, and system configurations.</p>
+    <div style="margin-bottom:8px;"></div>
+    </div>
+</div>
+<div class="dashboard">
+
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-number">5</div>
+            <div class="metric-label">Pending Approvals</div>
+            <div class="metric-sublabel">
+                Projects Awaiting Review
+                <div class="metric-tag blue-tag">+2 this week</div>
+            </div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-number">28</div>
+            <div class="metric-label">Active Members</div>
+            <div class="metric-sublabel">
+                Across 4 Roles
+                <div class="metric-tag purple-tag">84% engagement</div>
+            </div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-number">12</div>
+            <div class="metric-label">Metadata Sets</div>
+            <div class="metric-sublabel">
+                Configured and Active
+                <div class="metric-tag green-tag">3 updated today</div>
+            </div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-number">6</div>
+            <div class="metric-label">Data Sources</div>
+            <div class="metric-sublabel">
+                Connections Active
+                <div class="metric-tag blue-tag">99.8% uptime</div>
+            </div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-number">3</div>
+            <div class="metric-label">Access Requests</div>
+            <div class="metric-sublabel">
+                New this Week
+                <div class="metric-tag orange-tag">Review required</div>
+            </div>
+        </div>
+    </div>
+
+    <div (click)="toggleSection()" class="projects-section">
+        <div><span style="display:inline-block;margin-left:12px;margin-top:10px;margin-bottom:10px;">Project Approval (4)</span>
+            @if (isExpand) {
+            <span style="float:right;margin-right:13px;margin-top:10px;"><i class="bi bi-chevron-up" style="font-weight: bolder;"></i></span>
+            }
+             @if (!isExpand) {
+            <span style="float:right;margin-right:13px;margin-top:10px;"><i class="bi bi-chevron-down" style="font-weight: bolder;"></i></span>
+            }
+        </div>
+        <div class="Grid-View" *ngIf="isExpand">
+            <div *ngIf="viewMode === 'grid'" class="projects-grid">
+                <div *ngFor="let project of projects" class="project-card">
+                    <div class="card-body">
+                        <div class="card-header">
+                            <h3>{{ project.name }}</h3>
+                            <button class="menu-btn" style="color:rgb(97, 97, 235);font-size:12px;">View Details</button>
+                        </div>
+
+                        <div class="card-meta">
+                            <span class="meta-item">
+                                <i class="bi bi-calendar2-check me-1"></i>
+                                Created On: {{ project.range }}
+                            </span>
+                        </div>
+
+                        <div class="card-content">
+                            <div class="content-row">
+                                <div class="content-item">
+                                    <label>Audit Responsibility</label>
+                                    <span>{{ project.audit }}</span>
+                                </div>
+                                <div class="content-item">
+                                    <label>Risk Area</label>
+                                    <span>{{ project.risk }}</span>
+                                </div>
+                            </div>
+
+                            <div class="content-row">
+                                <div class="content-item">
+                                    <label>Modules</label>
+                                    <span>{{ project.modules }}</span>
+                                </div>
+                                <div class="content-item">
+                                    <label>Data Range</label>
+                                    <!-- <span>{{ project.daterange }}</span> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer" [ngClass]="project.status.toLowerCase()">
+                        <div class="status-badge" [ngClass]="project.status.toLowerCase()">
+                            <i *ngIf="project.status === 'Pending Approval'"
+                                class="bi bi-hourglass text-warning me-1"></i>
+                            <i *ngIf="project.status === 'Approved'" class="bi bi-hand-thumbs-up"></i>
+                            {{ project.status }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-grid" id="contentGrid" style="margin-top:25px;">
+        <div class="card">
+            <div class="card-title">Role Distribution</div>
+            <div class="chart-container">
+                <div class="donut-chart">
+                    <canvas id="donutChart" width="100" height="100" #canvas style="display: block;margin:auto"></canvas>
+                </div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color investigator-color"></div>
+                        <span>Investigator</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color l2-auditor-color"></div>
+                        <span>L2 Auditor</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color l1-auditor-color"></div>
+                        <span>L1 Auditor</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color admin-color"></div>
+                        <span>Admin</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Role Management</div>
+            <table class="table">
+                <thead class="table-header">
+                    <tr>
+                        <th>Role</th>
+                        <th>Description</th>
+                        <th style="text-align: center;">
+                            No.of Members
+                           <span style="display: inline-block;color:#1a1a1a"><i class="bi bi-sort-down"></i></span>
+                        </th>
+                        <th>
+                            Last Updated
+                          <span style="display: inline-block;color:#1a1a1a"><i class="bi bi-sort-down"></i></span>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="role-name">Investigator</td>
+                        <td class="description">Responsible for conducting detailed reviews of flagged...</td>
+                        <td class="member-count">12</td>
+                        <td class="date">10 Mar 2025</td>
+                        <td>
+                            <span class="edit-icon"><i class="bi bi-pencil"></i></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="role-name">L2 Auditor</td>
+                        <td class="description">Performs advanced-level audits, reviews escalated case...</td>
+                        <td class="member-count">10</td>
+                        <td class="date">10 Mar 2025</td>
+                        <td>
+                           <span class="edit-icon"><i class="bi bi-pencil"></i></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="role-name">L1 Auditor</td>
+                        <td class="description">Carries out initial audits, reviews data entries and syste...</td>
+                        <td class="member-count">5</td>
+                        <td class="date">08 Mar 2025</td>
+                        <td>
+                           <span class="edit-icon"><i class="bi bi-pencil"></i></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="role-name">Admin</td>
+                        <td class="description">Has full access to the system, including user manageme...</td>
+                        <td class="member-count">1</td>
+                        <td class="date">07 Mar 2025</td>
+                        <td>
+                           <span class="edit-icon"><i class="bi bi-pencil"></i></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="bottom-grid" style="margin-top:25px;">
+        <div class="card">
+            <div class="card-title">Metadata Configuration</div>
+            <table class="metadata-table">
+                <thead>
+                    <tr style="background-color: #C4DBFA;">
+                        <th style="text-align:justify;"><div style="margin-left:5px;">Metadata Set</div></th>
+                        <th style="text-align: center;">
+                            Fields Configured
+                           <span style="display: inline-block;color:#1a1a1a"><i class="bi bi-sort-down"></i></span>
+                        </th>
+                        <th>
+                            Last Updated
+                            <span style="display: inline-block;color:#1a1a1a"><i class="bi bi-sort-down"></i></span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="set-name">Audit Responsibility</td>
+                        <td class="count">2</td>
+                        <td class="date">20 Jul 2025</td>
+                    </tr>
+                    <tr>
+                        <td class="set-name">Risk Area</td>
+                        <td class="count">4</td>
+                        <td class="date">19 Jul 2025</td>
+                    </tr>
+                    <tr>
+                        <td class="set-name">Module</td>
+                        <td class="count">2</td>
+                        <td class="date">18 Jul 2025</td>
+                    </tr>
+                    <tr>
+                        <td class="set-name">Source System</td>
+                        <td class="count">6</td>
+                        <td class="date">25</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Connection Health Status</div>
+            <div class="connection-grid">
+                <div class="connection-item">
+                    <div class=""><img src="assets/images/sap.png" style="height:32px;width:32px"/></div>
+                    <!-- <div><img src="assets/images/sap.png"/></div> -->
+                    <div class="connection-info">
+                        <div class="connection-name" style="margin-top:5px;margin-left:5px">SAP</div>
+                        <div class="connection-records">45,623 records</div>
+                    </div>
+                    <div class="connection-status connected">Connected</div>
+                </div>
+                <div class="connection-item">
+                    <!-- <div class="connection-icon oracle-icon">OR</div> -->
+                     <div class=""><img src="assets/images/oracle.png" style="height:32px;width:32px"/></div>
+                    <div class="connection-info">
+                        <div class="connection-name" style="margin-left:5px;">Orcale</div>
+                        <div class="connection-records">45,623 records</div>
+                    </div>
+                    <div class="connection-status connected">Connected</div>
+                </div>
+                <div class="connection-item">
+                    <!-- <div class="connection-icon workday-icon">WD</div> -->
+                     <div class=""><img src="assets/images/workday.png" style="height:20px;width:30px"/></div>
+                    <div class="connection-info">
+                        <div class="connection-name" style="margin-left:5px;">Workday</div>
+                        <div class="connection-records">45,623 records</div>
+                    </div>
+                    <div class="connection-status syncing">Syncing</div>
+                </div>
+                <div class="connection-item">
+                    <!-- <div class="connection-icon salesforce-icon">SF</div> -->
+                     <div class=""><img src="assets/images/salesforce.png" style="height:32px;width:32px"/></div>
+                    <div class="connection-info">
+                        <div class="connection-name" style="margin-left:5px;">Salesforce</div>
+                        <div class="connection-records">45,623 records</div>
+                    </div>
+                    <div class="connection-status connected">Connected</div>
+                </div>
+                <div class="connection-item">
+                    <div class="connection-icon connection-icon-gray"></div>
+                    <div class="connection-info">
+                        <div class="connection-name">Conne</div>
+                        <div class="connection-records">X reco rds</div>
+                    </div>
+                    <div class="connection-status syncing">Syncing</div>
+                </div>
+                <div class="connection-item">
+                    <div class="connection-icon connection-icon-gray"></div>
+                    <div class="connection-info">
+                        <div class="connection-name">Connection</div>
+                        <div class="connection-records">X records</div>
+                    </div>
+                    <div class="connection-status connected">Connected</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>    

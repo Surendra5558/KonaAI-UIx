@@ -1,0 +1,123 @@
+
+
+<div class="holistic-container">
+  <!-- Header -->
+<div class="header-container">
+  <button class="btn-back" (click)="goBack()">
+    <i class="bi bi-arrow-left-short"></i>
+  </button>
+  <h1 class="header-title">
+    Contract Compliance Audit
+    <span class="phase-badge">Phase 1</span>
+  </h1>
+</div>
+ 
+ 
+
+  <div class="tabs">
+    <div class="tab" [class.active]="activeTab === 'p2p'" (click)="setActiveTab('p2p')">
+      P2P
+    </div>
+    <div class="tab" [class.active]="activeTab === 'o2c'" (click)="setActiveTab('o2c')">
+      O2C
+    </div>
+    <div class="tab" [class.active]="activeTab === 'te'" (click)="setActiveTab('te')">
+      T&E
+    </div>
+  </div>
+
+  <!-- Summary cards -->
+  <div class="summary-container">
+    <div class="summary-card" *ngFor="let item of summary">
+      <div class="title">{{ item.title }}</div>
+      <div style="display: flex; ">
+        <div class="files">Files: {{ item.files | number:'2.0' }}</div>
+        <div class="divider"></div>
+        <div class="status">
+          <div class="status-indicators">
+            <span class="status-icon success">
+              <i class="far fa-check-circle"></i> {{ successCount }}
+            </span>
+            <span class="status-icon error">
+              <i class="far fa-times-circle"></i> {{ errorCount }}
+            </span>
+            <span class="status-icon pending">
+              <i class="far fa-hourglass"></i> {{ warningCount }}
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Row -->
+<div class="search-row">
+  <div class="searchbar">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <circle cx="11" cy="11" r="8"></circle>
+      <path d="m21 21-4.35-4.35"></path>
+    </svg>
+    <input type="text" placeholder="What are you looking for?" />
+  </div>
+
+  <!-- <select style="border: 1px solid #e5e7eb;">
+    <option>Select Sub Module</option>
+    <option>Invoices</option>
+    <option>Payments</option>
+    <option>PO</option>
+  </select> -->
+  <select class="search-select">
+    <option value="" disabled selected>Select Sub Module</option>
+    <option>Invoices</option>
+    <option>Payments</option>
+    <option>PO</option>
+  </select>
+</div>
+
+  <!-- Data Table -->
+  <div class="table-wrapper">
+    <table class="table-main">
+      <thead>
+        <tr>
+          <th>Submodule</th>
+          <th>File Name</th>
+          <th>Source System</th>
+          <th>Record Count</th>
+          <th>Uploaded On</th>
+          <th>Modified On</th>
+          <th>Data Import</th>
+          <th>Data Quality</th>
+          <th>Data Staging</th>
+          <th>Data Validation</th>
+          <th>Data Mapping</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let file of files">
+          <td>{{ file.submodule }}</td>
+          <td>{{ file.fileName }}</td>
+          <td>{{ file.sourceSystem }}</td>
+          <td>{{ file.recordCount }}</td>
+          <td>{{ file.uploadedOn }}</td>
+          <td>{{ file.modifiedOn }}</td>
+          <td *ngFor="let stage of stagesOrder">
+            <ng-container [ngSwitch]="getStatus(stage)">
+              <span *ngSwitchCase="'Completed'" class="status-badge completed">
+                <i class="far fa-thumbs-up"></i> Completed
+              </span>
+              <ng-container *ngSwitchCase="'In Progress'">
+                <span class="status-badge pending">
+                  <i class="far fa-hourglass"></i> In Progress
+                </span>
+                
+              </ng-container>
+            </ng-container>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

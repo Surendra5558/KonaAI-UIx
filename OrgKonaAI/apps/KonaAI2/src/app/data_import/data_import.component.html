@@ -1,0 +1,562 @@
+<div *ngIf="isDataManager">
+  <!-- <app-top-bar [activeTab]="activateTab" (tabChanged)="onTabChanged($event)"></app-top-bar> -->
+</div>
+
+<!-- data_import.component.html -->
+<div class="container">
+  <!-- Header -->
+  <div class="header" *ngIf="!isHide">
+    <div class="header-left">
+      <div class="layout-back">
+        <button class="btn-back " (click)="onBackClick()">
+          <i class="bi bi-arrow-left-short"></i>
+        </button>
+        <span class="layout-back-name">{{projectName}} </span>
+        <span class="phase-badge">Phase 1</span>
+      </div>
+    </div>
+    <button class="holistic-view-btn" (click)="onHolisticViewClick()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#003585" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <!-- Rounded square -->
+        <rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect>
+        <!-- Vertical bars, all start same top (y=7), shorter overall -->
+        <line x1="8" y1="7" x2="8" y2="14"></line> <!-- left (shorter) -->
+        <line x1="12" y1="7" x2="12" y2="16"></line> <!-- middle (tallest but reduced) -->
+        <line x1="16" y1="7" x2="16" y2="12"></line> <!-- right (also shortened) -->
+      </svg>
+      Holistic View
+    </button>
+  </div>
+  <!-- Process Cards -->
+  <div class="process-cards" *ngIf="!isHide">
+    <div class="process-card active">
+      <div class="card-header">
+        <span class="card-title">P2P (Procure to Pay)</span>
+        <span class="card-counter"><i class="fa fa-hourglass-half"></i> 4/5</span>
+      </div>
+    </div>
+    <div class="process-card">
+      <div class="card-header">
+        <span class="card-title">O2C (Order to Cash)</span>
+        <span class="card-counter">0/5</span>
+      </div>
+    </div>
+    <div class="process-card">
+      <div class="card-header">
+        <span class="card-title">T&E (Travel & Expense)</span>
+        <span class="card-counter">0/5</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Process Steps -->
+  <div class="process-steps" *ngIf="!isHide">
+    <div class="step" *ngFor="let step of processSteps; let i = index" [class.active]="step.isActive"
+      (click)="goToStep(step)">
+      <div class="step-icon">
+        <div class="icon-circle" [class.active]="step.isActive">
+          <ng-container [ngSwitch]="step.icon">
+            <svg *ngSwitchCase="'import'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14,2 14,8 20,8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10,9 9,9 8,9"></polyline>
+            </svg>
+            <svg *ngSwitchCase="'quality'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M9 11H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h4"></path>
+              <path d="M9 7H3a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h6"></path>
+              <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6"></path>
+            </svg>
+            <svg *ngSwitchCase="'staging'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M12 2v6.5"></path>
+              <path d="M12 15.5V22"></path>
+              <path d="M4.93 4.93l4.24 4.24"></path>
+              <path d="M14.83 14.83l4.24 4.24"></path>
+              <path d="M2 12h6.5"></path>
+              <path d="M15.5 12H22"></path>
+              <path d="M4.93 19.07l4.24-4.24"></path>
+              <path d="M14.83 9.17l4.24-4.24"></path>
+            </svg>
+            <svg *ngSwitchCase="'validation'" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor">
+              <polyline points="9,11 12,14 22,4"></polyline>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+            <svg *ngSwitchCase="'mapping'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polygon points="12,2 2,7 12,12 22,7 12,2"></polygon>
+              <polyline points="2,17 12,22 22,17"></polyline>
+              <polyline points="2,12 12,17 22,12"></polyline>
+            </svg>
+          </ng-container>
+        </div>
+      </div>
+      <div class="step-content">
+        <h3 class="step-title">{{ step.title }}</h3>
+        <p class="step-description">{{ step.description }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-container" *ngIf="!isHide"
+    style="margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between;">
+
+    <!-- Left side: Search bar -->
+    <div class="searchbar" style="flex: 1; max-width: 400px;">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <input type="text" placeholder="What are you looking for?" [(ngModel)]="searchQuery" (input)="onSearchChange()">
+    </div>
+
+    <!-- Right side: Upload / Integrate buttons + Status Indicators -->
+    <div class="right-actions" style="display: flex; align-items: center; gap: 20px;">
+
+      <!-- Upload / Integrate -->
+      <div class="section-actions" *ngIf="isImport" style="display: flex; gap: 10px;">
+        <button class="action-btn text-btn" (click)="onUploadFileClick()">
+          <i class="bi bi-upload"></i> Upload File
+        </button>
+        <button class="action-btn text-btn" (click)="openIntegrationPopup()">
+          <i class="bi bi-cloud-upload"></i> Integrate
+        </button>
+      </div>
+
+        <!-- Export button for Quality -->
+      <div *ngIf="isQuality">
+        <button class="action-btn text-btn">
+          <i class="bi bi-box-arrow-up-right" style="font-size: 20px; color: #2563eb;"></i>
+          Export
+        </button>
+      </div>
+
+      <!-- Status Indicators -->
+      <div class="status-indicators" style="display: flex; gap: 10px;">
+        <span class="status-icon success">
+          <i class="far fa-check-circle"></i> {{ completedCount }}
+        </span>
+        <span class="status-icon error">
+          <i class="far fa-times-circle"></i> {{ failedCount }}
+        </span>
+        <span class="status-icon pending">
+          <i class="far fa-hourglass"></i> {{ pendingCount }}
+        </span>
+      </div>
+
+    
+
+    </div>
+  </div>
+
+
+  <div *ngIf="isImport">
+    <div class="uploaded-data-section">
+      <div class="section-header">
+        <div class="section-actions">
+          <!-- <button class="action-btn text-btn" (click)="onUploadFileClick()">
+            <i class="bi bi-upload"></i>
+            Upload File
+          </button>
+
+          <--Integrate -->
+          <!-- <button class="action-btn text-btn" (click)="openIntegrationPopup()">
+            <i class="bi bi-cloud-upload"></i>
+            Integrate
+          </button>  -->
+
+          <!-- <div class="status-indicators">
+            <span class="status-icon success">
+              <i class="far fa-check-circle"></i> {{ completedCount }}
+            </span>
+            <span class="status-icon error">
+              <i class="far fa-times-circle"></i> {{ failedCount }}
+            </span>
+            <span class="status-icon pending">
+              <i class="far fa-hourglass"></i> {{ pendingCount }}
+            </span>
+          </div> -->
+        </div>
+      </div>
+
+      <!-- Data Import Failed Alert -->
+      <div class="failed-alert" *ngIf="showFailedAlert">
+        <div class="alert-content">
+          <svg class="alert-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <div class="alert-text">
+            <strong>Data Import Failed</strong>
+            <p>({{ failedCount }}) File upload incomplete. Please recheck and retry failed uploads.</p>
+          </div>
+        </div>
+        <button class="alert-close" (click)="onCloseFailedAlert()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Data Table -->
+      <div class="data-table-container" *ngIf="dataFiles.length > 0; else emptyState">
+        <div class="table-wrapper">
+          <table class="table-main" >
+            <thead>
+              <tr>
+                <th (click)="sortData('submodule')">
+                  Submodule
+                  <span *ngIf="sortColumn==='submodule'" class="sort-icon" [ngClass]="sortDirection"></span>
+                </th>
+                <th (click)="sortData('sourceSystem')">
+                  Source System
+                  <span *ngIf="sortColumn==='sourceSystem'" class="sort-icon" [ngClass]="sortDirection"></span>
+                </th>
+                <th (click)="sortData('fileName')">
+                  File Name
+                  <span *ngIf="sortColumn==='fileName'" class="sort-icon" [ngClass]="sortDirection"></span>
+                </th>
+                <th (click)="sortData('uploadedOn')">
+                  Uploaded On
+                  <span *ngIf="sortColumn==='uploadedOn'" class="sort-icon" [ngClass]="sortDirection"></span>
+                </th>
+                <th (click)="sortData('modifiedOn')">
+                  Modified On
+                  <span *ngIf="sortColumn==='modifiedOn'" class="sort-icon" [ngClass]="sortDirection"></span>
+                </th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+
+
+            <tbody>
+              <tr *ngFor="let file of pagedFiles; let i = index">
+                <td>{{ file.submodule }}</td>
+                <td>{{ file.sourceSystem }}</td>
+
+                <td>
+                  <div class="filename-wrapper">
+                    <span class=" ">{{ file.fileName }}</span>
+                  </div>
+                </td>
+                <td>{{ file.uploadedOn | date:'dd MMM yyyy' }}</td>
+                <td>{{ file.modifiedOn | date:'dd MMM yyyy' }}</td>
+                <td class="status-cell-content" style="padding:19px 16px">
+                  <span *ngIf="file.status === 'success'" class="status-badge completed" style="text-transform: none;">
+                    <i class="far fa-thumbs-up"></i> Completed
+                  </span>
+
+                  <ng-container *ngIf="file.status === 'error'">
+                    <span class="status-badge failed">
+                      <i class="fas fa-times-circle"></i> Failed
+                    </span>
+                    <button class="action-link retry-action" type="button">
+                      <i class="fas fa-redo"></i> Retry
+                    </button>
+                  </ng-container>
+
+                  <span *ngIf="file.status === 'pending'" class="status-badge pending">
+                    <i class="far fa-hourglass"></i> Pending
+                  </span>
+                </td>
+
+                <td class="table-cell actions-cell">
+                  <div class="action-buttons" style="display: flex; align-items: center; gap: 25px;">
+                    <!-- View Icon -->
+                    <button class="table-action-btn view-btn" (click)="onViewFile(file.id || dataFiles.indexOf(file))"
+                      title="View" style="font-weight: 600;">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.0" style="color:#000;">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+
+                    <!-- Archive Icon -->
+                    <button class="table-action-btn archive-btn" (click)="onDeleteFile(file)" title="Archive"
+                      style="font-size: 17px; font-weight: 600; color: #000;">
+                      <i class="bi bi-archive" style="font-size: 17px; font-weight: 600; color: #000;"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+
+      <div style="display: flex;justify-content: flex-end;margin-top: 12px;">
+        <!-- Pagination Controls -->
+
+        <div class="bottom-bar" *ngIf="dataFiles.length > 0">
+          <div class="pagination-controls">
+            <button (click)="onPageChange('prev')" [disabled]="page === 1">‹</button>
+
+            <button *ngFor="let p of [].constructor(totalPages); let i = index" (click)="goToPage(i + 1)"
+              [class.active]="page === i + 1">
+              {{ i + 1 }}
+            </button>
+
+            <button (click)="onPageChange('next')" [disabled]="page === totalPages || totalPages === 0">›</button>
+          </div>
+
+
+          <div class="split-button-container" *ngIf="dataFiles.length > 0">
+            <button class="btn-execute" style="margin-left: -25%;" [disabled]="!canExecuteAllSteps"
+              [class.disabled]="!canExecuteAllSteps" (click)="toggleSplitOptions()">
+              Execute
+            </button>
+
+            <ul class="split-options" *ngIf="showSplitOptions && canExecuteAllSteps">
+              <li (click)="onSplitOptionSelect('manual')">Manual</li>
+              <li (click)="onSplitOptionSelect('automatic')">Automatic</li>
+            </ul>
+
+            <p class="execute-hint" *ngIf="!canExecuteAllSteps">
+              Please ensure all files are successfully uploaded before executing all steps
+            </p>
+          </div>
+        </div>
+
+
+      </div>
+      <!-- Empty State -->
+      <ng-template #emptyState>
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14,2 14,8 20,8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+          <h3 class="empty-title">Upload Your Data Files</h3>
+
+          <div class="upload-options">
+            <div class="upload-card" (click)="onFileUploadClick()">
+              <i class="bi bi-upload"></i>
+
+              <h4>Click to Upload File</h4>
+              <p>Select and upload your data files directly from your device</p>
+            </div>
+
+            <div class="upload-card" (click)="openIntegrationPopup()">
+              <i class="bi bi-cloud-upload"></i>
+              <h4>Integrations</h4>
+              <p>Easily link your database and upload data</p>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Upload File Modal -->
+    <div class="modal-overlay" *ngIf="showUploadModal" (click)="onCloseModal()">
+      <div class="modal-container" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2 class="modal-title">Upload File</h2>
+          <button class="close-btn" (click)="onCloseModal()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="modal-content">
+          <!-- Drop Zone -->
+          <div class="drop-zone" [class.drag-over]="dragOver" (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)" (drop)="onDrop($event)" (click)="onBrowseClick()">
+            <div class="drop-zone-content">
+              <p class="drop-text">
+                Drop your file(s) here or <span class="browse-link">Browse</span>
+              </p>
+              <p class="supported-text">Files supported - csv, txt, excel</p>
+            </div>
+          </div>
+
+          <!-- Selected Files List -->
+          <div class="selected-files-section" *ngIf="selectedFiles.length > 0">
+            <div class="file-item" *ngFor="let file of selectedFiles; let i = index">
+              <div class="file-info">
+                <!-- File Icon -->
+                <div class="file-icon" [ngClass]="'file-icon-' + getFileIcon(file.name)">
+                  <svg *ngIf="getFileIcon(file.name) === 'csv'" width="20" height="20" viewBox="0 0 24 24"
+                    fill="currentColor">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+                  </svg>
+                  <svg *ngIf="getFileIcon(file.name) === 'txt'" width="20" height="20" viewBox="0 0 24 24"
+                    fill="currentColor">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+                  </svg>
+                  <svg *ngIf="getFileIcon(file.name) === 'excel'" width="20" height="20" viewBox="0 0 24 24"
+                    fill="currentColor">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+                  </svg>
+                  <svg *ngIf="getFileIcon(file.name) === 'file'" width="20" height="20" viewBox="0 0 24 24"
+                    fill="currentColor">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+                  </svg>
+                </div>
+
+                <!-- File Details -->
+                <div class="file-details">
+                  <div class="file-name">{{ file.name }}</div>
+                  <div class="file-size">{{ file.size }}</div>
+                </div>
+              </div>
+
+              <!-- Delete Button -->
+              <button class="delete-btn" (click)="removeFile(i)" type="button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3,6 5,6 21,6"></polyline>
+                  <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="cancel-btn" (click)="onCancelUpload()" type="button">Cancel</button>
+          <button class="save-btn" (click)="onSaveFiles()" type="button" [disabled]="selectedFiles.length === 0">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="showIntegrationPopup" class="modal-overlay" (click)="closeIntegrationPopup()">
+      <div (click)="$event.stopPropagation()">
+        <app-integration-popup (closePopup)="closeIntegrationPopup()"></app-integration-popup>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isStagging">
+    <app-data-staging></app-data-staging>
+  </div>
+  <div *ngIf="isValidation">
+    <app-data-validations></app-data-validations>
+  </div>
+  <div *ngIf="isMapping">
+    <app-datamapping></app-datamapping>
+  </div>
+  <div *ngIf="isQuality">
+    <app-data-quality></app-data-quality>
+  </div>
+  <!-- Uploaded Data Section -->
+
+  <div class="steps-modal-overlay" *ngIf="showStepsConfirmationModal" (click)="closeStepsConfirmationModal()">
+  </div>
+
+  <!-- Steps Confirmation Modal -->
+  <div class="steps-confirmation-modal" *ngIf="showStepsConfirmationModal">
+    <div class="steps-modal-header">
+      <div class="steps-info-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10" stroke="#2563eb" stroke-width="2" fill="none" />
+          <path d="M12 16v-4" stroke="#2563eb" stroke-width="2" stroke-linecap="round" />
+          <path d="M12 8h.01" stroke="#2563eb" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="steps-modal-content">
+      <h2 class="steps-modal-title">Confirm Execution</h2>
+      <p class="steps-modal-description">
+        This will run the complete workflow and trigger all configured steps in sequence.
+      </p>
+    </div>
+
+    <div class="steps-modal-actions">
+      <button class="steps-cancel-btn" type="button" (click)="closeStepsConfirmationModal()">
+        Cancel
+      </button>
+      <button class="steps-confirm-btn" type="button" (click)="confirmStepsExecution()" [disabled]="isStepsExecuting">
+        {{ isStepsExecuting ? 'Executing...' : 'Confirm' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- View button preview Privileged Data Modal Overlay -->
+  <div class="steps-privileged-modal-overlay" *ngIf="showPrivilegedModal" (click)="closePrivilegedModal()">
+  </div>
+
+  <!-- Main Modal Container -->
+  <div class="steps-privileged-modal" *ngIf="showPrivilegedModal">
+    <!-- Modal Header with close button -->
+    <div class="steps-privileged-modal-header">
+      <div>
+        <h2 class="steps-privileged-modal-title">
+          {{ privilegedData.fileInfo.title }}
+        </h2>
+        <p><strong>Source Template:</strong> {{ privilegedData.fileInfo.sourceTemplate }}</p>
+      </div>
+      <button class="steps-privileged-close-btn" (click)="closePrivilegedModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Content -->
+    <div class="steps-privileged-modal-content">
+
+
+      <div class="steps-privileged-table-container">
+        <table class="table-main">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Mobile</th>
+              <th>City</th>
+              <th>State</th>
+              <th>Zipcode</th>
+              <th>DOB</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let record of privilegedData.tableData">
+              <td>{{ record.id }}</td>
+              <td [class.steps-privileged-sensitive-data]="record.sensitive">{{ record.firstName }}</td>
+              <td [class.steps-privileged-sensitive-data]="record.sensitive">{{ record.lastName }}</td>
+              <td class="steps-privileged-sensitive-data">{{ record.mobile }}</td>
+              <td>{{ record.city }}</td>
+              <td>{{ record.state }}</td>
+              <td>{{ record.zipcode }}</td>
+              <td class="steps-privileged-sensitive-data">{{ record.dob }}</td>
+              <td>
+                <span [ngClass]="{
+              'steps-privileged-status-active': record.status === 'Active',
+              'steps-privileged-status-inactive': record.status === 'Inactive',
+              'steps-privileged-status-hold': record.status === 'Hold'
+            }">
+                  {{ record.status }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <div *ngIf="showHolisticView" class="vm-details-fullscreen-overlay" [class.sidebar-pinned]="true"
+    [class.sidebar-unpinned]="!isSidebarPinned">
+    <app-data-staging-holistic [parentData]="stage" (dataToParent)="goToStep($event)"></app-data-staging-holistic>
+  </div>
+  <app-delete-popup *ngIf="showDeletePopup" [data]="deleteData"
+    (result)="handleDeleteResult($event)"></app-delete-popup>
+

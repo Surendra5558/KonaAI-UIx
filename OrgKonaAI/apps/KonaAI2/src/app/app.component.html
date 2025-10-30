@@ -1,0 +1,12 @@
+<body>
+  <!-- Show sidebar only when user is logged in -->
+  @if (isUserLoggedIn()) {
+    <app-sidebar></app-sidebar>
+  }
+
+  <!-- Main content with conditional margin for sidebar -->
+  <div class="main-content" [class.with-sidebar]="isUserLoggedIn()" [class.sidebar-collapsed]="isSidebarCollapsed()">
+    <app-loader></app-loader>
+    <router-outlet></router-outlet>
+  </div>
+</body>

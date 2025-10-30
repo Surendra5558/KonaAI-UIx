@@ -1,0 +1,398 @@
+<div class="content">
+  <div class="header-block">
+    <div>
+      <h2>Questionnaire Builder</h2>
+      <p> Add and customise questionnaires for investigations and assessments.</p>
+    </div>
+
+  </div>
+
+  <div style="display: flex; justify-content: space-between;">
+    <div class="tab-navigation">
+      <button class="tab-btn" [class.active]="activeTab === 'questionnaire'" (click)="setActiveTab('questionnaire')">
+        Questionnaire
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'sections'" (click)="setActiveTab('sections')">
+        Sections
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'questionBank'" (click)="setActiveTab('questionBank')">
+        Question Bank
+      </button>
+
+    </div>
+    <div>
+      <button type="button" class="btn btn-save" (click)="navigateToCreate()">
+        <i class="bi bi-plus-lg mr-2"></i> {{ createButtonLabel }}
+      </button>
+    </div>
+  </div>
+
+
+  <div class="Questionnaire-content">
+    <!-- Tab Navigation -->
+
+
+    <!-- Questionnaire Tab Content -->
+    <div *ngIf="activeTab === 'questionnaire'" class="tab-content">
+      <div style="display: flex; justify-content: space-between;">
+        <div class="searchbar">
+          <i class="bi bi-search search-icon"></i>
+          <input type="text" placeholder="Search Questionnaires" [(ngModel)]="searchText" />
+        </div>
+
+        <div class="list-grid-view">
+          <div class="toolbar-actions">
+            <button class="toolbar-btn list-btn" [class.active]="viewMode === 'list'" (click)="viewMode = 'list'"
+              aria-label="List view">
+              <i class="bi bi-filter-right fs-1"></i>
+            </button>
+            <button class="toolbar-btn grid-btn" [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'"
+              aria-label="Grid view">
+              <i class="bi bi-grid fs-2"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- List View -->
+      <div *ngIf="viewMode === 'list'" class="questionnaires-table-outer">
+        <table class="questionnaires-table table-main">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Created On</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let q of filteredQuestionnaires()" style="cursor: pointer;">
+              <td><span (click)="openPreview()">{{ q.name }}</span></td>
+              <td>{{ q.created }}</td>
+              <td class="actions-column" (click)="$event.stopPropagation()">
+                <div class="card-menu">
+                  <button class="menu-button" (click)="menuOpenFor = menuOpenFor === q.id ? null : q.id">
+                    <i class="bi bi-three-dots-vertical"></i>
+                  </button>
+                  <div class="menu-panel" *ngIf="menuOpenFor === q.id">
+                    <button (click)="onRename(q.id)">
+                      <i class="bi bi-input-cursor"></i> Rename
+                    </button>
+                    <button (click)="onDelete(q.id)">
+                      <i class="bi bi-trash3"></i> Delete Permanently
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Grid View -->
+      <div *ngIf="viewMode === 'grid'" class="card-grid">
+        <div *ngFor="let q of filteredQuestionnaires()" class="card">
+          <div class="card-icon">
+            <span class="material-symbols-rounded">{{ getIconSymbol(q.name) }}</span>
+            <div class="triangle-border"></div>
+          </div>
+          <div>
+            <div class="card-title">{{ q.name }}</div>
+            <div class="card-date">Created on {{ q.created }}</div>
+          </div>
+          <div class="card-menu">
+            <button class="menu-button" (click)="menuOpenFor = menuOpenFor === q.id ? null : q.id">
+              <i class="bi bi-three-dots-vertical"></i>
+            </button>
+            <div class="menu-panel" *ngIf="menuOpenFor === q.id">
+              <button (click)="onRename(q.id)"><i class="bi bi-input-cursor"></i> Rename</button>
+              <button (click)="onDelete(q.id)"><i class="bi bi-trash3"></i> Delete Permanently</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sections Tab Content -->
+    <div *ngIf="activeTab === 'sections'" class="tab-content">
+      <div class="searchbar">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" placeholder="Search Sections" [(ngModel)]="sectionSearchText" />
+      </div>
+
+      <div class="sections-table-outer">
+        <table class="questionnaires-table table-main">
+          <thead>
+            <tr>
+              <th>Section Name</th>
+              <th>Description</th>
+              <th>Created On</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of filteredSections()" style="cursor: pointer;">
+              <td>{{ s.name }}</td>
+              <td>{{ s.description }}</td>
+              <td>{{ s.created }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Question Bank Tab Content -->
+    <div *ngIf="activeTab === 'questionBank'" class="tab-content">
+      <div class="searchbar">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" placeholder="Search Questions" [(ngModel)]="questionSearchText" />
+      </div>
+
+      <div class="questions-table-outer">
+        <table class="questionnaires-table table-main">
+          <thead>
+            <tr>
+              <th>Question</th>
+              <th>Type</th>
+              <th>Created On</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let q of filteredQuestions()" style="cursor: pointer;">
+              <td><span>{{ q.question }}</span></td>
+              <td>{{ q.type }}</td>
+              <td>{{ q.created }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Rename Popup -->
+    <div class="popup-bg" *ngIf="showRenamePopup">
+      <div class="popup">
+        <h3>Rename</h3>
+        <div class="title-class">
+          <label for="renameInput">Name</label>
+          <input id="renameInput" [(ngModel)]="renameValue" />
+        </div>
+        <div class="popup-actions">
+          <button class="btn btn-clear" (click)="cancelRename()">Cancel</button>
+          <button class="btn btn-save" (click)="saveRename()">Rename</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Popup -->
+  <app-delete-popup *ngIf="showDeletePopup" [data]="deleteData" (result)="handleDeleteResult($event)">
+  </app-delete-popup>
+
+  <!-- Question Popup -->
+  <div *ngIf="showQuestionPopup" class="popup-backdrop">
+    <div class="popup-content">
+      <div class="popup-header">
+        <h3>Add Question</h3>
+        <button class="btn btn-clear" (click)="closeQuestionPopup()">✕</button>
+      </div>
+
+      <div class="popup-body">
+        <!-- Use the same question card structure you pasted -->
+        <div *ngFor="let question of selectedSection.questions" class="question-card">
+          <div class="question-header">
+            <div class="question-input-fields">
+              <input [(ngModel)]="question.text" placeholder="What do you want to ask?" class="question-input" />
+              <select [(ngModel)]="question.type" class="question-type" (change)="question.options=[]">
+                <option value="" disabled>Select Question Type</option>
+                <option *ngFor="let type of questionTypes" [value]="type">{{type}}</option>
+              </select>
+            </div>
+            <div class="question-actions">
+              <div>
+
+              </div>
+              <div class="icons-actions">
+                <button (click)="duplicateQuestion(selectedSection, question)" title="Duplicate" class="icon-btn"><i
+                    class="bi bi-copy"></i></button>
+                <button (click)="removeQuestion(selectedSection, question)" title="Delete" class="icon-btn"><i
+                    class="bi bi-trash3"></i></button>
+                <label class="required-label">
+                  Required
+                  <div class="toggle-switch">
+                    <input type="checkbox" [(ngModel)]="question.required" class="toggle-input" />
+                    <span class="toggle-slider"></span>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Options for choices -->
+          <div *ngIf="['Multiple Choice','Check Boxes','Dropdown', 'Radio'].includes(question.type)"
+            class="options-section">
+            <div *ngFor="let option of question.options; let i = index; trackBy: trackByIndex" class="option-row">
+              <input [ngModel]="option" (ngModelChange)="updateOption(question, i, $event)" placeholder="Option" />
+              <button type="button" (click)="removeOption(question, i)" class="option-delete" title="Remove Option">
+                <i class="bi bi-trash3"></i>
+              </button>
+            </div>
+            <button (click)="addOption(question)" class="btn btn-clear" style="width: 10vw;">+ Add Choice</button>
+          </div>
+          <hr style="border-top: 1px dashed #000;">
+          <!-- Rules Section -->
+          <div *ngFor="let rule of question.rules; let i = index" class="rule-section">
+            <!-- Loop over conditions -->
+            <div *ngFor="let condition of rule.conditions; let j = index; let last = last" class="rule-tabs">
+
+              <!-- Combination dropdown only for j > 0 -->
+              <ng-container *ngIf="j === 0; else combinationBlock">
+                <label>If the answer</label>
+              </ng-container>
+              <ng-template #combinationBlock>
+                <select [(ngModel)]="condition.combination" class="andOr">
+                  <option *ngFor="let c of conditionCombinations" [value]="c">{{ c }}</option>
+                </select>
+              </ng-template>
+
+              <!-- Operator dropdown -->
+              <select [(ngModel)]="condition.operator" class="isIsNot">
+                <option *ngFor="let op of conditionOperators" [value]="op">{{ op }}</option>
+              </select>
+
+              <!-- Value dropdown -->
+              <select [(ngModel)]="condition.value" class="values-rule"
+                (change)="updateAvailableOptions(question, rule)" [disabled]="areAllOptionsUsed(question)">
+                <option *ngFor="let opt of getAvailableOptions(question, rule, condition)" [value]="opt">
+                  {{ opt }}
+                </option>
+                <option *ngIf="getAvailableOptions(question, rule, condition).length === 0" disabled>
+                  No options available
+                </option>
+              </select>
+
+
+              <!-- Add Condition button ONLY on the last row -->
+              <button *ngIf="last" (click)="addCondition(question, rule)" class="btn btn-rule add-condition-btn"
+                [disabled]="areAllOptionsUsed(question) || !rule.canAddMore"
+                [title]="areAllOptionsUsed(question) ? 'All options already used' : (!rule.canAddMore ? 'No more unique options available' : '')">
+                <i class="bi bi-plus-lg mr-2"></i> Add Condition
+              </button>
+              <button *ngIf="!last" type="button" (click)="removeCondition(question, rule, j)"
+                class="btn btn-delete del-btn" title="Remove this condition"
+                style="display: flex; align-items: center; justify-content: center;">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
+
+            <div class="rule-then">
+              <span>Then</span>
+              <div style="width: 88%;">
+                <input [(ngModel)]="rule.thenAction" placeholder="Question" />
+                <select>
+                  <option>Text</option>
+                </select>
+              </div>
+            </div>
+            <div style="width: 100%;display: flex;justify-content: end;">
+              <button (click)="removeRule(question, i)" class="btn btn-delete del-btn"><i
+                  class="bi bi-trash mr-2"></i></button>
+            </div>
+          </div>
+          <div style="display: flex;justify-content: space-between;font-size: small; align-items: center;">
+            <span>Always go to Next Question, if not</span>
+            <button (click)="addRule(question)" class="btn btn-rule"
+              [disabled]="!isRuleEnabled(question) || areAllOptionsUsed(question)"
+              [title]="!isRuleEnabled(question) ? 'Enabled only for dropdown & radio render types' : areAllOptionsUsed(question) ? 'All options already used' : ''">
+              <i class="bi bi-plus-lg mr-2"></i> Add Rule
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="model-footer">
+        <button class="btn btn-cancel" (click)="closeQuestionPopup()">Cancel</button>
+        <button class="btn btn-save" (click)="saveQuestion()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section Creation Popup -->
+  <div *ngIf="showSectionPopup" class="popup-backdrop">
+    <div class="popup">
+      <div class="popup-header">
+        <h3>Create New Section</h3>
+        <button class="btn btn-clear" (click)="closeSectionPopup()">✕</button>
+      </div>
+
+      <div class="popup-body-s">
+        <!-- Section name input -->
+        <label>Section Name</label>
+        <input type="text" [(ngModel)]="sectionName" placeholder="Enter section name" class="form-input" />
+        <!-- Section description input -->
+        <label>Description</label>
+        <input type="text" [(ngModel)]="sectionDescription" placeholder="Enter section description"
+          class="form-input" />
+
+        <label>Select Questions</label>
+        <div class="custom-dropdown">
+          <div class="dropdown-header" (click)="toggleDropdown()">
+            <!-- Show this when dropdown is closed -->
+            <span *ngIf="!dropdownOpen">
+              {{ selectedQuestionIds.length ? selectedQuestionIds.length + ' selected' : 'Select Questions' }}
+            </span>
+
+            <!-- Show this when dropdown is open -->
+            <input *ngIf="dropdownOpen" type="text" [(ngModel)]="questionSearchText" placeholder="Search questions..."
+              (click)="$event.stopPropagation()" class="dropdown-search" />
+
+            <span class="arrow"><i class="bi bi-chevron-down"></i></span>
+          </div>
+
+          <div class="dropdown-list" *ngIf="dropdownOpen">
+            <div *ngFor="let q of filteredQuestions()" class="dropdown-item"
+              [class.disabled]="isQuestionDisabled(q.id)">
+              <input type="checkbox" [checked]="selectedQuestionIds.includes(q.id)"
+                [disabled]="isQuestionDisabled(q.id)" (change)="toggleQuestionSelection(q.id)" />
+              <label>{{ q.question }}</label>
+            </div>
+
+            <div class="dropdown-add-btn">
+              <button class="btn-save" (click)="addSelectedQuestions()">Save</button>
+            </div>
+          </div>
+        </div>
+        <div class="selected-questions-table" *ngIf="selectedQuestions.length > 0">
+          <table class="table-main">
+            <thead>
+              <tr>
+                <th style="width: 40px;"></th>
+                <th>Question</th>
+                <th>Type</th>
+                <th style="width: 60px; text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody cdkDropList [cdkDropListData]="selectedQuestions" (cdkDropListDropped)="dropQuestion($event)">
+              <tr *ngFor="let q of selectedQuestions; let i = index" cdkDrag>
+                <td cdkDragHandle style="cursor: grab; text-align: center;">
+                  <i class="bi bi-grid-3x2-gap-fill"
+                    style="transform: rotate(90deg) scale(0.8); display: inline-block;"></i>
+                </td>
+                <td>{{ q.question }}</td>
+                <td>{{ q.type }}</td>
+                <td style="text-align: center;">
+                  <button type="button" class="btn btn-delete" (click)="removeSelectedQuestion(i)" title="Remove"><i
+                      class="bi bi-trash"></i></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="popup-footer">
+          <button class="btn btn-cancel" (click)="closeSectionPopup()">Cancel</button>
+          <button class="btn btn-save" (click)="saveSection()">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>

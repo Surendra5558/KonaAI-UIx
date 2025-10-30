@@ -1,0 +1,125 @@
+<div class="account-header">
+  <div>
+    <h2>Account</h2>
+    <p>Manage your personal information and settings.</p>
+  </div>
+</div>
+
+  <div class="account-container">
+    <!-- PROFILE SECTION -->
+    <div class="section-row">
+      <div class="section-title">
+        <h3>Profile</h3>
+        <p>Manage your profile picture.</p>
+      </div>
+      <div class="section-content">
+        <div class="profile-top">
+          <div class="avatar-box">
+            <div class="avatar-preview" *ngIf="profileImage">
+              <img [src]="profileImage" />
+            </div>
+            <div class="avatar-placeholder" *ngIf="!profileImage">👤</div>
+          </div>
+          <div class="upload-info">
+            <label class="upload-label">
+              <input id="imageUpload" type="file" hidden (change)="onImageUpload($event)" />
+              {{ uploadState === 'initial' ? 'Upload image' : (uploadState === 'uploading' ? 'Uploading...' : 'Change Picture') }}
+            </label>
+            <p class="file-info">PNG, JPG under 2MB</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Name on card*</label>
+            <input type="text" [(ngModel)]="form.name" />
+          </div>
+
+          <div class="form-group">
+            <label>Assigned Role</label>
+            <input type="text" [value]="'Super Admin'" disabled />
+          </div>
+
+          <div class="form-group">
+            <label>Contact</label>
+            <div class="phone-input">
+              <select [(ngModel)]="form.countryCode">
+                <option value="+91">+91</option>
+                <option value="+1">+1</option>
+              </select>
+              <input type="text" [(ngModel)]="form.phone" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Language*</label>
+            <select [(ngModel)]="form.language">
+              <option>English</option>
+              <option>Hindi</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCOUNT SECURITY -->
+    <div class="section-row">
+      <div class="section-title">
+        <h3>Account Security</h3>
+        <p>Manage your basic profile details.</p>
+      </div>
+      <div class="section-content">
+        <div class="form-group">
+          <label>Email*</label>
+          <input type="email" [value]="form.email" disabled />
+        </div>
+
+        <div class="form-group">
+          <label>Change Password</label>
+          <p>You can change your password for your account.</p>
+<span class="change-link" (click)="showPasswordPopup = true">Change Password</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DELETE ACCOUNT -->
+    <div class="section-row">
+      <div class="section-title">
+        <h3>Delete Account</h3>
+        <p>This action is irreversible, and all information associated with your account will be permanently deleted.</p>
+      </div>
+      <div class="section-content">
+<button class="delete-btn" (click)="showDeletePopup = true">Delete Account</button>
+      </div>
+    </div>
+  </div>
+<!-- Change Password Pop-up -->
+<div class="popup" *ngIf="showPasswordPopup">
+  <h3>Change Password</h3>
+  <div class="form-group">
+    <label>New Password*</label>
+    <input type="password" [(ngModel)]="newPassword" placeholder="Enter new password" />
+  </div>
+  <div class="form-group">
+    <label>Confirm Password*</label>
+    <input type="password" [(ngModel)]="confirmPassword" placeholder="Confirm new password" />
+  </div>
+  <div class="popup-actions">
+    <button class="btn-cancel" (click)="showPasswordPopup = false">Cancel</button>
+    <button class="btn-primary" (click)="changePassword()">Save</button>
+  </div>
+</div>
+
+<!-- Delete Account Pop-up -->
+<div class="popup" *ngIf="showDeletePopup">
+  <h3>Delete Account</h3>
+  <p>Are you sure you want to delete your account <strong>{{ form.name }}</strong>? This action cannot be undone.</p>
+  <label>To confirm, type <strong>delete my account</strong> in the input below</label>
+  <input type="text" [(ngModel)]="deleteConfirm" placeholder="delete my account" />
+  <div class="popup-actions">
+    <button class="btn-cancel" (click)="showDeletePopup = false">Cancel</button>
+    <button class="btn-primary" (click)="confirmDelete()">Save</button>
+  </div>
+</div>
+
+

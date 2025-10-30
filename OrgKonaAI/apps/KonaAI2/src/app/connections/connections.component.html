@@ -1,0 +1,126 @@
+<app-top-bar *ngIf="isDataManager"[activeTab]="activateTab" (tabChanged)="onTabChanged($event)"></app-top-bar>
+<div class="content">
+  <div class="header-block">
+    <div>
+      <h2>Connections</h2>
+      <p>Manage and monitor your data connections across systems to enable seamless data flow.</p>
+    </div>
+    <button class="btn btn-save" (click)="openNewConnectionModal()">
+     <i class="bi bi-plus-lg mr-2"></i>  New Connection
+    </button>
+  </div>
+
+<div>
+  <div class="searchbar" style="margin-bottom: 12px;">
+    <div class="search-box">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <input type="text" placeholder="What are you looking for?" [(ngModel)]="searchQuery" (input)="onSearchChange()"
+        class="search-input">
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="connections.length === 0">
+    <svg class="empty-icon" xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="none" viewBox="0 0 80 80">
+      <rect x="20" y="15" width="40" height="50" rx="4" stroke="#C0CAD5" stroke-width="2" />
+      <line x1="28" y1="30" x2="52" y2="30" stroke="#C0CAD5" stroke-width="2" />
+      <line x1="28" y1="38" x2="48" y2="38" stroke="#C0CAD5" stroke-width="2" />
+      <line x1="28" y1="46" x2="46" y2="46" stroke="#C0CAD5" stroke-width="2" />
+      <circle cx="55" cy="20" r="8" stroke="#C0CAD5" stroke-width="2" />
+      <text x="55" y="23" text-anchor="middle" font-size="10" font-weight="bold" fill="#C0CAD5">i</text>
+    </svg>
+    <p class="empty-text">No Data Available Right Now</p>
+  </div>
+  <!-- Connections Table -->
+  <div *ngIf="connections.length > 0">
+    <table class="table-main">
+      <thead>
+        <tr>
+          <th>Provider</th>
+          <th>Connection Name</th>
+          <th>Created By</th>
+          <th>Created on</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let conn of connections">
+          <td>{{ conn.provider }}</td>
+          <td>{{ conn.name }}</td>
+          <td>{{ conn.createdBy }}</td>
+          <td>{{ conn.createdAt | date: 'dd MMM yyyy' }}</td>
+          <td>
+            <span *ngIf="conn.testStatus === 'Failed'" class="status-badge failed">
+              <i class="far fa-times-circle"></i> Failed
+            </span>
+            <span *ngIf="conn.testStatus === 'Success'" class="status-badge completed">
+              <i class="far fa-thumbs-up"></i> Completed
+            </span>
+            
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- New Connection Modal -->
+  <!-- New Connection Modal -->
+  <div id="newConnectionModal" class="modal" [class.show]="isModalOpen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>New Connection</h2>
+        <span class="closePopup" (click)="closeModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="search-connectors" placeholder="Search Connectors" />
+        <div class="provider-grid">
+          <div *ngFor="let provider of providers" class="provider-card" (click)="selectProvider(provider)">
+            <img [src]="provider.icon" [alt]="provider.name" />
+            <span>{{ provider.name }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- SAP Connection Modal (if needed) -->
+  <div id="sapConnectionModal" class="modal" [class.show]="isSapModalOpen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>New SAP Connection</h2>
+        <span class="closePopup" (click)="closeSapModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="sapForm" (ngSubmit)="createSapConnection()">
+          <div>
+            <label for="connectionName">Connection Name</label>
+            <input id="connectionName" formControlName="connectionName" />
+          </div>
+          <div>
+            <label for="sapHost">SAP Host</label>
+            <input id="sapHost" formControlName="sapHost" />
+          </div>
+          <div>
+            <label for="sapPort">SAP Port</label>
+            <input id="sapPort" formControlName="sapPort" />
+          </div>
+          <div>
+            <label for="sapClient">SAP Client</label>
+            <input id="sapClient" formControlName="sapClient" />
+          </div>
+          <div>
+            <label for="sapUser">SAP User</label>
+            <input id="sapUser" formControlName="sapUser" />
+          </div>
+          <div>
+            <label for="sapPassword">SAP Password</label>
+            <input id="sapPassword" formControlName="sapPassword" type="password" />
+          </div>
+          <button type="submit" [disabled]="!sapForm.valid">Create</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,205 @@
+<div class="scenario-manager-container">
+  <!-- Controls Section -->
+  <div class="controls-section">
+    <div class="searchbar">
+      <i class="bi bi-search search-icon"></i>
+      <input type="text" placeholder="Search Users" placeholder="Search Scenarios" [(ngModel)]="searchTerm"
+        (input)="onSearch()" />
+    </div>
+    <div class="action-buttons">
+      <button class="btn" (click)="onEditScenario('Create')">
+        <i class="icon-plus"></i>
+        New Scenario
+      </button>
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <div class="table-container">
+    <table class="table-main">
+      <thead>
+        <tr>
+          <th>Scenario Name</th>
+          <th>
+            Created By
+            <i class="bi bi-chevron-down"></i>
+          </th>
+          <th>
+            Trigger Type
+            <i class="bi bi-chevron-down"></i>
+          </th>
+          <th>
+            Last Executed On
+            <i class="bi bi-chevron-down"></i>
+          </th>
+          <th>Alerts</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let scenario of filteredScenarios" [class.inactive]="!scenario.isActive">
+          <td class="scenario-name">
+            <div class="scenario-info">
+              <span class="name">{{ scenario.scenarioName }}</span>
+            </div>
+          </td>
+          <td>{{ scenario.createdBy }}</td>
+          <td>
+            <span class="trigger-type" [class.automatic]="scenario.triggerType === 'Automatic'"
+              [class.manual]="scenario.triggerType === 'Manual'">
+              {{ scenario.triggerType }}
+            </span>
+          </td>
+          <td>{{ scenario.lastExecutedOn || '-' }}</td>
+          <td>
+            <span class="alert-count" [class.has-alerts]="scenario.alerts > 0">
+              <i class="bi bi-exclamation-triangle"></i>{{ scenario.alerts }}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <div class="action-buttons-group">
+              <button class="action-btn edit-btn" (click)="onEditScenario('Edit')" title="Edit">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="action-btn trigger" (click)="onTriggerScenario(scenario)" title="Trigger">
+                <i class="bi bi-bell"></i>
+              </button>
+              <button class="action-btn preview-btn" (click)="onPreviewScenario(scenario)" title="Preview">
+                <i class="bi bi-eye"></i>
+              </button>
+              <button class="action-btn delete-btn" (click)="onDeleteScenario(scenario)" title="Delete">
+                <i class="bi bi-trash3"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Trigger Modal -->
+<div class="modal-overlay" *ngIf="showTriggerModal" (click)="closeTriggerModal()">
+  <div class="modal trigger-modal" (click)="$event.stopPropagation()">
+    <div class="modal-body">
+      <div class="icon-container">
+        <i class="bi bi-bell"></i>
+      </div>
+      <h4>Trigger scenario</h4>
+      <p>Are you sure you want to trigger this scenario "{{ selectedScenario?.scenarioName }}"?
+        This will run all the test cases.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-cancel" (click)="closeTriggerModal()">Cancel</button>
+      <button class="btn btn-trigger" (click)="confirmTrigger()">Trigger</button>
+    </div>
+  </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal-overlay" *ngIf="showPreviewModal" (click)="closePreviewModal()">
+  <div class="modal preview-modal large-modal" (click)="$event.stopPropagation()">
+    <div class="modal-body preview-content">
+      <div class="preview-header">
+        <div class="modal-header">
+          <h4>Preview Scenario</h4>
+          <button class="close-btn" (click)="closePreviewModal()">×</button>
+        </div>
+        <div class="scenario-details">
+          <div class="detail-row">
+            <span class="label">Scenario Name:</span>
+            <span class="value">{{ previewData.scenarioName }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <!-- Data Details Section -->
+        <h3 class="section-heading">Data Details</h3>
+        <table class="table-main">
+          <thead>
+            <tr>
+              <th>Condition</th>
+              <th>Column ID</th>
+              <th>Operations</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td></td>
+              <td>Invoice Amount</td>
+              <td>greater than</td>
+              <td>₹1,00,000</td>
+            </tr>
+            <tr>
+              <td>And/OR</td>
+              <td>PO</td>
+              <td>equal to</td>
+              <td>NO</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 class="section-heading">Test Details</h3>
+        <table class="table-main">
+          <thead>
+            <tr>
+              <th>Test Name</th>
+              <th>Parameter</th>
+              <th>Column ID</th>
+              <th>Condition</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="test-name-cell">P2PFMN211:Payment clearance on same date of Physical Invoice</td>
+              <td class="parameter-cell">1</td>
+              <td class="column-id-cell">Invoice Amount</td>
+              <td class="condition-cell">And/OR</td>
+              <td class="value-cell">20</td>
+            </tr>
+            <tr>
+              <td class="test-name-cell"></td>
+              <td class="parameter-cell">2</td>
+              <td class="column-id-cell">Invoice Amount</td>
+              <td class="condition-cell">And/OR</td>
+              <td class="value-cell">20</td>
+            </tr>
+            <tr>
+              <td class="test-name-cell">P2PFMN211:Payment clearance on same date of Physical Invoice</td>
+              <td class="parameter-cell"></td>
+              <td class="column-id-cell"></td>
+              <td class="condition-cell"></td>
+              <td class="value-cell"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal Placeholder -->
+<!-- <div class="modal-overlay" *ngIf="showEditModal" (click)="closeEditModal()">
+  <div class="modal edit-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Edit Scenario</h3>
+      <button class="close-btn" (click)="closeEditModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <p>Edit form for "{{ selectedScenario?.scenarioName }}" would be implemented here.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-cancel" (click)="closeEditModal()">Cancel</button>
+      <button class="btn btn-primary">Save Changes</button>
+    </div>
+  </div>
+</div> -->
+<app-delete-popup
+  *ngIf="showDeletePopup"
+  [data]="deleteData"
+  (result)="handleDeleteResult($event)">
+</app-delete-popup>

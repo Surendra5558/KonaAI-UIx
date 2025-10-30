@@ -1,0 +1,19 @@
+<div style="display:flex;height:100vh;">
+    <!-- Sidebar with pages -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <ul class="pages-list">
+           <li *ngFor="let page of pages; trackBy: trackByName" 
+               class="page-item" 
+               [class.active]="activePage?.name === page.name"
+               (click)="goToPage(page)">
+             <span class="page-dot"></span>
+             <span class="page-label">{{ page.displayName }}</span>
+           </li>
+        </ul>
+      </div>
+    </div>
+  
+    <!-- Report Container -->
+      <div #reportContainer class="report-container" style="height:104%; width:100%;"></div>
+  </div>

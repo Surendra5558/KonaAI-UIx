@@ -1,0 +1,105 @@
+
+
+
+ <div class="content">
+   <div class="header-block">
+      <div class="topbar-inner">
+        <div>
+          <h2>Roles</h2>
+          <p>Create new roles and manage permissions to control access across the platform.</p>
+        </div>
+      </div>
+
+        <div class="button-container">
+          <button type="button" class="btn btn-save" (click)="openAddRole()">
+            <i class="bi bi-plus-lg mr-2"></i> New Role
+          </button>
+        </div>
+      </div>
+
+  <!-- Empty state -->
+  <div class="frame-container" *ngIf="!hasRoles">
+    <!-- Title -->
+    <div class="title-container">
+      <h4 class="empty-title">No Roles Added Yet</h4>
+    </div>
+    
+    <!-- Description -->
+    <div class="description-container">
+      <p class="empty-description">
+        Define user roles to manage access and permissions across the platform.
+      </p>
+    </div>
+  </div>
+
+
+       <!-- Filters -->
+      <div class="filters">
+        <div class="searchbar"> 
+          <i class="bi bi-search search-icon"></i> 
+          <input type="text" placeholder="Search Role" /> 
+        </div>
+      </div> 
+
+
+  <!-- Roles present layout (from Figma node 436:99499) -->
+  <div class="table-wrap" *ngIf="hasRoles">
+    <table class="members-table table-main">
+      <colgroup>
+        <col />
+        <col />
+        <col />
+      </colgroup>
+      <thead>
+        <tr>
+          <th class="left">Role/Permissions</th>
+          <th>Description</th>
+          <th class="right"></th>
+          <th class="right"></th>
+          <th class="right"></th>
+          <th class="right"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of presentRoles; trackBy: trackByRoleName">
+          <td>
+            <div class="role">
+              <div class="role-name">{{ r.name }}</div>
+              <div class="role-perms">
+                <span class="perms-text">{{ r.permissions }}</span>
+                <span class="more">+20 more</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="desc">{{ r.description }}</div>
+          </td>
+          <td class="actions">
+            <button class="icon-btn edit" aria-label="Edit" (click)="onEditClick(r.name)">
+               <i class="bi bi-pencil"></i> 
+            </button>
+          </td>
+            <td>
+              <button class="icon-btn delete" aria-label="Delete" (click)="onDeleteClick(r.name)">
+                 <i class="bi bi-trash3"></i> 
+              </button>
+            </td>
+           <td>
+            <button class="icon-btn redirect" aria-label="Redirect" (click)="onRedirectClick(r.name)">
+              <i class="bi bi-arrow-up-right"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<app-delete-popup *ngIf="showDeletePopup" [data]="deleteData" (result)="handleDeleteResult($event)"></app-delete-popup>
+
+
+
+
+
+
+

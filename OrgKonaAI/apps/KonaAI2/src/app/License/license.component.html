@@ -1,0 +1,69 @@
+
+<div class="content">
+  <!-- Header with Renew License Button -->
+  <div class="header-block">
+    <div>
+      <h2>License Information</h2>
+      <p>Track license usage, validity, and allocations across the organisation.</p>
+    </div>
+    <button class="btn-delete btn-renew" (click)="onRenewLicense()">
+      <span class="renew-icon">⚠</span>
+      Renew License
+    </button>
+  </div>
+
+  <!-- License Details Grid -->
+  <div class="license-details-grid">
+    <!-- Left Column -->
+    <div class="license-column">
+      <!-- License Status -->
+      <div class="info-group">
+        <label class="info-label">License Status</label>
+        <div class="status-container">
+          <span class="status-badge" [ngClass]="getStatusClass()">
+            <span class="status-icon">●</span>
+            {{ licenseInfo.status }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Start Date -->
+      <div class="info-group">
+        <label class="info-label">Start Date</label>
+        <div class="date-container">
+          <span class="calendar-icon"><i class="bi bi-calendar2-minus"></i></span>
+          <span class="date-value">{{ formatDate(licenseInfo.startDate) }}</span>
+        </div>
+      </div>
+
+      <!-- End Date -->
+      <div class="info-group">
+        <label class="info-label">End Date</label>
+        <div class="date-container">
+          <span class="calendar-icon"><i class="bi bi-calendar2-minus"></i></span>
+          <span class="date-value">{{ formatDate(licenseInfo.endDate) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="license-column">
+      <!-- License Terms -->
+      <div class="info-group">
+        <label class="info-label">License Terms</label>
+        <div class="terms-value">{{ licenseInfo.terms }}</div>
+      </div>
+
+    </div>
+  </div>
+
+<app-toast-notification
+  [title]="'This clients license has expired '"
+  [message]="'Please renew the license to restore full functionality.'"
+  [show]="showToast"
+  (close)="closeToast()">
+</app-toast-notification> 
+</div>
+
+
+

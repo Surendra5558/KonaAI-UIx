@@ -1,0 +1,1140 @@
+<!-- Unified Pagination Component Template -->
+<ng-template #paginationTemplate let-paginationData="paginationData">
+  <div class="pagination-container-figma" [style.display]="paginationData.totalItems > 0 ? 'block' : 'none'">
+    <!-- Left: Showing info -->
+    <div class="pagination-info-left">
+      <span class="pagination-info-text">{{paginationData.startItem}}-{{paginationData.endItem}} of {{paginationData.totalItems | number}}</span>
+    </div>
+    
+    <!-- Center: Pagination controls -->
+    <div class="pagination-center-figma">
+      <div class="pagination-controls-figma">
+        <!-- Previous arrow -->
+        <button class="carousel-arrow prev" [disabled]="paginationData.currentPage === 1" (click)="paginationData.onPageChange(paginationData.currentPage - 1)">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M10 4L6 8L10 12" stroke="#65717D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        
+        <!-- Page numbers -->
+        <button *ngFor="let page of paginationData.visiblePages" 
+                class="page-btn" 
+                [class.active]="page === paginationData.currentPage"
+                [disabled]="page === '...'"
+                (click)="paginationData.onPageChange(page)">
+          {{page}}
+        </button>
+        
+        <!-- Next arrow -->
+        <button class="carousel-arrow next" [disabled]="paginationData.currentPage === paginationData.totalPages" (click)="paginationData.onPageChange(paginationData.currentPage + 1)">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M6 4L10 8L6 12" stroke="#65717D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Right: Items per page -->
+    <div class="pagination-right-figma">
+      <span class="items-per-page-label">Items per page</span>
+      <div class="items-per-page-select">
+        <select [(ngModel)]="paginationData.itemsPerPage" (change)="paginationData.onItemsPerPageChange()" class="form-select-sm">
+          <option *ngFor="let option of paginationData.itemsPerPageOptions" [value]="option">{{option}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+ <div class="content">
+   <div class="header">
+     <div class="header-block">
+      <div>
+        <h2>Insights</h2>
+        <p>View test results,anomalies, and analyse data trends for deeper insights .</p>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      <div class="view-options">
+   <div class="radio-buttons">
+        <label class="radio-option">
+          <input type="radio" name="insight-type" value="O2C" [(ngModel)]="selectedInsightType">
+          <span class="radio-icon o2c"></span>
+          <span class="radio-label">O2C</span>
+        </label>
+       
+        <label class="radio-option">
+          <input type="radio" name="insight-type" value="P2P" [(ngModel)]="selectedInsightType">
+          <span class="radio-icon p2p"></span>
+          <span class="radio-label">P2P</span>
+        </label>
+       
+        <label class="radio-option">
+          <input type="radio" name="insight-type" value="T&E" [(ngModel)]="selectedInsightType">
+          <span class="radio-icon te"></span>
+          <span class="radio-label">T&E</span>
+        </label>
+      </div>
+      </div>
+      
+     <div class="dropdown-container">
+        <select class="dropdown" [(ngModel)]="selectedInvoiceType">
+          <option value="invoices">Invoices</option>
+          <option value="receipts">Receipts</option>
+          <option value="contracts">Contracts</option>
+        </select>
+      </div>
+
+       <button class="report-button">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M10 1V13M10 13L7 10M10 13L13 10" stroke="#FCFCFC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 17H16" stroke="#FCFCFC" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span>Report</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- main layout -->
+  <div class="dashboard-container">
+    <!-- Sidebar styled like entity-trans component -->
+    <div class="visualizations-sidebar">
+      <div class="sidebar-header" (click)="toggleVisualization()">
+        <div class="header-content">
+          <span class="header-title">Visualisations</span>
+        </div>
+        <button class="expand-button" type="button" aria-label="Toggle Visualisations">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M4 6L8 10L12 6" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="divider"></div>
+
+      <!-- Visualization Pages List (appears directly under the Visualisations tab) -->
+      <ul *ngIf="isVisualizationOpen && visualizationPages && visualizationPages.length > 0" class="visualization-pages-list">
+        <li *ngFor="let page of visualizationPages; trackBy: trackVisualizationPageByName" 
+            class="page-item" 
+            [class.active]="isVisualizationPageActive(page)"
+            (click)="goToVisualizationPage(page)"
+            [title]="page.displayName">
+          
+          <span class="page-dot"></span>
+          <span class="page-label">{{ page.displayName }}</span>
+        </li>
+        <div class="divider"></div>
+      </ul>
+      <div class="sidebar-menu">
+        <div class="menu-item" [class.active]="activeView === 'entity-view'" (click)="switchToEntityView()">
+          <div class="menu-indicator"></div>
+          <span class="menu-text">Entity View</span>
+        </div>
+        <div class="divider"></div>
+        <div class="menu-item" [class.active]="activeView === 'transaction-view'" (click)="switchToTransactionView()">
+          <div class="menu-indicator"></div>
+          <span class="menu-text">Transaction View</span>
+        </div>
+        <div class="divider"></div>
+        <div class="menu-item" [class.active]="activeView === 'scenario-manager'" (click)="navigateToScenarioManager()">
+          <div class="menu-indicator"></div>
+          <span class="menu-text">Scenario Manager</span>
+        </div>
+        <div class="divider"></div>
+        <div class="menu-item" [class.active]="activeView === 'similar-transactions'" (click)="navigateToSimilarTransactions()">
+          <div class="menu-indicator" ></div>
+          <span class="menu-text">Similar Transaction</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Similar Transactions Screen - Full Screen Display -->
+    <div *ngIf="activeView === 'similar-transactions'" class="similar-transactions-container">
+        <!-- Header Controls -->
+        <div class="header-controls">
+          <div class="filters">
+            <div class="filter-group">
+              <select class="form-select" [(ngModel)]="selectedSimilarTransactionRiskCategory">
+                <option value="">Select Risk Category</option>
+                <option *ngFor="let category of similarTransactionRiskCategories" [value]="category.value">
+                  {{category.label}}
+                </option>
+              </select>
+            </div>
+            
+            <div class="filter-group">
+              <select class="form-select" [(ngModel)]="selectedSimilarTransactionTests">
+                <option value="">Select Tests</option>
+                <option *ngFor="let test of similarTransactionTests" [value]="test.value">
+                  {{test.label}}
+                </option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="view-controls">
+            <button class="btn btn-outline-secondary columns-btn" style="color: rgb(109, 109, 230);border: none;" (click)="toggleSimilarTransactionColumnsPanel()">
+              <i class="bi bi-layout-three-columns"></i> Columns
+            </button>
+          </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="table-container">
+          <table class="table table-hover table-sm">
+            <thead>
+              <tr>
+                <th class="checkbox-column">
+                  <input type="checkbox" [checked]="isAllSimilarTransactionsSelected" (change)="toggleSelectAllSimilarTransactions($event)">
+                </th>
+                <th class="sortable" (click)="sortSimilarTransactions('vendorNumber')">
+                  Vendor Number
+                  <i class="bi bi-chevron-down" [class.bi-chevron-up]="similarTransactionSortColumn === 'vendorNumber' && similarTransactionSortDirection === 'asc'"
+                     [class.bi-chevron-down]="similarTransactionSortColumn === 'vendorNumber' && similarTransactionSortDirection === 'desc'"></i>
+                </th>
+                <th class="sortable" (click)="sortSimilarTransactions('vendorName')" style="width:181px;">
+                  Vendor Name
+                  <i class="fa bi-chevron" [class.bi-chevron-up]="similarTransactionSortColumn === 'vendorName' && similarTransactionSortDirection === 'asc'"
+                     [class.bi-chevron-down]="similarTransactionSortColumn === 'vendorName' && similarTransactionSortDirection === 'desc'"></i>
+                </th>
+                <th class="sortable" (click)="sortSimilarTransactions('systemInvoiceNo')">
+                  System Invoice no
+                  <i class="bi bi-chevron-down" [class.bi-chevron-up]="similarTransactionSortColumn === 'systemInvoiceNo' && similarTransactionSortDirection === 'asc'"
+                     [class.bi-chevron-down]="similarTransactionSortColumn === 'systemInvoiceNo' && similarTransactionSortDirection === 'desc'"></i>
+                </th>
+                <th class="sortable" (click)="sortSimilarTransactions('systemInvoiceLineNo')">
+                  System Invoice line no
+                  <i class="bi bi-chevron-down" [class.bi-chevron-up]="similarTransactionSortColumn === 'systemInvoiceLineNo' && similarTransactionSortDirection === 'asc'"
+                     [class.chevron-down]="similarTransactionSortColumn === 'systemInvoiceLineNo' && similarTransactionSortDirection === 'desc'"></i>
+                </th>
+                <th class="sortable" (click)="sortSimilarTransactions('physicalInvoiceNo')">
+                  Physical Invoice no
+                  <i class="bi bi-chevron-down" [class.bi-chevron-up]="similarTransactionSortColumn === 'physicalInvoiceNo' && similarTransactionSortDirection === 'asc'"
+                     [class.bi-chevron-down]="similarTransactionSortColumn === 'physicalInvoiceNo' && similarTransactionSortDirection === 'desc'"></i>
+                </th>
+                <th>Tag</th>
+                <th class="sortable" (click)="sortSimilarTransactions('alerts')">
+                  Alerts
+                  <i class="bi bi-chevron-down" [class.bi-chevron-up]="similarTransactionSortColumn === 'alerts' && similarTransactionSortDirection === 'asc'"
+                     [class.bi-chevron-down]="similarTransactionSortColumn === 'alerts' && similarTransactionSortDirection === 'desc'"></i>
+                </th>
+                <th>OCR</th>
+                <th class="actions-column"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Group Headers -->
+              <ng-container *ngFor="let group of paginatedSimilarTransactionGroups; let groupIndex = index">
+                <tr class="group-header" [class.expanded]="group.expanded">
+                  <td colspan="10">
+                    <div class="group-header-content" (click)="toggleSimilarTransactionGroup(group)">
+                      <i class="bi" [class.bi-chevron-up]="group.expanded" [class.bi-chevron-down]="!group.expanded"></i>
+                      <span class="group-title">{{group.name}} ({{group.transactions.length}})</span>
+                      <div class="group-badges" *ngIf="getSimilarTransactionGroupBadges(group).length > 0">
+                        <span *ngFor="let badge of getSimilarTransactionGroupBadges(group)" 
+                              class="badge" 
+                              [class.badge-warning]="badge.type === 'flag'"
+                              [class.badge-danger]="badge.type === 'priority'">
+                          {{badge.text}}
+                        </span>
+                      </div>
+                      <div class="group-stats">
+                        <span class="alert-count" *ngIf="getSimilarTransactionGroupAlertCount(group) > 0">
+                          <i class="bi bi-exclamation-triangle text-warning" style="color:red;"></i> {{getSimilarTransactionGroupAlertCount(group)}}
+                        </span>
+                        <span class="ocr-count" *ngIf="getSimilarTransactionGroupOcrCount(group) > 0">
+                          <i class="bi bi-paperclip"></i> {{getSimilarTransactionGroupOcrCount(group)}}
+                        </span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                
+                <!-- Group Transactions -->
+                <tr *ngFor="let transaction of group.transactions; let i = index" 
+                    class="transaction-row" 
+                    [class.hidden]="!group.expanded"
+                    [class.selected]="transaction.selected">
+                  <td>
+                    <input type="checkbox" 
+                           [(ngModel)]="transaction.selected" 
+                           (change)="updateSimilarTransactionSelectionState()">
+                  </td>
+                  <td>{{transaction.vendorNumber}}</td>
+                  <td style="width: 171px;">{{transaction.vendorName}}</td>
+                  <td>{{transaction.systemInvoiceNo}}</td>
+                  <td>{{transaction.systemInvoiceLineNo}}</td>
+                  <td>{{transaction.physicalInvoiceNo}}</td>
+                  <td>
+                    <span *ngIf="transaction.tag" 
+                          class="badge" 
+                          [class.badge-warning]="transaction.tag === 'Flag for Review'"
+                          [class.badge-danger]="transaction.tag === 'Prioritise Review'"
+                          [class.badge-success]="transaction.tag === 'Downgrade'">
+                      {{transaction.tag}}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="alerts-cell" *ngIf="transaction.alerts > 0">
+                      <i class="bi bi-exclamation-triangle text-warning" style="color:yellow;"></i>
+                      <span class="alert-count">{{transaction.alerts}}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ocr-cell" *ngIf="transaction.hasOcr">
+                      <i class="fas fa-file-text text-primary clickable" 
+                         (click)="navigateToOcrViewFromSimilarTransaction(transaction)"
+                         title="Click to view OCR document"></i>
+                    </div>
+                    <div class="ocr-cell" *ngIf="transaction.hasExternalLink">
+                      <i class="fas fa-external-link text-muted"></i>
+                    </div>
+                  </td>
+                  <td class="actions-cell">
+                    <div class="dropdown">
+                      <button class="btn btn-link btn-sm" 
+                            (click)="showSimilarTransactionPopup()">
+                        <i class="bi bi-three-dots-vertical"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+              
+              <!-- Empty State -->
+              <tr *ngIf="paginatedSimilarTransactionGroups.length === 0" class="empty-state">
+                <td colspan="10" class="text-center py-4">
+                  <div class="empty-message">
+                    <i class="fas fa-search fa-2x text-muted mb-3"></i>
+                    <p class="text-muted">No transactions found matching your criteria</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Similar Transactions Pagination - Using unified template -->
+        <ng-container *ngTemplateOutlet="paginationTemplate; context: { paginationData: similarTransactionPaginationData }"></ng-container>
+      </div>
+
+    <!-- Main Content Area for other views -->
+    <div class="main-content" *ngIf="activeView === 'entity-view' || activeView === 'transaction-view'">
+      <!-- Information Toast - positioned next to left sidebar -->
+      <div class="info-toast" *ngIf="activeView === 'entity-view'">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="8" stroke="#8CAAFE" stroke-width="1.5" fill="none"/>
+          <path d="M10 6V10M10 14H10.01" stroke="#8CAAFE" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span class="toast-message">Select an one or more entities and click 'Transaction Details' to review all transactions associated with them.</span>
+        <button class="toast-close">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M12 4L4 12M4 4L12 12" stroke="#3538CD" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Right Content Area -->
+      <div class="right-content" *ngIf="activeView === 'entity-view' || activeView === 'transaction-view'" [ngStyle]="{'padding-top': activeView === 'entity-view' ? '60px' : '0px '}">
+        <!-- Tabs Section - Only show for entity view -->
+        <div class="content-tabs" *ngIf="activeView === 'entity-view'">
+          <button 
+            class="content-tab" 
+            [class.active]="activeTabEntity === 'entity-profiling'"
+            [class.disabled]="activeTabEntity === 'transaction-details'"
+            (click)="switchToEntityProfiling()">
+            Entity Profiling
+          </button>
+          <button 
+            class="content-tab" 
+            [class.active]="activeTabEntity === 'transaction-details'"
+            [class.disabled]="activeTabEntity === 'entity-profiling'"
+            [attr.disabled]="activeTabEntity === 'entity-profiling' ? true : null">
+            Transaction Details
+          </button>
+        </div>
+
+        <!-- Search and Filters - Only show for entity view -->
+        <div class="search-filters" *ngIf="activeView === 'entity-view'  || activeView === 'transaction-view'">
+          <div class="search-bar">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <circle cx="9" cy="9" r="6" stroke="#8597A4" stroke-width="1.5" fill="none"/>
+              <path d="M15 15L19 19" stroke="#8597A4" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <input type="text" [attr.placeholder]="activeView === 'entity-view' ? 'Search Entities' : 'Search Transactions'" [(ngModel)]="searchTerm">
+          </div>
+          
+          <select class="risk-dropdown" [(ngModel)]="selectedRiskCategory">
+            <option value="">Select Risk Category</option>
+            <option value="high">High Risk</option>
+            <option value="medium">Medium Risk</option>
+            <option value="low">Low Risk</option>
+          </select>
+          
+          <button class="columns-button">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <rect x="3" y="3" width="4" height="14" stroke="#082D78" stroke-width="1.5" fill="none"/>
+              <rect x="9" y="3" width="4" height="14" stroke="#082D78" stroke-width="1.5" fill="none"/>
+              <rect x="15" y="3" width="2" height="14" stroke="#082D78" stroke-width="1.5" fill="none"/>
+            </svg>
+            <span>Columns</span>
+          </button>
+        </div>
+
+        <!-- Data Tables with Unified Structure -->
+        <div class="table-wrapper">
+          <!-- Transaction View Table -->
+          <ng-container *ngIf="activeView === 'transaction-view'; else entityProfilingTable">
+            <div class="data-table-container">
+              <div class="table-scroll-container" style="max-height: 40rem; min-height: 30rem;">
+                <table class="data-table unified-table transaction-view-table">
+                  <thead class="table-header">
+                    <tr>
+                      <th class="col-checkbox">
+                        <input type="checkbox" class="select-all" (change)="toggleSelectAllTransactionView($event)">
+                      </th>
+                      <th class="col-system-invoice sortable">
+                        <div class="header-content">
+                          <span>System Invoice</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-vendor-name sortable">
+                        <div class="header-content">
+                          <span>Vendor Name</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-invoice-type sortable">
+                        <div class="header-content">
+                          <span>Invoice Type</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-invoice-description sortable">
+                        <div class="header-content">
+                          <span>Invoice Description</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-posting-date sortable">
+                        <div class="header-content">
+                          <span>Posting Date</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-gl-account sortable">
+                        <div class="header-content">
+                          <span>GL Account Description</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-physical-invoice sortable">
+                        <div class="header-content">
+                          <span>Physical Invoice</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-tag sortable">
+                        <div class="header-content">
+                          <span>Tag</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-alerts sortable">
+                        <div class="header-content">
+                          <span>Alerts</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-ocr sortable">
+                        <div class="header-content">
+                          <span>OCR</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-actions">
+                        <div class="header-content">
+                          <span></span>
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="table-body">
+                    <tr *ngFor="let tx of transactionViewData; let i = index" [class.selected]="tx.selected">
+                      <td class="col-checkbox">
+                        <input type="checkbox" [(ngModel)]="tx.selected" (change)="onTransactionViewSelectionChange()">
+                      </td>
+                      <td class="col-system-invoice">{{ tx.systemInvoice }}</td>
+                      <td class="col-vendor-name">
+                        <div class="vendor-name-text">{{ tx.vendorName }}</div>
+                      </td>
+                      <td class="col-invoice-type">{{ tx.invoiceType }}</td>
+                      <td class="col-invoice-description">
+                        <div class="description-text">{{ tx.invoiceDescription }}</div>
+                      </td>
+                      <td class="col-posting-date">{{ tx.postingDate }}</td>
+                      <td class="col-gl-account">{{ tx.glAccountDescription }}</td>
+                      <td class="col-physical-invoice">{{ tx.physicalInvoice }}</td>
+                      <td class="col-tag">
+                        <span *ngIf="tx.tag" class="tag" [ngClass]="tx.tagClass">{{ tx.tag }}</span>
+                      </td>
+                      <td class="col-alerts">
+                        <div class="alert-info" [class.inactive]="tx.alerts === 0">
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 2 L14 14 H2 Z" [attr.stroke]="tx.alerts > 0 ? '#B20000' : '#8597A4'" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+                            <path d="M8 6 V9" [attr.stroke]="tx.alerts > 0 ? '#B20000' : '#8597A4'" stroke-width="1.5" stroke-linecap="round"/>
+                            <circle cx="8" cy="11.5" r="0.75" [attr.fill]="tx.alerts > 0 ? '#B20000' : '#8597A4'"/>
+                          </svg>
+                          <span>{{ tx.alerts }}</span>
+                        </div>
+                      </td>
+                      <td class="col-ocr">
+                        <svg *ngIf="tx.hasOcr" 
+                             width="16" 
+                             height="16" 
+                             viewBox="0 0 24 24" 
+                             fill="none" 
+                             xmlns="http://www.w3.org/2000/svg"
+                             class="ocr-icon clickable"
+                             (click)="navigateToOcrView(tx)"
+                             title="Click to view OCR document">
+                          <g transform="rotate(-90 12 12)">
+                            <path d="M21.44 11.05l-7.07 7.07a5 5 0 01-7.07-7.07l8.49-8.49a3.5 3.5 0 114.95 4.95l-9.19 9.19a2 2 0 11-2.83-2.83l8.49-8.49" stroke="#082D78" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </g>
+                        </svg>
+                      </td>
+                      <td class="col-actions">
+                        <button class="action-menu" (click)="showActionMenu($event, i)">
+                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <circle cx="10" cy="5" r="1" fill="#1C1C1C"/>
+                            <circle cx="10" cy="10" r="1" fill="#1C1C1C"/>
+                            <circle cx="10" cy="15" r="1" fill="#1C1C1C"/>
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Entity Profiling Table -->
+          <ng-template #entityProfilingTable>
+            <ng-container *ngIf="activeTabEntity === 'entity-profiling'; else transactionDetailsTable">
+            <div class="data-table-container">
+              <div class="table-scroll-container" style="max-height: 28rem; min-height: 22rem;">
+                <table class="data-table unified-table">
+                  <thead class="table-header">
+                    <tr>
+                      <th class="col-checkbox">
+                        <input type="checkbox" class="select-all" (change)="toggleSelectAll($event)">
+                      </th>
+                      <th class="col-vendor-id sortable">
+                        <div class="header-content">
+                          <span>Vendor ID</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-vendor-name sortable">
+                        <div class="header-content">
+                          <span>Vendor Name</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-vendor-country sortable">
+                        <div class="header-content">
+                          <span>Vendor Country</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-risk-ranking sortable">
+                        <div class="header-content">
+                          <span>Risk Ranking</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-risk-score sortable">
+                        <div class="header-content">
+                          <span>Risk Score</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-tag sortable">
+                        <div class="header-content">
+                          <span>Tag</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-alerts sortable">
+                        <div class="header-content">
+                          <span>Alerts</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-actions">
+                        <div class="header-content">
+                          <span></span>
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="table-body">
+                    <tr *ngFor="let vendor of vendors; let i = index" [class.selected]="vendor.selected">
+                      <td class="col-checkbox">
+                        <input type="checkbox" [(ngModel)]="vendor.selected" (change)="onSelectionChange()">
+                      </td>
+                      <td class="col-vendor-id">{{ vendor.id }}</td>
+                      <td class="col-vendor-name">
+                        <div class="vendor-name-text">{{ vendor.name }}</div>
+                      </td>
+                      <td class="col-vendor-country">{{ vendor.country }}</td>
+                      <td class="col-risk-ranking">{{ vendor.riskRanking }}</td>
+                      <td class="col-risk-score">{{ vendor.riskScore }}</td>
+                      <td class="col-tag">
+                        <span *ngIf="vendor.tag" class="tag" [ngClass]="vendor.tagClass">{{ vendor.tag }}</span>
+                      </td>
+                      <td class="col-alerts">
+                        <div class="alert-info" [class.inactive]="vendor.alerts === 0">
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 1L15 14H1L8 1Z" [attr.stroke]="vendor.alerts > 0 ? '#B20000' : '#8597A4'" stroke-width="1.5" [attr.fill]="vendor.alerts > 0 ? '#B20000' : '#8597A4'"/>
+                            <path *ngIf="vendor.alerts > 0" d="M8 6V9M8 12H8.01" stroke="#FFF" stroke-width="1.5" stroke-linecap="round"/>
+                          </svg>
+                          <span>{{ vendor.alerts }}</span>
+                        </div>
+                      </td>
+                      <td class="col-actions">
+                        <button class="action-menu" (click)="showActionMenu($event, i)">
+                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <circle cx="10" cy="5" r="1" fill="#1C1C1C"/>
+                            <circle cx="10" cy="10" r="1" fill="#1C1C1C"/>
+                            <circle cx="10" cy="15" r="1" fill="#1C1C1C"/>
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </ng-container>
+          </ng-template>
+
+          <ng-template #transactionDetailsTable>
+            <div class="data-table-container">
+              <div class="table-scroll-container" style="max-height: 28rem; min-height: 22rem;">
+                <table class="data-table unified-table">
+                  <thead class="table-header">
+                    <tr>
+                      <th class="col-checkbox">
+                        <input type="checkbox" class="select-all" (change)="toggleSelectAllTransactions($event)">
+                      </th>
+                      <th class="col-system-invoice sortable">
+                        <div class="header-content">
+                          <span>System Invoice</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-vendor-name sortable">
+                        <div class="header-content">
+                          <span>Vendor Name</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-invoice-type sortable">
+                        <div class="header-content">
+                          <span>Invoice Type</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-invoice-description sortable">
+                        <div class="header-content">
+                          <span>Invoice Description</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-tag sortable">
+                        <div class="header-content">
+                          <span>Tag</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-alerts sortable">
+                        <div class="header-content">
+                          <span>Alerts</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-ocr sortable">
+                        <div class="header-content">
+                          <span>OCR</span>
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 10L8 14L12 10" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </th>
+                      <th class="col-actions">
+                        <div class="header-content">
+                          <span></span>
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="table-body">
+                    <tr *ngFor="let tx of transactions; let i = index" [class.selected]="tx.selected">
+                      <td class="col-checkbox">
+                        <input type="checkbox" [(ngModel)]="tx.selected" (change)="onTransactionSelectionChange()">
+                      </td>
+                      <td class="col-system-invoice">{{ tx.systemInvoice }}</td>
+                      <td class="col-vendor-name">
+                        <div class="vendor-name-text">{{ tx.vendorName }}</div>
+                      </td>
+                      <td class="col-invoice-type">{{ tx.invoiceType }}</td>
+                      <td class="col-invoice-description">
+                        <div class="description-text">{{ tx.invoiceDescription }}</div>
+                      </td>
+                      <td class="col-tag">
+                        <span *ngIf="tx.tag" class="tag" [ngClass]="tx.tagClass">{{ tx.tag }}</span>
+                      </td>
+                      <td class="col-alerts">
+                        <div class="alert-info" [class.inactive]="tx.alerts === 0">
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 2 L14 14 H2 Z" [attr.stroke]="tx.alerts > 0 ? '#B20000' : '#8597A4'" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+                            <path d="M8 6 V9" [attr.stroke]="tx.alerts > 0 ? '#B20000' : '#8597A4'" stroke-width="1.5" stroke-linecap="round"/>
+                            <circle cx="8" cy="11.5" r="0.75" [attr.fill]="tx.alerts > 0 ? '#B20000' : '#8597A4'"/>
+                          </svg>
+                          <span>{{ tx.alerts }}</span>
+                        </div>
+                      </td>
+                      <td class="col-ocr">
+                        <svg *ngIf="tx.hasOcr" 
+                             width="16" 
+                             height="16" 
+                             viewBox="0 0 24 24" 
+                             fill="none" 
+                             xmlns="http://www.w3.org/2000/svg"
+                             class="ocr-icon clickable"
+                             (click)="navigateToOcrView(tx)"
+                             title="Click to view OCR document">
+                          <g transform="rotate(-90 12 12)">
+                            <path d="M21.44 11.05l-7.07 7.07a5 5 0 01-7.07-7.07l8.49-8.49a3.5 3.5 0 114.95 4.95l-9.19 9.19a2 2 0 11-2.83-2.83l8.49-8.49" stroke="#082D78" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </g>
+                        </svg>
+                      </td>
+                      <td class="col-actions">
+                        <button class="action-menu" (click)="showActionMenu($event, i)">
+                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <circle cx="10" cy="5" r="1" fill="#1C1C1C"/>
+                            <circle cx="10" cy="10" r="1" fill="#1C1C1C"/>
+                            <circle cx="10" cy="15" r="1" fill="#1C1C1C"/>
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+
+
+        <!-- Main Content Pagination - Using unified template -->
+        <ng-container *ngTemplateOutlet="paginationTemplate; context: { paginationData: mainContentPaginationData }"></ng-container>
+      </div>
+    </div>
+
+    
+
+    <!-- Visualization Component for other views -->
+    <app-visualization 
+      *ngIf="activeView !== 'entity-view' && activeView !== 'transaction-view' && activeView !== 'scenario-manager' && activeView !== 'similar-transactions'"
+      style="flex: 1; width: 100%; min-height: calc(100vh - 80px);"
+      (pagesLoaded)="onVisualizationPagesLoaded($event)"
+      (pageChanged)="onVisualizationPageChanged($event)">
+    </app-visualization>
+
+    <!-- Main Content   --> 
+    <div class="main-content-display" *ngIf="activeTab === 'scenario-manager' && activeView !== 'transaction-view' && activeView !== 'entity-view'">
+      <!-- <app-insights-overview *ngIf="activeTab === 'overview'"></app-insights-overview>
+      <app-insight-duplicatecheck *ngIf="activeTab === 'duplicate-check'"></app-insight-duplicatecheck>
+      <app-insights-text-analysis *ngIf="activeTab === 'text-analysis'"></app-insights-text-analysis>
+      <app-insights-transaction-metrics *ngIf="activeTab === 'transaction-metrics'"></app-insights-transaction-metrics>
+      <app-insights-know-your-vendor *ngIf="activeTab === 'vendor-lookup'"></app-insights-know-your-vendor> -->
+      <app-scenario-manager *ngIf="activeTab === 'scenario-manager'"></app-scenario-manager>
+     <!-- <app-underlying-details *ngIf="activeTab === 'underlying-details'"></app-underlying-details>-->
+      
+      
+    </div> 
+  </div>
+  <!-- Unified Selection Popup for Both Tabs -->
+  <div class="selection-popup compact" *ngIf="(hasSelectedRecords() && activeTabEntity === 'entity-profiling') || (hasSelectedTransactions() && activeTabEntity === 'transaction-details') || (hasSelectedTransactionViewRecords() && activeView === 'transaction-view')">
+    <div class="popup-header">
+      <div class="popup-title">
+        <button class="popup-close" (click)="getCloseSelectionMethod()()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M12 4L4 12M4 4L12 12" stroke="#FCFCFC" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <span class="popup-title-text">
+          {{ getSelectionPopupTitle() }} 
+          ({{ getSelectionPopupCount() }})
+        </span>
+      </div>
+    </div>
+    
+    <div class="popup-content">
+      <div class="popup-left">
+        <div class="add-tag-section">
+          <span class="add-tag-label">Add Tag:</span>
+          <div class="tag-options">
+            <label class="tag-option">
+              <input type="radio" name="unifiedTag" value="prioritise" [(ngModel)]="selectedTag">
+              <span class="radio-button"></span>
+              <span class="tag-text">Prioritise Review</span>
+            </label>
+            
+            <label class="tag-option">
+              <input type="radio" name="unifiedTag" value="flag" [(ngModel)]="selectedTag">
+              <span class="radio-button"></span>
+              <span class="tag-text">Flag For Review</span>
+            </label>
+            
+            <label class="tag-option">
+              <input type="radio" name="unifiedTag" value="downgrade" [(ngModel)]="selectedTag">
+              <span class="radio-button"></span>
+              <span class="tag-text">Downgrade</span>
+            </label>
+            
+            <button class="apply-button" (click)="getApplyTagMethod()">Apply</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="popup-separator"></div>
+      
+      <div class="popup-right">
+        <div class="action-buttons">
+          <!-- Show View Transaction Details only for entity profiling -->
+          <button 
+            *ngIf="activeTabEntity === 'entity-profiling'" 
+            class="view-details-button" 
+            (click)="viewTransactionDetails()">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <rect x="2" y="3" width="16" height="13" rx="2" stroke="#082D78" stroke-width="1.5" fill="none"/>
+              <path d="M2 8H18" stroke="#082D78" stroke-width="1.5"/>
+              <path d="M6 12H14" stroke="#082D78" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span>View Transaction Details</span>
+          </button>
+          
+          <button class="new-alert-button" (click)="getCreateAlertMethod()()">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 2L18 17H2L10 2Z" stroke="#2844A5" stroke-width="1.5"/>
+              <path d="M10 7V11M10 14H10.01" stroke="#2844A5" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span>New Alert</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Menu Popup -->
+  <div 
+    class="action-popup" 
+    *ngIf="showActionPopup"
+    [style.top.px]="actionPopupPosition.top"
+    [style.left.px]="actionPopupPosition.left"
+    (click)="$event.stopPropagation()">
+    
+    <div class="popup-content">
+      <div class="popup-item" (click)="onChangeTag(selectedRowIndex)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 8L8 2L14 8" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 7V13C3 13.5523 3.44772 14 4 14H12C12.5523 14 13 13.5523 13 13V7" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Change Tag</span>
+      </div>
+      
+      <div class="popup-item" (click)="onViewAlerts(selectedRowIndex)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8 1L15 14H1L8 1Z" stroke="#1C1C1C" stroke-width="1.5" fill="none"/>
+          <path d="M8 6V9M8 12H8.01" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span>View Alerts</span>
+      </div>
+      
+      <div class="popup-item" (click)="onCreateAlert(selectedRowIndex)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8 1V15M1 8H15" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span>Create Alert</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Tag Popup Modal with Dark Overlay -->
+  <div class="modal-overlay" *ngIf="showChangeTagPopup" (click)="closeChangeTagPopup()">
+    <div class="change-tag-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">Change Tag</h2>
+      </div>
+      
+      <div class="modal-divider"></div>
+      
+      <div class="tag-options">
+        <label class="tag-option">
+          <input type="radio" name="tagOption" value="prioritise" [ngModel]="selectedTagOption" (ngModelChange)="selectedTagOption = $event">
+          <span class="radio-button"></span>
+          <span class="option-label">Prioritise Review</span>
+        </label>
+        
+        <label class="tag-option">
+          <input type="radio" name="tagOption" value="flag" [ngModel]="selectedTagOption" (ngModelChange)="selectedTagOption = $event">
+          <span class="radio-button"></span>
+          <span class="option-label">Flag for Review</span>
+        </label>
+        
+        <label class="tag-option">
+          <input type="radio" name="tagOption" value="downgrade" [ngModel]="selectedTagOption" (ngModelChange)="selectedTagOption = $event">
+          <span class="radio-button"></span>
+          <span class="option-label">Downgrade</span>
+        </label>
+        
+        <label class="tag-option">
+          <input type="radio" name="tagOption" value="none" [ngModel]="selectedTagOption" (ngModelChange)="selectedTagOption = $event">
+          <span class="radio-button"></span>
+          <span class="option-label">No tag</span>
+        </label>
+      </div>
+      
+      <div class="modal-actions">
+        <button class="cancel-button" (click)="closeChangeTagPopup()">Cancel</button>
+        <button class="save-button" [disabled]="!selectedTagOption" (click)="saveTagChange()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="p-3 bg-light" style="height:100vh;">
+    <h6>Filter by Alert State</h6>
+    <ul class="list-unstyled">
+      <li *ngFor="let state of states">
+        <input type="checkbox" [checked]="selected.has(state)" (change)="toggleState(state)">
+        {{ state }}
+      </li>
+    </ul>
+  
+    <button class="btn btn-sm btn-outline-secondary mr-2" (click)="clear()">Clear</button>
+    <button class="btn btn-sm btn-primary" (click)="apply()">Apply</button>
+  </div> -->
+
+  <!-- Scenario Manager Modals -->
+  <!-- Delete Modal -->
+  <div class="modal-overlay" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
+    <div class="modal delete-modal" (click)="$event.stopPropagation()">
+      <div class="modal-body">
+        <div class="delete-icon">
+          🗑️
+        </div>
+        <h4>Delete Scenario</h4>
+        <p>Are you sure you want to delete this scenario "{{ selectedScenario?.scenarioName }}"?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-cancel" (click)="closeDeleteModal()">Cancel</button>
+        <button class="btn btn-delete" (click)="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trigger Modal -->
+  <div class="modal-overlay" *ngIf="showTriggerModal" (click)="closeTriggerModal()">
+    <div class="modal trigger-modal" (click)="$event.stopPropagation()">
+      <div class="modal-body">
+        <div class="icon-container">
+          🔔
+        </div>
+        <h4>Trigger scenario</h4>
+        <p>Are you sure you want to trigger this scenario "{{ selectedScenario?.scenarioName }}"?
+          This will run all the test cases.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-cancel" (click)="closeTriggerModal()">Cancel</button>
+        <button class="btn btn-trigger" (click)="confirmTrigger()">Trigger</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview Modal -->
+  <div class="modal-overlay" *ngIf="showPreviewModal" (click)="closePreviewModal()">
+    <div class="modal preview-modal large-modal" (click)="$event.stopPropagation()">
+      <div class="modal-body preview-content">
+        <div class="preview-header">
+          <div class="modal-header">
+            <h4>Preview Scenario</h4>
+            <button class="close-btn" (click)="closePreviewModal()">×</button>
+          </div>
+          <div class="scenario-details">
+            <div class="detail-row">
+              <span class="label">Scenario Name:</span>
+              <span class="value">{{ previewData.scenarioName }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <!-- Data Details Section -->
+          <h3 class="section-heading">Data Details</h3>
+          <table class="table-main">
+            <thead class="data-table-header">
+              <tr>
+                <th>Condition</th>
+                <th>Column ID</th>
+                <th>Operations</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td>Invoice Amount</td>
+                <td>greater than</td>
+                <td>₹1,00,000</td>
+              </tr>
+              <tr>
+                <td>And/OR</td>
+                <td>PO</td>
+                <td>equal to</td>
+                <td>NO</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="section-heading">Test Details</h3>
+          <table class="table-main">
+            <thead class="test-table-header">
+              <tr>
+                <th class="test-name-cell">Test Name</th>
+                <th class="parameter-cell">Parameter</th>
+                <th class="column-id-cell">Column ID</th>
+                <th class="condition-cell">Condition</th>
+                <th class="value-cell">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="test-name-cell">P2PFMN211:Payment clearance on same date of Physical Invoice</td>
+                <td class="parameter-cell">1</td>
+                <td class="column-id-cell">Invoice Amount</td>
+                <td class="condition-cell">And/OR</td>
+                <td class="value-cell">20</td>
+              </tr>
+              <tr>
+                <td class="test-name-cell"></td>
+                <td class="parameter-cell">2</td>
+                <td class="column-id-cell">Invoice Amount</td>
+                <td class="condition-cell">And/OR</td>
+                <td class="value-cell">20</td>
+              </tr>
+              <tr>
+                <td class="test-name-cell">P2PFMN211:Payment clearance on same date of Physical Invoice</td>
+                <td class="parameter-cell"></td>
+                <td class="column-id-cell"></td>
+                <td class="condition-cell"></td>
+                <td class="value-cell"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Similar Transactions Columns Panel (Offcanvas) -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="similarTransactionColumnsPanel" *ngIf="showSimilarTransactionColumnsPanel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title">Manage Columns</h5>
+      <button type="button" class="btn-close" (click)="toggleSimilarTransactionColumnsPanel()"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="column-list">
+        <div *ngFor="let column of similarTransactionAvailableColumns" class="form-check">
+          <input class="form-check-input" 
+                 type="checkbox" 
+                 [id]="'similar-col-' + column.key"
+                 [(ngModel)]="column.visible">
+          <label class="form-check-label" [for]="'similar-col-' + column.key">
+            {{column.label}}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Similar Transactions Modal -->
+  <div class="custom-backdrop" *ngIf="showSimilarTransactionModal" (click)="closeSimilarTransactionModal()"></div>
+
+  <div class="custom-modal" *ngIf="showSimilarTransactionModal">
+    <div class="custom-header">
+     <button class="close-btn" (click)="closeSimilarTransactionModal()">✖</button> <span>Selected Transactions ({{selectedSimilarTransactions.length}})</span>
+    </div>
+
+    <div class="custom-body">
+      <label><input type="checkbox"> Prioritise Review</label>
+      <label><input type="checkbox"> Flag For Review</label>
+      <label><input type="checkbox"> Downgrade</label>
+      <a href="#" (click)="applySimilarTransactionAction()">Apply</a>
+    </div>
+
+    <div class="custom-footer">
+      <button (click)="viewSimilarTransactionDetails()">👁 View Transaction Details</button>
+      <button (click)="createNewSimilarTransactionAlert()"><i class="bi bi-plus-lg"></i> New Alert</button>
+  </div>
+</div>

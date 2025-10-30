@@ -1,0 +1,231 @@
+// Color Variables
+$primary-blue: #3f51b5;
+$header-bg: #e8f0f8;
+$dark-line-color: #a0c4ff;
+$dot-size: 8px;
+$text-color: #4a4a4a;
+$line-color: #bbdefb; // This is a good base color
+$dot-color: rgba($line-color, 0.7); // Slightly more opaque blue for the dots
+
+
+// Base container
+.mapping-container {
+    display: flex;
+    font-family: "Segoe UI";
+    min-height: 100vh;
+    //background-color: #f7f9fc;
+}
+
+// Summary Panel (Fixed Left)
+.summary-panel {
+    width: 300px;
+    padding: 30px 20px;
+    //background-color: white;
+    //box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+
+    h2 {
+        font-size: 20px;
+        font-weight: 600;
+        color: $text-color;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid $line-color;
+    }
+
+    p {
+        font-size: 16px;
+        margin: 6px 0;
+        color: $text-color;
+
+        strong {
+            font-weight: 600;
+            color: $primary-blue;
+        }
+    }
+
+    .back-button {
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        margin-bottom: 20px;
+        color: $primary-blue;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+// Mapping Area (Right Scrollable)
+.mapping-area {
+    flex-grow: 1;
+    padding: 20px;
+    overflow: auto;
+    max-height: 100vh;
+}
+
+// Mapping Box
+// Mapping Box
+.mapping-box {
+    display: flex;
+    justify-content: center; // Center columns horizontally
+    gap: 138px;               // Space between columns
+    position: relative;
+    padding: 20px;
+    border: 1px solid $line-color;
+    border-radius: 6px;
+    background-color: #fff;
+   background-image: 
+        radial-gradient(circle at center, $dot-color 1px, transparent 1px);
+    background-size: 20px 20px; // Adjust this value to change the spacing of the dots
+    overflow-x: hidden;       // Hide horizontal scrollbar
+    overflow-y: auto;         // Allow vertical scrolling if needed
+    width: 100%;              // Fit parent container
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
+}
+/* Shift only the target-column slightly to the left */
+.mapping-box .column:last-child {
+    transform: translateX(-30px); // Adjust the value as needed
+}
+
+// Optional: Make sure columns do not exceed mapping-box width
+.column {
+    flex: 0 0 350px;
+    max-width: 350px; // Prevent columns from being wider than their base
+
+
+    h3 {
+        padding: 12px 15px;
+        background-color: #DCEAFC;
+       
+        border: 1px solid $line-color;
+        border-radius: 4px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    li {
+        background-color: white;
+        border: 1px solid $line-color;
+        border-radius: 4px;
+        padding: 10px 15px;
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: $text-color;
+        position: relative;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: background 0.2s, transform 0.2s;
+
+        &:hover {
+            background-color: #f0f4ff;
+            transform: translateY(-1px);
+        }
+    }
+}
+
+/* Projection Dots */
+.column:first-child li { padding-right: 40px; }
+.column:last-child li { padding-left: 40px; }
+
+.column:first-child li::after,
+.column:last-child li::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: $dot-size;
+    height: $dot-size;
+    background-color: $dark-line-color;
+    border: 2px solid $dark-line-color;
+    border-radius: 50%;
+    z-index: 3;
+}
+
+.column:first-child li::after { right: 15px; }
+.column:last-child li::before { left: 15px; }
+
+/* SVG Overlay for Mapping Lines */
+.mapping-lines-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Optional: Custom scrollbar */
+.mapping-area::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+.mapping-area::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+}
+.mapping-area::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+/* --- Header & Title Group Styles --- */
+.header-title-group {
+    display: flex;
+    gap : 8px;
+    align-items: center;
+    margin-bottom: 30px; /* Space below the main header */
+}
+
+
+
+
+/* --- Back Button Styling (The light blue rounded square) --- */
+.back-btn {
+    background-color: $header-bg; // Light blue background
+    border: none;
+    border-radius: 8px; /* Rounded corners */
+    padding: 10px;
+    cursor: pointer;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    
+    // Ensure the SVG stroke is the primary blue color
+    svg {
+        stroke: $primary-blue;
+    }
+
+    &:hover {
+        background-color: lighten($header-bg, 3%);
+    }
+}
+
+/* --- Title Styling (Invoices) --- */
+.title {
+    font-size: 28px; /* Large, bold text */
+    font-weight: 700; /* Extra bold */
+    color: #212121; /* Very dark text color */
+    margin: 0;
+    line-height: 1; /* Aligns text properly with the button/badge */
+    margin-right: 20px; /* Space before the phase badge */
+      font-family:  "Segoe UI", Tahoma, Geneva, Verdana, sans-serif
+
+}
+
+/* --- Phase Badge Styling (Phase 1) --- */
+

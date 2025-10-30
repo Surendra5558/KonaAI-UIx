@@ -1,0 +1,58 @@
+<div class="container">
+  <div class="top-bar topbar-header"  *ngIf="userRole !== 'L1 User'&& userRole !== 'L2 User' && userRole !== 'Client Admin'">
+    <div class="header">
+      <h1>
+        <button class="header-backbtn" (click)="goBack()"><i class="bi bi-arrow-left"></i></button>
+        {{ projectData?.name || 'Contract Compliance Audit' }}
+      </h1>
+    </div>
+    <div class="header">
+      <div class="nav-container">
+        <div class="tab-wrapper">
+          <!-- Overview Tab -->
+          <div class="tab-item" [class.active]="activeTab === 'overview'" [class.disabled]="userRole === 'Investigator' || userRole === 'L1 User' || userRole === 'Client Admin'"
+            (click)="selectTab('overview')">
+            <i class="bi bi-file-text"></i>
+            @if (activeTab === 'overview') { <span>Overview</span> }
+          </div>
+
+          <!-- Workflow Setup Tab -->
+          <div class="tab-item" [class.active]="activeTab === 'workflow'" [class.disabled]="userRole === 'Investigator' || userRole === 'L1 User' || userRole === 'Client Admin'"
+            (click)="selectTab('workflow')">
+            <i class="bi bi-diagram-3"></i>
+            @if (activeTab === 'workflow') { <span>Workflow Setup</span> }
+          </div>
+
+          <!-- Insights Tab -->
+          <div class="tab-item" [class.active]="activeTab === 'insights'" [class.disabled]="userRole === 'Investigator' || userRole === 'L1 User' || userRole === 'Client Admin'"
+            (click)="selectTab('insights')">
+            <i class="bi bi-reception-3"></i>
+            @if (activeTab === 'insights') { <span>Insights</span> }
+          </div>
+
+          <!-- Alert Tab -->
+          <div class="tab-item" [class.active]="activeTab === 'alert'" (click)="selectTab('alert')">
+            <i class="bi bi-exclamation-triangle"></i>
+            @if (activeTab === 'alert') { <span>Alert</span> }
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Content area -->
+  <div class="content">
+    <!-- Show Overview component -->
+    <app-overview *ngIf="activeTab === 'overview'" [projectData]="projectData"></app-overview>
+
+    <!-- Show Workflow component -->
+    <app-workflow-setup *ngIf="activeTab === 'workflow'"></app-workflow-setup>
+
+    <!-- Show Insights component -->
+    <app-insights *ngIf="activeTab === 'insights'" ></app-insights>
+
+    <!-- Show Create Alert component -->
+    <app-alert *ngIf="activeTab === 'alert'"></app-alert>
+  </div>
+</div>

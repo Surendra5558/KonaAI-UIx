@@ -1,0 +1,255 @@
+<!-- Main Container -->
+<div class="bg-gray-50 relative w-full min-h-screen data-quality-container">
+ 
+  <!-- Main Content Area -->
+  <div class="flex-1 bg-white">
+    <!-- Top Header with Back Button and File Name -->
+    <div class="flex items-center gap-4 p-6 border-b border-gray-200 bg-white">
+      <button 
+        (click)="goBack()"
+        class="bg-blue-200 flex items-center justify-center p-2 rounded-lg w-9 h-9 hover:bg-blue-300 transition-colors">
+        <svg class="w-4 h-4 text-blue-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+      <h1 class="font-extrabold text-xl text-black">
+        Numera- Privilaged & Confidential- Appendix_Updated.xlsx
+      </h1>
+    </div>
+
+    <!-- Content Area -->
+    <div class="p-8">
+      <!-- Open/Resolved Tabs -->
+      <div class="tabs mb-6 pb-1">
+        <button (click)="setMainTab('Open')" class="tab" [class.tab--active]="activeMainTab === 'Open'">Open</button>
+        <button (click)="setMainTab('Resolved')" class="tab" [class.tab--active]="activeMainTab === 'Resolved'">Resolved</button>
+      </div>
+      
+      <!-- Show content only when Open tab is active -->
+      <div *ngIf="activeMainTab === 'Open'">
+
+        <!-- Category Cards -->
+        <div class="category-cards">
+          <!-- Important Card -->
+          <button (click)="setCategory('Important')"
+                  class="category-card flex items-center justify-between px-6 py-3 rounded-lg cursor-pointer shadow-sm hover:shadow-md transition-shadow"
+                  [ngClass]="activeCategory === 'Important' ? 'border-2 border-blue-500 bg-gradient-to-r from-blue-100 to-white' : 'border border-blue-300 bg-white'"
+                  style="height: 50px;">
+            <div class="font-bold text-lg text-gray-900">Important</div>
+            <div [ngClass]="activeCategory === 'Important' ? 'font-semibold text-base text-blue-700' : 'font-semibold text-base text-gray-700'">
+              {{getImportantCount()}}
+            </div>
+          </button>
+
+          <!-- Critical Card -->
+          <button (click)="setCategory('Critical')"
+                  class="category-card flex items-center justify-between px-6 py-3 rounded-lg cursor-pointer shadow-sm hover:shadow-md transition-shadow"
+                  [ngClass]="activeCategory === 'Critical' ? 'border-2 border-blue-500 bg-gradient-to-r from-blue-100 to-white' : 'border border-blue-300 bg-white'"
+                  style="height: 50px;">
+            <div class="font-bold text-lg text-gray-900">Critical</div>
+            <div [ngClass]="activeCategory === 'Critical' ? 'font-semibold text-base text-blue-700' : 'font-semibold text-base text-gray-700'">
+              {{getCriticalCount()}}
+            </div>
+          </button>
+
+          <!-- Impacts Reporting Card (Active) -->
+          <button (click)="setCategory('Impacts Reporting')"
+                  class="category-card flex items-center justify-between px-6 py-3 rounded-lg cursor-pointer shadow-sm hover:shadow-md transition-shadow"
+                  [ngClass]="activeCategory === 'Impacts Reporting' ? 'border-2 border-blue-500 bg-gradient-to-r from-blue-100 to-white' : 'border border-blue-300 bg-white'"
+                  style="height: 50px;">
+            <div class="font-bold text-lg text-gray-900">Impacts Reporting</div>
+            <div [ngClass]="activeCategory === 'Impacts Reporting' ? 'font-semibold text-base text-blue-700' : 'font-semibold text-base text-gray-700'">
+              {{getTotalCount()}}
+            </div>
+          </button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-container relative">
+          <div class="absolute pointer-events-none" style="left: 0.75rem; top: 50%; transform: translateY(-50%);">
+            <svg class="text-gray-400" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+          <input 
+            type="text" 
+            placeholder="What are you looking for?" 
+            [(ngModel)]="searchTerm"
+            (input)="onSearchChange($any($event.target).value)"
+            class="block w-full pr-4 py-3 border border-gray-300 rounded-lg text-sm text-gray-600 placeholder-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm" 
+            style="padding-left: 2.25rem;">
+        </div>
+
+        <!-- Data Table - Updated to match Figma design exactly -->
+        <div class="data-table">
+          <!-- Table Header - Blue background as per Figma -->
+          <div class="table-header">
+            <div class="table-header-row">
+              <div class="table-header-cell">DQC_Id</div>
+              <div class="table-header-cell">Issue Description</div>
+              <div class="table-header-cell">Record Count</div>
+              <div class="table-header-cell">Impact</div>
+              <div class="table-header-cell">Possible Fix</div>
+              <div class="table-header-cell">Status</div>
+              <div class="table-header-cell"></div>
+            </div>
+          </div>
+
+          <!-- Table Body - Dynamic table with data binding -->
+          <div class="table-body">
+            <div class="table-row" *ngFor="let row of paginatedTableRows; let i = index">
+              <div class="table-cell">{{ row.id }}</div>
+              <div class="table-cell">{{ row.description }}</div>
+              <div class="table-cell text-right">{{ formatNumber(row.recordCount) }}</div>
+              <div class="table-cell">
+                <span class="inline-flex px-2.5 py-1.5 text-xs font-medium rounded-xl" 
+                      [ngClass]="{
+                        'impact-high': row.impact === 'High',
+                        'impact-medium': row.impact === 'Medium',
+                        'impact-low': row.impact === 'Low'
+                      }">
+                  {{ row.impact }}
+                </span>
+              </div>
+              <div class="table-cell">{{ row.possibleFix }}</div>
+              <div class="table-cell">
+                <span class="inline-flex items-center px-2.5 py-1.5 text-xs font-medium rounded-xl gap-1 status-pending">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  {{ row.status }}
+                </span>
+              </div>
+              <div class="table-cell flex items-center justify-center">
+                <!-- <svg class="w-4 h-4 text-gray-600 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" (click)="navigateToReport(row.id)">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg> -->
+                <svg (click)="navigateToReport(row.id); $event.stopPropagation()"
+                    xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"
+                    style="cursor: pointer;" >
+                    <path d="M1 11L11 1M11 1V11M11 1H1" stroke="#2196f3" stroke-width="1.5" stroke-linecap="round" />
+                  </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="getCurrentFilteredIssuesLength() === 0" class="text-center py-12">
+            <div class="text-gray-500 text-lg">No {{activeMainTab.toLowerCase()}} issues found</div>
+            <div class="text-gray-400 text-sm mt-2">Try adjusting your search criteria</div>
+          </div>
+        </div>
+        
+        <!-- End of Open tab content -->
+      </div>
+
+      <!-- Show content when Resolved tab is active -->
+      <div *ngIf="activeMainTab === 'Resolved'">
+        
+        <!-- Search Bar for Resolved -->
+        <div class="search-container relative">
+          <div class="absolute pointer-events-none" style="left: 16px; top: 50%; transform: translateY(-50%);">
+            <svg class="text-gray-400" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+          <input 
+            type="text" 
+            placeholder="What are you looking for?" 
+            [(ngModel)]="searchTerm"
+            (input)="onSearchChange($any($event.target).value)"
+            class="block w-full pr-4 py-4 pl-12 border border-gray-200 rounded-lg text-sm text-gray-600 placeholder-gray-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm" 
+            style="height: 37px;">
+        </div>
+
+        <!-- Resolved Issues Table -->
+        <div class="data-table resolved-table">
+          <!-- Table Header -->
+          <div class="table-header">
+            <div class="table-header-row">
+              <div class="table-header-cell">XBLNR</div>
+              <div class="table-header-cell">MANDT</div>
+              <div class="table-header-cell">BUKRS</div>
+              <div class="table-header-cell">LIFNR</div>
+              <div class="table-header-cell">UMSKS</div>
+              <div class="table-header-cell">UMSKZ</div>
+              <div class="table-header-cell">Status</div>
+            </div>
+          </div>
+
+          <!-- Table Body -->
+          <div class="table-body">
+            <div class="table-row" *ngFor="let issue of filteredResolvedIssues; let i = index">
+              <div class="table-cell">{{issue.xblnr}}</div>
+              <div class="table-cell">{{issue.mandt}}</div>
+              <div class="table-cell">{{issue.bukrs}}</div>
+              <div class="table-cell">{{issue.lifnr}}</div>
+              <div class="table-cell">{{issue.umsks}}</div>
+              <div class="table-cell">{{issue.umskz}}</div>
+              <div class="table-cell status-cell">
+                <span class="status-badge" 
+                      [ngClass]="{
+                        'status-archived': issue.status === 'Archived',
+                        'status-deleted': issue.status === 'Deleted'
+                      }">
+                  {{issue.status}}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="getCurrentFilteredIssuesLength() === 0" class="text-center py-12">
+            <div class="text-gray-500 text-lg">No {{activeMainTab.toLowerCase()}} issues found</div>
+            <div class="text-gray-400 text-sm mt-2">Try adjusting your search criteria</div>
+          </div>
+        </div>
+
+        <!-- End of Resolved tab content -->
+      </div>
+
+      <!-- Pagination -->
+      <div class="flex items-center justify-between mt-8 px-2">
+        <div class="font-medium text-gray-500 text-sm">
+          Showing {{(currentPage - 1) * itemsPerPage + 1}}-{{getMath().min(currentPage * itemsPerPage, getCurrentFilteredIssuesLength())}} of {{getCurrentFilteredIssuesLength()}}
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
+            <span class="font-medium text-gray-600 text-sm">Items per page</span>
+            <select 
+              [value]="itemsPerPage"
+              (change)="onItemsPerPageChange($any($event.target).value)"
+              class="border border-gray-300 rounded px-2 py-1 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+              <option [value]="10">10</option>
+              <option [value]="25">25</option>
+              <option [value]="50">50</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-1">
+            <button 
+              (click)="previousPage()" 
+              [disabled]="currentPage === 1"
+              class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors disabled:opacity-50" 
+              [class.disabled]="currentPage === 1">‹</button>
+            
+            <ng-container *ngFor="let page of pageNumbers">
+              <button 
+                *ngIf="page !== -1"
+                (click)="goToPage(page)" 
+                [class]="page === currentPage ? 'px-3 py-1 bg-blue-600 text-white rounded text-sm font-medium' : 'px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors'">
+                {{page}}
+              </button>
+              <span *ngIf="page === -1" class="px-2 text-gray-500">...</span>
+            </ng-container>
+            
+            <button 
+              (click)="nextPage()" 
+              [disabled]="currentPage === totalPages"
+              class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors disabled:opacity-50" 
+              [class.disabled]="currentPage === totalPages">›</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

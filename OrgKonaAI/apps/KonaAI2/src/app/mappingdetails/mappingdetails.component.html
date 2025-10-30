@@ -1,0 +1,46 @@
+  <div class="header-title-group">
+             <button class="btn-back" (click)="back()">
+                  <i class="bi bi-arrow-left-short"></i>
+            </button>
+            <span class="layout-back-name">Invoices</span>
+            <span class="phase-badge">Phase 1</span>
+        </div>
+
+
+<div class="mapping-container">
+
+
+  <div class="summary-panel">
+    <!-- <button class="back-button" (click)="back()">← Back</button> -->
+     
+    <h2>Summary</h2>
+    <p>Record Count: <strong>{{ recordCount }}</strong></p>
+    <p>Exclude Count: <strong>{{ excludeCount }}</strong></p>
+  </div>
+
+  <div class="mapping-area">
+    <!-- <h2>{{ submodule | titlecase }} <span class="phase-badge">Phase 1</span></h2>  -->
+
+    <div class="mapping-box">
+      .
+      <svg #mappingLinesOverlay class="mapping-lines-overlay"></svg>
+
+      <div class="column source-column">
+        <h3>Source System</h3>
+        <ul>
+          <li *ngFor="let col of sourceColumns; let i = index" [attr.data-source-index]="i">
+            {{ col }}  </li>
+        </ul>
+      </div>
+
+      <div class="column target-column">
+        <h3>Payments_GDB Columns</h3>
+        <ul>
+          <li *ngFor="let col of targetColumns; let i = index" [attr.data-target-index]="i">
+            {{ col }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

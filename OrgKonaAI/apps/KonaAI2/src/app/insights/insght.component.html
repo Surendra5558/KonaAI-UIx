@@ -1,0 +1,140 @@
+<div *ngIf="activeTab === 'insights'" class="insights-content">
+  <div class="content">
+    <!-- Insights Header Section -->
+    <div class="header-block">
+      <div>
+        <h2>Insights Template</h2>
+        <p>Manage modules, risk areas, and source system mappings</p>
+      </div>
+    </div>
+
+    <!-- Insights Grid Container -->
+    <div class="insights-grid-container">
+      <!-- O2C Insights Card -->
+      <div class="insights-card">
+        <div class="insights-card-image">
+          <div class="card-background-image"></div>
+        </div>
+        <div class="insights-card-content">
+          <div class="insights-card-header">
+            <div class="insights-card-info">
+              <div class="insights-module-label">Module: O2C</div>
+              <div class="insights-card-title">O2C_Insights.ppt</div>
+            </div>
+            <div class="insights-menu-container">
+              <button class="insights-menu-btn" (click)="toggleInsightsMenu($event, 'o2c')">
+                <span class="insights-menu-icon"></span>
+              </button>
+              @if (activeInsightsMenu === 'o2c') {
+              <div class="insights-dropdown-menu" (click)="$event.stopPropagation()">
+                <div class="insights-menu-items">
+                  <div class="insights-menu-item active" (click)="previewInsightCard('o2c')">
+                    <div class="insights-menu-content">
+                      <div class="insights-menu-icon-eye"></div>
+                      <span class="insights-menu-text">Preview</span>
+                    </div>
+                  </div>
+                  <div class="insights-menu-item" (click)="downloadInsightCard('o2c')">
+                    <div class="insights-menu-content">
+                      <div class="insights-menu-icon-download"></div>
+                      <span class="insights-menu-text">Download</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+          <div class="insights-card-description">
+            Identify revenue risks, assess credit exposure, and monitor customer payment trends. Ensure compliance and
+            improve cash flow visibility with structured insights.
+          </div>
+        </div>
+      </div>
+
+      <!-- P2P Insights Card -->
+      <div class="insights-card">
+        <div class="insights-card-image">
+          <div class="card-background-image"></div>
+        </div>
+        <div class="insights-card-content">
+          <div class="insights-card-header">
+            <div class="insights-card-info">
+              <div class="insights-module-label">Module: P2P</div>
+              <div class="insights-card-title">P2P_Insights.ppt</div>
+            </div>
+            <div class="insights-menu-container">
+              <button class="insights-menu-btn" (click)="toggleInsightsMenu($event, 'p2p')">
+                <span class="insights-menu-icon"></span>
+              </button>
+              @if (activeInsightsMenu === 'p2p') {
+              <div class="insights-dropdown-menu" (click)="$event.stopPropagation()">
+                <div class="insights-menu-items">
+                  <div class="insights-menu-item active" (click)="previewInsightCard('p2p')">
+                    <div class="insights-menu-content">
+                      <div class="insights-menu-icon-eye"></div>
+                      <span class="insights-menu-text">Preview</span>
+                    </div>
+                  </div>
+                  <div class="insights-menu-item" (click)="downloadInsightCard('p2p')">
+                    <div class="insights-menu-content">
+                      <div class="insights-menu-icon-download"></div>
+                      <span class="insights-menu-text">Download</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+          <div class="insights-card-description">
+            Identify revenue risks, assess credit exposure, and monitor customer payment trends. Ensure compliance and
+            improve cash flow visibility with structured insights.
+          </div>
+        </div>
+      </div>
+
+      <!-- T&E Insights Card -->
+      <div class="insights-card">
+        <div class="insights-card-image">
+          <div class="card-background-image"></div>
+        </div>
+        <div class="insights-card-content">
+          <div class="insights-card-header">
+            <div class="insights-card-info">
+              <div class="insights-module-label">Module: T&E</div>
+              <div class="insights-card-title">T&E_Insights.ppt</div>
+            </div>
+            <div class="insights-menu-container">
+              <button class="insights-menu-btn" (click)="toggleInsightsMenu($event, 'te')">
+                <span class="insights-menu-icon"></span>
+              </button>
+              @if (activeInsightsMenu === 'te') {
+              <div class="insights-dropdown-menu" (click)="$event.stopPropagation()">
+                <div class="insights-menu-items">
+                  <div class="insights-menu-item active" (click)="previewInsightCard('te')">
+                    <div class="insights-menu-content">
+                      <div class="insights-menu-icon-eye"></div>
+                      <span class="insights-menu-text">Preview</span>
+                    </div>
+                  </div>
+                  <div class="insights-menu-item" (click)="downloadInsightCard('te')">
+                    <div class="insights-menu-content">
+                      <div class="insights-menu-icon-download"></div>
+                      <span class="insights-menu-text">Download</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+          <div class="insights-card-description">
+            Identify revenue risks, assess credit exposure, and monitor customer payment trends. Ensure compliance and
+            improve cash flow visibility with structured insights.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

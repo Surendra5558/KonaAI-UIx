@@ -1,0 +1,159 @@
+<div class="content">
+  <!-- Header Section -->
+  <div class="documents-header">
+    <div class="header-block">
+      <div>
+        <h2>Documents</h2>
+        <p>Upload and manage all key project documents in one place</p>
+      </div>
+      <div>
+        <button class="btn btn-save"(click)="uploadDocument()">
+          <i class="bi bi-plus-lg mr-2"> </i> New Document
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Section -->
+  <div class="searchbar" style="margin-bottom: 24px;">
+    <div class="search-container">
+      <i class="bi bi-search search-icon"></i>
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="Search Documents"
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()">
+    </div>
+  </div>
+
+  <!-- Documents Table -->
+  <div class="documents-table-container">
+    <table class="table-main">
+      <thead>
+        <tr>
+          <th>
+            <div>
+              <span>Module</span>
+            </div>
+          </th>
+          <th>
+            <div>
+              <span>Name</span>
+            </div>
+          </th>
+          <th>
+            <div>
+              <span>Size</span>
+            </div>
+          </th>
+          <th>
+            <div>
+              <span>Date Modified</span>
+            </div>
+          </th>
+          <th>
+            <div>
+              <span>Next Update Due</span>
+            </div>
+          </th>
+          <th>
+            <div>
+              <span>Type</span>
+            </div>
+          </th>
+          <th>
+            <div>
+              <span>Comment</span>
+            </div>
+          </th>
+          <th>
+            <div>
+              <span></span>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let doc of filteredDocuments">
+          <td>
+            <span>{{ doc.module }}</span>
+          </td>
+          <td>
+            <div class="name-content">
+              <i class="file-icon" 
+                 [class]="getFileIcon(doc.fileType || '')"
+                 [style.color]="getFileTypeColor(doc.fileType || '')"></i>
+              <span class="name-text">{{ doc.name }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="size-text">{{ doc.size }}</span>
+          </td>
+          <td>
+            <span>{{ doc.dateModified }}</span>
+          </td>
+          <td>
+            <span>{{ doc.nextUpdateDue }}</span>
+          </td>
+          <td>
+            <span>{{ doc.type }}</span>
+          </td>
+          <td>
+            <span>{{ doc.comment }}</span>
+          </td>
+          <td class="action-cell">
+            <ng-container [ngSwitch]="doc.actionType">
+              <div *ngSwitchCase="'menu'" class="kebab-wrapper" (click)="onMenuClick($event)">
+                <button class="menu-btn" title="More actions" (click)="toggleMenu($event, doc.id)">
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <div class="dropdown-menu" *ngIf="openMenuId === doc.id">
+                  <div class="dropdown-card">
+                    <button class="dropdown-item" (click)="onMenuAction('edit', doc)">
+                      <i class="bi bi-pencil"></i>
+                      <span>Edit</span>
+                    </button>
+                    <button class="dropdown-item" (click)="onMenuAction('preview', doc)">
+                      <i class="bi bi-eye"></i>
+                      <span>Preview</span>
+                    </button>
+                    <button class="dropdown-item" (click)="onMenuAction('download', doc)">
+                      <i class="bi bi-download"></i>
+                      <span>Download</span>
+                    </button>
+                    <button class="dropdown-item danger" (click)="onMenuAction('delete', doc)">
+                      <i class="bi bi-trash"></i>
+                      <span>Delete Permanently</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <button *ngSwitchDefault class="upload-btn" (click)="uploadDocument()">
+                <i class="bi bi-upload"></i>
+                <span>Upload</span>
+              </button>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty State (shown when no documents) -->
+  <div class="empty-state" *ngIf="filteredDocuments.length === 0">
+    <div class="empty-content">
+      <i class="bi bi-file-earmark-text empty-icon"></i>
+      <h3>No documents found</h3>
+      <p>Try adjusting your search criteria or upload a new document</p>
+      <button class="upload-btn primary" (click)="uploadDocument()">
+        <i class="bi bi-plus"></i>
+        <span>Upload Document</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Add Document Popup Mount -->
+  <app-add-document-popup></app-add-document-popup>
+  <app-preview-document-popup></app-preview-document-popup>
+</div>

@@ -1,0 +1,231 @@
+<div class="underlying-details-container">
+  <!-- Header with Currency Toggle -->
+  <div class="header-section">
+    <div class="currency-toggle">
+      <span class="currency-label">Reporting Currency: USD</span>
+      <button class="refresh-btn" aria-label="Refresh">
+        <i class="refresh-icon">↻</i>
+      </button>
+      <button class="expand-btn" aria-label="Expand">
+        <i class="expand-icon">⤢</i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Test Information Cards -->
+  <div class="info-cards">
+    <div class="info-card">
+      <h3>Test Information</h3>
+      <div class="info-row">
+        <span class="label">Test ID:</span>
+        <span class="value">{{ testInfo.testId }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Category:</span>
+        <span class="value">{{ testInfo.category }}</span>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h3>Test Results</h3>
+      <div class="info-row">
+        <span class="label">Total Tested:</span>
+        <span class="value">{{ testInfo.totalTested | number }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Flagged Percent:</span>
+        <span class="value flagged">{{ testInfo.flaggedPercent }}%</span>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h3>Financial Impact</h3>
+      <div class="info-row">
+        <span class="label">Total Amount:</span>
+        <span class="value">{{ testInfo.totalAmount | currency:'USD':'symbol':'1.2-2' }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">At Risk:</span>
+        <span class="value at-risk">{{ testInfo.atRisk | currency:'USD':'symbol':'1.2-2' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls Section -->
+  <div class="controls-section">
+    <!-- Search and Filters -->
+    <div class="controls-row">
+      <div class="search-container">
+        <input 
+          type="text" 
+          placeholder="Search Columns" 
+          class="search-input"
+          [value]="searchTerm"
+          (input)="onSearch($event)">
+        <i class="search-icon">🔍</i>
+      </div>
+
+      <div class="group-filter">
+        <select (change)="onGroupChange($event)" [value]="selectedGroup">
+          <option value="All Groups">All Groups</option>
+          <option value="Group 1">Group 1</option>
+          <option value="Group 2">Group 2</option>
+          <option value="Group 3">Group 3</option>
+        </select>
+      </div>
+
+      <div class="column-controls">
+        <button class="columns-btn" (click)="toggleColumnCustomizer()">
+          <i class="columns-icon">☰</i>
+          Columns
+        </button>
+        <div class="show-all-btn" *ngIf="!showColumnCustomizer">
+          Show All
+        </div>
+      </div>
+    </div>
+
+    <!-- Column Customizer Panel -->
+    <div class="column-customizer" *ngIf="showColumnCustomizer">
+      <div class="customizer-header">
+        <h4>Manage Columns</h4>
+        <button class="close-btn" (click)="toggleColumnCustomizer()">×</button>
+      </div>
+      <div class="customizer-subtitle">
+        Function allows users to display and hide columns
+      </div>
+      
+      <div class="customizer-controls">
+        <div class="search-columns">
+          <input type="text" placeholder="Search Columns" class="search-input small">
+          <i class="search-icon">🔍</i>
+        </div>
+        <div class="bulk-actions">
+          <button (click)="showAllColumns()">Show All</button>
+          <button (click)="hideAllColumns()">Hide All</button>
+        </div>
+      </div>
+
+      <div class="column-list">
+        <div class="column-item" *ngFor="let column of availableColumns">
+          <label class="checkbox-label">
+            <input 
+              type="checkbox" 
+              [checked]="column.visible"
+              (change)="toggleColumn(column.key)">
+            <span class="checkmark"></span>
+            {{ column.label }}
+          </label>
+          <i class="drag-handle">⋮⋮</i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="table-container" #tableContainer>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th *ngFor="let column of visibleColumns" 
+              [class.sortable]="column.sortable"
+              (click)="column.sortable ? sort(column.key) : null">
+            {{ column.label }}
+            <span class="sort-indicator" *ngIf="sortField === column.key">
+              {{ sortDirection === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let transaction of paginatedTransactions; let i = index" 
+            [class.even]="i % 2 === 0">
+          <td *ngIf="isColumnVisible('transactionLineNo')">
+            {{ transaction.transactionLineNo }}
+          </td>
+          <td *ngIf="isColumnVisible('vendorId')">
+            {{ transaction.vendorId }}
+          </td>
+          <td *ngIf="isColumnVisible('vendorName')">
+            {{ transaction.vendorName }}
+          </td>
+          <td *ngIf="isColumnVisible('invoiceType')">
+            {{ transaction.invoiceType }}
+          </td>
+          <td *ngIf="isColumnVisible('invoiceDescription')">
+            {{ transaction.invoiceDescription }}
+          </td>
+          <td *ngIf="isColumnVisible('glAccountDescription')">
+            {{ transaction.glAccountDescription }}
+          </td>
+          <td *ngIf="isColumnVisible('physicalInvoice')">
+            {{ transaction.physicalInvoice }}
+          </td>
+          <td *ngIf="isColumnVisible('systemInvoice')">
+            {{ transaction.systemInvoice }}
+          </td>
+          <td *ngIf="isColumnVisible('postingDate')">
+            {{ transaction.postingDate }}
+          </td>
+          <td *ngIf="isColumnVisible('currency')">
+            {{ transaction.currency }}
+          </td>
+          <td *ngIf="isColumnVisible('amount')" class="amount">
+            {{ formatAmount(transaction.amount, transaction.currency) }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination-container">
+    <div class="pagination-info">
+      Showing {{ (currentPage - 1) * itemsPerPage + 1 }}-{{ Math.min(currentPage * itemsPerPage, totalItems) }} of {{ totalItems | number }}
+    </div>
+    
+    <div class="pagination-controls">
+      <button 
+        class="page-btn" 
+        (click)="previousPage()" 
+        [disabled]="currentPage === 1">
+        ‹
+      </button>
+      
+      <button 
+        *ngFor="let page of pageNumbers"
+        class="page-btn"
+        [class.active]="page === currentPage"
+        (click)="goToPage(page)">
+        {{ page }}
+      </button>
+      
+      <span class="page-dots" *ngIf="totalPages > 10">...</span>
+      
+      <button 
+        class="page-btn"
+        *ngIf="totalPages > 10 && currentPage < totalPages - 2"
+        (click)="goToPage(totalPages)">
+        {{ totalPages }}
+      </button>
+      
+      <button 
+        class="page-btn" 
+        (click)="nextPage()" 
+        [disabled]="currentPage === totalPages">
+        ›
+      </button>
+    </div>
+
+    <div class="items-per-page">
+      Items per page: 
+      <select (change)="onItemsPerPageChange($event)" [value]="itemsPerPage">
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+  </div>
+</div>

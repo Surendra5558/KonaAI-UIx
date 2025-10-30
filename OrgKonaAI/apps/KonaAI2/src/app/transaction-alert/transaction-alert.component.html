@@ -1,0 +1,850 @@
+<div class="topbar topbar-header topbar-inner">
+  <button class="btn-back" (click)="goBack()"> <i class="bi bi-arrow-left-short"></i></button>
+  <!-- <div class="back-tab" style="display: flex; gap: 7px"><i class="bi bi-exclamation-triangle"></i>
+    <span>Alerts</span><i class="bi bi-chevron-right"></i>
+  </div> -->
+  <div><span class="alert-id"><span style="color: #955EE9; font-weight: 500;">●</span> {{ alert.id }}</span>
+    <span class="risk-label">Risk Amount</span>
+    <span class="risk-amount">↑ {{ formatCurrency(alert.riskAmount) }}</span><br>
+    <span style="color: #7629E1;font-size: small;margin-left: 20px;font-weight: 500;">{{id}}</span>
+  </div>
+  <div class="action-buttons">
+    <button type="disable" class="btn btn-cancel" (click)="onEscalate()">Escalate</button>
+    <button type="disable" class="btn btn-save" (click)="onResolve()">Resolve</button>
+  </div>
+</div>
+<div class="content">
+  <!-- Header -->
+  <div>
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <!-- Left Panel -->
+      <div class="left-panel">
+        <!-- Header Section -->
+        <div class="audit-header">
+          <div class="header-info">
+            <span class="assigned-to">Assigned to: <strong>Michael Johnson</strong></span> <span
+              style="color: #C9D6E0;">|</span>
+            <span class="due-date">Due on: <strong>25 Apr 2025</strong></span> <span style="color: #C9D6E0;">|</span>
+            <span class="priority">Priority: <span class="priority-high">● High</span></span> <span
+              style="color: #C9D6E0;">|</span>
+            <button class="edit-btn" (click)="onEdit()" [disabled]="disableEdit"><i class="bi bi-pencil"></i></button>
+          </div>
+        </div>
+        <div class="left-side-panel">
+          <!-- Tabs -->
+          <div class="tabs">
+            <button class="tab" [class.active]="activeTab === 'details'" (click)="setActiveTab('details')">
+              Details</button>
+            <button class="tab" [class.active]="activeTab === 'transactions'"
+              (click)="setActiveTab('transactions')">Entity Transactions</button>
+            <button class="tab" [class.active]="activeTab === 'alerts'" (click)="setActiveTab('alerts')">Associated
+              Alerts</button>
+            <button class="tab" [class.active]="activeTab === 'evidence'"
+              (click)="setActiveTab('evidence')">Evidence</button>
+          </div>
+
+          <!-- Details Tab Content -->
+          <div *ngIf="activeTab === 'details'" class="tab-content">
+            <!-- Patterns Detected -->
+            <div class="patterns-section" *ngIf="isEntitylevel">
+              <div class="section-header">
+                <span>Patterns Detected</span>
+                <span class="kona-ai"><i class="bi bi-stars"></i> konaAI</span>
+              </div>
+              <div class="pattern-content">
+                Employee Jane Smith has submitted 5 business class flights in one week.<br>
+                Employee Jane Smith has taken 10 business trips to tax haven countries in 3 months.<br>
+                Employee Jane Smith submits and approves their own expense report.
+              </div>
+            </div>
+
+            <!-- Risk Assessment -->
+            <div class="risk-section">
+              <h3>Risk Assessment</h3>
+              <div class="risk-grid">
+                <div>
+                  <div class="risk-item">
+                    <span class="risk-label">Current Risk Score</span>
+                    <span class="risk-value">85</span>
+                  </div>
+                  <div class="risk-item">
+                    <span class="risk-label">Duplicate Transaction</span>
+                    <span class="risk-value"><span class="check-icon">✓</span> Yes</span>
+                  </div>
+                  <div class="risk-item">
+                    <span class="risk-label">Tests Failed Count</span>
+                    <span class="risk-value">2</span>
+                  </div>
+                </div>
+                <div class="risk-item">
+                  <span class="risk-label">Tests Failed</span>
+                  <span class="risk-value">Personal Expense Claimed<br>Weekend Transaction</span>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- Transaction Details -->
+            <div class="transaction-section" *ngIf="isTransactionLevel">
+              <h3>Transaction Details</h3>
+              <div class="detail-grid">
+                <div class="detail-row">
+                  <span class="detail-label">Module</span>
+                  <span class="detail-value">T&E</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Payment Type</span>
+                  <span class="detail-value">Corporate Credit Card</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Submodule</span>
+                  <span class="detail-value">Expenses</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Billing Currency</span>
+                  <span class="detail-value">USD</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Phase</span>
+                  <span class="detail-value">2</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Billing Amount</span>
+                  <span class="detail-value">$1,500</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Risk Amount</span>
+                  <span class="detail-value">$1,500</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Approved By</span>
+                  <span class="detail-value">John Doe</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Transaction ID</span>
+                  <span class="detail-value">TXN-245678</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Approved On</span>
+                  <span class="detail-value">18 Mar 2024</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Report Number</span>
+                  <span class="detail-value">REP-90876</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Payment Date</span>
+                  <span class="detail-value">20 Mar 2024</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Transaction Date</span>
+                  <span class="detail-value">15 Mar 2024</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Payment Status</span>
+                  <span class="detail-value">Paid</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Line Item Description</span>
+                  <span class="detail-value">Business-Class Flight Upgrade</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Entity Details -->
+            <div class="entity-section" *ngIf="isEntitylevel">
+              <h3>Entity Details</h3>
+              <div class="detail-grid">
+                <div class="detail-row">
+                  <span class="detail-label">Entity Type</span>
+                  <span class="detail-value">Employee</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Number</span>
+                  <span class="detail-value">EMP-56789</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Name</span>
+                  <span class="detail-value">Jane Smith</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Country</span>
+                  <span class="detail-value">United States</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Country Code</span>
+                  <span class="detail-value">USA</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Region</span>
+                  <span class="detail-value">North America</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Category</span>
+                  <span class="detail-value">Senior Manager</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Risk Score</span>
+                  <span class="detail-value">85</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Rank</span>
+                  <span class="detail-value">4</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Total Transactions Count</span>
+                  <span class="detail-value">45</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Hit Transactions Count</span>
+                  <span class="detail-value">7</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Total Transactions Amount</span>
+                  <span class="detail-value">$30,000</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Hit Transactions Amount</span>
+                  <span class="detail-value">$6,500</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Multi_transaction Details -->
+
+            <div class="multi-transaction-wrapper" *ngIf="isMultiTransactionLevel">
+
+              <!-- Page Buttons -->
+              <div class="page-buttons">
+                <button *ngFor="let p of [1, 2, 3]" (click)="setPage(p)" [class.active]="currentPage === p">
+                  {{ p }}
+                </button>
+              </div>
+
+              <!-- Transaction Details -->
+              <table class="transaction-table">
+                <tr>
+                  <th>Transaction ID</th>
+                  <td>{{ currentTransaction.id }}</td>
+                </tr>
+                <tr>
+                  <th>Billing Amount</th>
+                  <td>{{ currentTransaction.amount }}</td>
+                </tr>
+                <tr>
+                  <th>Approved By</th>
+                  <td>{{ currentTransaction.approvedBy }}</td>
+                </tr>
+                <tr>
+                  <th>Status</th>
+                  <td>{{ currentTransaction.status }}</td>
+                </tr>
+                <tr>
+                  <th>Date</th>
+                  <td>{{ currentTransaction.date }}</td>
+                </tr>
+              </table>
+
+            </div>
+          </div>
+
+          <!-- Entity Transactions Tab Content -->
+          <div *ngIf="activeTab === 'transactions'" class="tab-content">
+            <div style="overflow-x: auto;">
+              <table class="table-main entity-table">
+                <thead>
+                  <tr>
+                    <th>Transaction ID</th>
+                    <th>Risk Score</th>
+                    <th>Risk Amount</th>
+                    <th>Tests Failed Count</th>
+                    <th>Module</th>
+                    <th>Alert ID</th>
+                    <th>Assigned to</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let transaction of entityTransactions">
+                    <td>{{ transaction.transactionId }}</td>
+                    <td>
+                      <span [ngClass]="getRiskScoreClass(transaction.riskScore)">
+                        {{ transaction.riskScore }}
+                      </span>
+                    </td>
+                    <td>{{ formatCurrency(transaction.riskAmount) }}</td>
+                    <td>{{ transaction.testsFailedCount }}</td>
+                    <td>{{ transaction.module }}</td>
+                    <td>{{ transaction.alertId || '-' }}</td>
+                    <td>{{ transaction.assignedTo || '-' }}</td>
+                    <td>
+                      <div class="action-buttons-table">
+                        <button class="btn-icon" title="Add"><i class="bi bi-plus-lg"></i></button>
+                        <button class="btn-icon" title="Delete"><i class="bi bi-paperclip"></i></button>
+                        <button class="btn-icon" title="More"><i class="bi bi-chevron-down"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Associated Alerts Tab Content -->
+          <div *ngIf="activeTab === 'alerts'" class="tab-content">
+            <div class="table-container">
+              <table class="table-main associated-main">
+                <thead>
+                  <tr>
+                    <th>Alert ID</th>
+                    <th>Risk Score</th>
+                    <th>Risk Amount</th>
+                    <th>Type</th>
+                    <th>Txn Count</th>
+                    <th>Assigned to</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let alert of associatedAlerts">
+                    <td>{{ alert.alertId }}</td>
+                    <td>
+                      <span class="risk-score" [ngClass]="getRiskScoreClass(alert.riskScore)">
+                        {{ alert.riskScore }}
+                      </span>
+                    </td>
+                    <td>{{ formatCurrency(alert.riskAmount) }}</td>
+                    <td>{{ alert.module }}</td>
+                    <td>{{ alert.testsFailedCount }}</td>
+                    <td>{{ alert.assignedTo || '-' }}</td>
+                    <td class="status-badge">
+                      <span class="status-badge-value" [ngClass]="getStatusClass(alert.status)">{{ alert.status
+                        }}</span>
+                    </td>
+                    <td>
+                      <span class="icon external-link" title="Open in new tab"><i
+                          class="bi bi-arrow-up-right"></i></span>
+                      <span class="icon dropdown" title="More options"><i class="bi bi-chevron-down"></i></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+          <!-- Evidence Tab Content -->
+          <div *ngIf="activeTab === 'evidence'" class="tab-content">
+            <div class="evidence-content">
+              <!-- Evidence Header -->
+              <div class="evidence-header">
+                <div class="evidence-title">
+                  <h3>Evidence</h3>
+                  <span class="evidence-subtitle">Upload and manage all supporting documentation relevant to this
+                    alert.</span>
+                </div>
+                <div class="evidence-actions">
+                  <button class="btn btn-clear" (click)="addEvidence()">
+                    <i class="bi bi-paperclip"></i> Evidence
+                  </button>
+                </div>
+              </div>
+
+              <!-- Evidence Table -->
+              <div style="width: 47vw;">
+                <table class="table-main">
+                  <thead>
+                    <tr>
+                      <th>Transaction ID</th>
+                      <th>Name</th>
+                      <th>Uploaded by</th>
+                      <th>Uploaded on</th>
+                      <th>Size</th>
+                      <th>OCR</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let evidence of evidenceItems">
+                      <td>{{ evidence.transactionId }}</td>
+                      <td>{{ evidence.name }}</td>
+                      <td>{{ evidence.uploadedBy }}</td>
+                      <td>{{ evidence.uploadDate | date:'dd MMM yyyy' }}</td>
+                      <td>{{ evidence.size }}</td>
+                      <td class="ocr-cell">
+                        <i class="bi bi-paperclip" (click)="navigateToOcrView(evidence)" title="View OCR Document"></i>
+                      </td>
+                      <td class="actions-cell">
+                        <div class="actions-menu-wrapper" (click)="$event.stopPropagation()">
+                          <button class="btn-icon" (click)="toggleEvidenceMenu(evidence, $event)" title="Actions">
+                            <i class="bi bi-three-dots-vertical"></i>
+                          </button>
+                          <div class="evidence-actions-menu" *ngIf="openEvidenceMenuId === evidence.id">
+                            <button class="menu-item" (click)="renameEvidence(evidence); closeEvidenceMenu()">
+                              <i class="bi bi-pencil-square"></i>
+                              <span>Rename</span>
+                            </button>
+                            <button class="menu-item" (click)="navigateToOcrView(evidence); closeEvidenceMenu()">
+                              <i class="bi bi-trash3"></i>
+                              <span>Delete Permanently OCR</span>
+                            </button>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel -->
+      <div class="right-panel">
+        <!-- Icon Navigation with Progress Bar -->
+        <div class="icon-navigation">
+          <div class="icon-item" [class.active]="activeIcon === 'questionnaire'"
+            (click)="setActiveIcon('questionnaire')">
+            <div class="icon-btn"><i class="bi bi-question-circle"></i></div>
+          </div>
+          <div class="icon-item" [class.active]="activeIcon === 'notes'" (click)="setActiveIcon('notes')">
+            <div class="icon-btn"><i class="bi bi-file-earmark"></i></div>
+          </div>
+          <div class="icon-item" [class.active]="activeIcon === 'documents'" (click)="setActiveIcon('documents')">
+            <div class="icon-btn"><i class="bi bi-chat"></i></div>
+          </div>
+          <div class="icon-item" [class.active]="activeIcon === 'search'" (click)="setActiveIcon('search')">
+            <div class="icon-btn"><i class="bi bi-clock-history"></i></div>
+          </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+          <!-- Questionnaire Content -->
+          <div class="content-section" *ngIf="activeIcon === 'questionnaire'">
+            <div class="section-header">
+              <h4>Questionnaire</h4>
+              <select class="auditor-select">
+                <option>L1 Auditor</option>
+                <option>L2 Auditor</option>
+              </select>
+            </div>
+            <div class="questionnaire-content">
+
+              <div class="question-block" *ngFor="let section of sections">
+                <div class="question-title" (click)="toggleSection(section.id)">
+                  <div class="question-number">{{ section.id }}</div>
+                  <div class="question-value">
+                    <h4>{{ section.title }}</h4>
+                  </div>
+                </div>
+
+                <div class="question-section" *ngIf="openSection === section.id">
+                  <div class="question-content" *ngFor="let q of section.questions">
+                    <div class="sub-question">
+                      <strong>{{ q.text }}</strong>
+                      <div class="answer-box">{{ q.answer }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Notes Content -->
+          <div class="content-section" *ngIf="activeIcon === 'notes'">
+            <div class="notes-container">
+              <!-- Header -->
+              <div class="notes-header">
+                <h1 class="notes-title">Notes</h1>
+                <div class="header-controls">
+                  <button class="font-btn" [class.active]="isToolbarVisible" (click)="toggleToolbar()">Aa</button>
+                  <button class="menu-btn">
+                    <div class="menu-icon">
+                      <div class="line"></div>
+                      <div class="line"></div>
+                      <div class="line"></div>
+                    </div>
+                  </button>
+                </div>
+
+              </div>
+
+              <!-- Main Content Area -->
+              <!-- <div class="content-area"> -->
+              <!-- Formatting Toolbar -->
+              <div class="formatting-toolbar" [class.visible]="isToolbarVisible">
+                <div class="format-buttons">
+                  <button class="format-btn bold-btn" (click)="applyFormatting('bold')">B</button>
+                  <button class="format-btn italic-btn" (click)="applyFormatting('italic')">I</button>
+                  <button class="format-btn underline-btn" (click)="applyFormatting('underline')">U</button>
+                  <button class="format-btn strikethrough-btn" (click)="applyFormatting('strikethrough')">S</button>
+                </div>
+
+                <div class="text-styles">
+                  <div class="style-option" [class.selected]="selectedStyle === 'title'" (click)="selectStyle('title')">
+                    <span class="checkmark">✓</span>
+                    <span class="style-name title">Title</span>
+                  </div>
+                  <div class="style-option" [class.selected]="selectedStyle === 'heading'"
+                    (click)="selectStyle('heading')">
+                    <span class="checkmark">✓</span>
+                    <span class="style-name heading">Heading</span>
+                  </div>
+                  <div class="style-option" [class.selected]="selectedStyle === 'subheading'"
+                    (click)="selectStyle('subheading')">
+                    <span class="checkmark">✓</span>
+                    <span class="style-name subheading">Subheading</span>
+                  </div>
+                  <div class="style-option" [class.selected]="selectedStyle === 'body'" (click)="selectStyle('body')">
+                    <span class="checkmark">✓</span>
+                    <span class="style-name body">Body</span>
+                  </div>
+                  <div class="style-option" [class.selected]="selectedStyle === 'bulleted'"
+                    (click)="selectStyle('bulleted')">
+                    <span class="checkmark">✓</span>
+                    <span class="bullet">•</span>
+                    <span class="style-name">Bulleted List</span>
+                  </div>
+                  <div class="style-option" [class.selected]="selectedStyle === 'dashed'"
+                    (click)="selectStyle('dashed')">
+                    <span class="checkmark">✓</span>
+                    <span class="dash">-</span>
+                    <span class="style-name">Dashed List</span>
+                  </div>
+                  <div class="style-option" [class.selected]="selectedStyle === 'numbered'"
+                    (click)="selectStyle('numbered')">
+                    <span class="checkmark">✓</span>
+                    <span class="number">1.</span>
+                    <span class="style-name">Numbered List</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Text Editor Area -->
+              <div class="editor-area">
+                <div class="editor-content" contenteditable="true">
+                  Click here to start writing...
+                </div>
+              </div>
+              <!-- </div> -->
+            </div>
+          </div>
+
+          <!-- Documents Content -->
+          <div class="content-section" *ngIf="activeIcon === 'documents'">
+            <h4 class="comments-heading">Comments</h4>
+            <div class="comments-container">
+              <div class="comment" *ngFor="let comment of comments">
+                <!-- Comment header -->
+                <div class="comment-header">
+                  <img [src]="comment.avatar" class="avatar" />
+                  <div class="meta">
+                    <strong>{{ comment.user }}</strong>
+                    <span class="time">{{ comment.time }}</span>
+                  </div>
+                </div>
+
+                <!-- Comment text -->
+                <div class="comment-body">{{ comment.text }}</div>
+
+                <!-- Actions -->
+                <div class="comment-actions">
+                  <a *ngFor="let action of comment.actions">{{ action }}</a>
+                  <span *ngIf="comment.resolvedBy" class="resolved">
+                    Resolved by ({{ comment.resolvedBy }})
+                  </span>
+                </div>
+
+                <!-- Replies (recursive) -->
+                <div class="replies" *ngIf="comment.replies">
+                  <ng-container *ngFor="let reply of comment.replies">
+                    <div class="comment reply">
+                      <div class="comment-header">
+                        <img [src]="reply.avatar" class="avatar" />
+                        <div class="meta">
+                          <strong>{{ reply.user }}</strong>
+                          <span class="time">{{ reply.time }}</span>
+                        </div>
+                      </div>
+
+                      <div class="comment-body">{{ reply.text }}</div>
+
+                      <div class="comment-actions">
+                        <a *ngFor="let action of reply.actions">{{ action }}</a>
+                      </div>
+
+                      <!-- Nested replies -->
+                      <div class="replies" *ngIf="reply.replies">
+                        <div class="comment reply" *ngFor="let r of reply.replies">
+                          <div class="comment-header">
+                            <img [src]="r.avatar" class="avatar" />
+                            <div class="meta">
+                              <strong>{{ r.user }}</strong>
+                              <span class="time">{{ r.time }}</span>
+                            </div>
+                          </div>
+
+                          <div class="comment-body">{{ r.text }}</div>
+                          <div class="comment-actions">
+                            <a *ngFor="let action of r.actions">{{ action }}</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+
+              <!-- Input box -->
+              <div class="input-box">
+                <input type="text" placeholder="Type here" />
+                <button class="send-btn">➤</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Search Content -->
+          <div class="content-section" *ngIf="activeIcon === 'search'">
+            <h4 style="padding: 10px 0px; border-bottom: 1px solid #ededed;">Audit Trail</h4>
+            <div class="timeline-container">
+              <div class="timeline-item" *ngFor="let item of timeline">
+                <!-- Dot for timeline -->
+                <div class="timeline-dot"></div>
+
+                <!-- Card -->
+                <div class="timeline-card">
+                  <!-- Header -->
+                  <div class="header">
+                    <img [src]="item.avatar" class="avatar" />
+                    <div>
+                      <div class="name">{{ item.user }}</div>
+                      <div class="email">{{ item.email }}</div>
+                    </div>
+                  </div>
+
+                  <!-- Date/Time + Status -->
+                  <div class="datetime">
+                    <span>{{ item.date }}</span> • <span>{{ item.time }}</span>
+                    <span *ngIf="item.status" class="status">{{ item.status }}</span>
+                  </div>
+
+                  <!-- Details -->
+                  <ul *ngIf="item.details">
+                    <li *ngFor="let detail of item.details">{{ detail }}</li>
+                  </ul>
+
+                  <!-- Comment -->
+                  <div *ngIf="item.comment" class="comment-box">
+                    {{ item.comment }}
+                  </div>
+
+                  <!-- Footer Info -->
+                  <div class="footer" *ngIf="item.location || item.browser || item.ip">
+                    <span *ngIf="item.location">{{ item.location }}</span>
+                    <span *ngIf="item.browser">{{ item.browser }}</span>
+                    <span *ngIf="item.ip">{{ item.ip }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Details Popup -->
+<div *ngIf="showEditPopup" class="popup-overlay" (click)="onPopupOverlayClick($event)">
+  <div class="popup-content">
+    <div class="popup-header">
+      <h2>Edit Details</h2>
+    </div>
+
+    <div class="popup-body">
+      <div class="section">
+        <h3>Add Auditors</h3>
+
+        <div class="auditors-list">
+          <div class="auditor-item" *ngFor="let auditor of auditors">
+            <div class="checkbox-wrapper">
+              <input type="checkbox" [id]="auditor.id" [checked]="auditor.selected" (change)="onAuditorToggle(auditor)"
+                class="custom-checkbox">
+              <label [for]="auditor.id" class="auditor-label">{{auditor.name}}</label>
+            </div>
+
+            <div class="assignment-section">
+              <div *ngIf="!auditor.selected || !auditor.assigned" class="assign-button-wrapper">
+                <button class="assign-button" [disabled]="!auditor.selected">
+                  Assign {{auditor.name | lowercase}}s
+                </button>
+              </div>
+
+              <div *ngIf="auditor.selected && auditor.assigned" class="assigned-user">
+                <span class="assigned-name">{{auditor.assigned}}</span>
+                <button class="remove-button" (click)="removeAssignedAuditor(auditor)">✕</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Start Date</label>
+          <div class="date-input-wrapper">
+            <input type="text" [(ngModel)]="editFormData.startDate" class="date-input" readonly>
+            <span class="calendar-icon">📅</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="required">Start Date*</label>
+          <div class="date-input-wrapper">
+            <input type="text" [(ngModel)]="editFormData.endDate" placeholder="dd/mm/yy" class="date-input">
+            <span class="calendar-icon">📅</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="required">Select Priority*</label>
+          <div class="select-wrapper">
+            <select [(ngModel)]="editFormData.priority" class="priority-select">
+              <option value="" disabled>e.g. Low</option>
+              <option *ngFor="let p of priorities" [value]="p">{{p}}</option>
+            </select>
+            <span class="select-arrow">▼</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="popup-footer">
+      <button class="btn btn-clear" (click)="onCancelEdit()">Cancel</button>
+      <button class="btn btn-save" (click)="onSaveEdit()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Rename Evidence Popup -->
+<div *ngIf="showRenamePopup" class="popup-overlay" (click)="onRenameOverlayClick($event)">
+  <div class="rename-popup">
+    <div class="rename-header">
+      <div class="rename-title">Rename evidence</div>
+      <div class="rename-subtitle">Update the file name as it should appear in the evidence list.</div>
+    </div>
+    <div class="rename-body">
+      <label class="rename-label">File name</label>
+      <input class="rename-input" type="text" [(ngModel)]="renameFormName" (keydown)="onRenameKeydown($event)" />
+    </div>
+    <div class="rename-footer">
+      <button class="btn btn-clear" (click)="cancelRename()">Cancel</button>
+      <button class="btn btn-save" [disabled]="!renameFormName || !renameFormName.trim()"
+        (click)="confirmRename()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Evidence Chooser Popup removed as per request -->
+
+<!-- Upload Evidence Popup -->
+<div *ngIf="showUploadEvidencePopup" class="popup-overlay" (click)="onEvidenceOverlayClick($event)">
+  <div class="popup-content">
+    <div class="popup-header">
+      <h2>Upload evidence</h2>
+    </div>
+    <div class="popup-body">
+      <div class="section">
+        <label class="drop-zone" [class.drag-over]="isDragOver" (dragover)="onEvidenceDragOver($event)"
+          (dragleave)="onEvidenceDragLeave($event)" (drop)="onEvidenceDrop($event)">
+          <div class="drop-icon"><i class="bi bi-cloud-arrow-up"></i></div>
+          <div class="drop-title">Drag & drop files here</div>
+          <div class="drop-subtitle">or click to browse</div>
+          <input class="file-input" type="file" multiple (change)="onFilesSelected($event)" />
+        </label>
+
+        <div *ngIf="uploadedFiles.length" class="file-list">
+          <div class="file-item" *ngFor="let f of uploadedFiles; let i = index">
+            <div class="file-meta">
+              <i class="bi bi-file-earmark"></i>
+              <div class="file-text">
+                <div class="file-name">{{ f.name }}</div>
+                <div class="file-size">{{ formatFileSize(f.size) }}</div>
+              </div>
+            </div>
+            <button type="button" class="remove-file" (click)="removeSelectedFile(i)">
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-footer">
+      <button class="btn btn-clear" (click)="cancelUploadEvidence()">Cancel</button>
+      <button class="btn btn-save" [disabled]="!uploadedFiles.length" (click)="confirmUploadEvidence()">Upload</button>
+    </div>
+  </div>
+</div>
+
+<!-- Request Evidence Popup -->
+<div *ngIf="showRequestEvidencePopup" class="popup-overlay" (click)="onEvidenceOverlayClick($event)">
+  <div class="popup-content">
+    <div class="popup-header">
+      <h2>Request evidence</h2>
+    </div>
+    <div class="popup-body">
+      <div class="form-row" style="grid-template-columns: 1fr;">
+        <div class="form-group">
+          <label class="required">Email*</label>
+          <input class="date-input" type="email" [(ngModel)]="requestEmail" placeholder="name@example.com" />
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea class="date-input" [(ngModel)]="requestMessage" rows="3" placeholder="Add a short note"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Due date</label>
+          <input class="date-input" type="date" [(ngModel)]="requestDueDate" />
+        </div>
+      </div>
+    </div>
+    <div class="popup-footer">
+      <button class="btn btn-clear" (click)="cancelRequestEvidence()">Cancel</button>
+      <button class="btn btn-save" [disabled]="!requestEmail" (click)="submitRequestEvidence()">Send request</button>
+    </div>
+  </div>
+</div>
+
+<!-- Link Evidence Popup -->
+<div *ngIf="showLinkEvidencePopup" class="popup-overlay" (click)="onEvidenceOverlayClick($event)">
+  <div class="popup-content">
+    <div class="popup-header">
+      <h2>Link document</h2>
+    </div>
+    <div class="popup-body">
+      <div class="form-row" style="grid-template-columns: 1fr;">
+        <div class="form-group">
+          <label class="required">URL*</label>
+          <input class="date-input" type="url" [(ngModel)]="linkUrl" placeholder="https://..." />
+        </div>
+        <div class="form-group">
+          <label>Name (optional)</label>
+          <input class="date-input" type="text" [(ngModel)]="linkName" placeholder="Display name" />
+        </div>
+      </div>
+    </div>
+    <div class="popup-footer">
+      <button class="btn btn-clear" (click)="cancelLinkEvidence()">Cancel</button>
+      <button class="btn btn-save" [disabled]="!linkUrl" (click)="saveLinkEvidence()">Save</button>
+    </div>
+  </div>
+</div>

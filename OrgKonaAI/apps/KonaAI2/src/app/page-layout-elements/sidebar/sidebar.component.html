@@ -1,0 +1,459 @@
+<div class="sidebar font-primary" [class.sidebar-collapsed]="isCollapsed">
+  <!-- Header -->
+  <div class="sidebar-header">
+    <div class="logo-container">
+      <img src="assets/images/loginImages/KonaAIicon.png" alt="KonaAI" class="sidebar-logo">
+      @if (!isCollapsed) {
+      <span class="logo-text">kona<span class="ai-text">AI</span></span>
+      }
+    </div>
+    <button class="collapse-btn" (click)="toggleSidebar()">
+      <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'"></i>
+    </button>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="sidebar-nav">
+    <div class="nav-section" *ngIf="isInvestigator">
+      <div class="nav-item" [class.active]="activeSection === 'investigator'" (click)="toggleSection('investigator')">
+        <div class="nav-item-content">
+          <i class="nav-icon">P</i>
+          @if (!isCollapsed) {
+          <span class="nav-text">Projects</span>
+          }
+        </div>
+        @if (!isCollapsed) {
+        <i class="chevron bi bi-chevron-down" [class.rotated]="activeSection === 'investigator'"></i>
+        }
+      </div>
+
+      <!-- Submenu -->
+      @if (activeSection === 'investigator') {
+      <div class="submenu" [class.collapsed]="isCollapsed">
+        <div class="submenu-item" [class.active]="activeItem === 'projects'" (click)="setActiveItem('projects')"
+          routerLink="/projectsDashboard">
+          <i class="submenu-icon fa fa-th-large"></i>
+          @if (!isCollapsed) {
+          <span>Projects</span>
+          }
+        </div>
+
+        <div class="submenu-item" [class.active]="activeItem === 'organizationMembers'"
+          (click)="setActiveItem('organizationMembers')" routerLink="/members">
+          <i class="submenu-icon fa fa-exchange"></i>
+          @if (!isCollapsed) {
+          <span>Organization Members</span>
+          }
+        </div>
+      </div>
+      }
+    </div>
+
+
+   
+
+    <!-- L2 User Section -->
+     <div class="nav-section" *ngIf="isL2User">
+      <div class="nav-item" [class.active]="activeSection === 'clientAdmin'" (click)="toggleSection('clientAdmin')">
+        <div class="nav-item-content">
+          <i class="nav-icon client-admin-icon">L</i>
+          @if (!isCollapsed) {
+          <span class="nav-text">Investigation</span>
+          }
+        </div>
+        @if (!isCollapsed) {
+        <i class="chevron bi bi-chevron-down" [class.rotated]="activeSection === 'clientAdmin'"></i>
+        }
+      </div>
+
+      <!-- Dynamic Client Admin Submenu -->
+      @if (activeSection === 'l2User') {
+      <div class="submenu" [class.collapsed]="isCollapsed">
+        <!-- Organisation Tabs -->
+        @if (currentClientAdminTab === 'organisation') {
+          <div class="submenu-item" *ngFor="let tab of L1userOrganisationTabs" 
+               [class.active]="tab.isActive" 
+               (click)="setActiveTab(tab.id)"
+               [routerLink]="tab.route">
+            <i class="submenu-icon" [ngClass]="tab.icon"></i>
+            @if (!isCollapsed) {
+            <span>{{tab.label}}</span>
+            }
+          </div>
+        }
+
+        <!-- Project Tabs (filtered based on project selection) -->
+        @if (currentClientAdminTab === 'projects') {
+          <div class="submenu-item" *ngFor="let tab of getFilteredProjectTabs()" 
+               [class.active]="tab.isActive" 
+               (click)="setActiveTab(tab.id)"
+               [routerLink]="tab.route">
+            <i class="submenu-icon" [ngClass]="tab.icon"></i>
+            @if (!isCollapsed) {
+            <span>{{tab.label}}</span>
+            }
+          </div>
+        }
+      </div>
+      }
+    </div>
+    <div class="nav-section" *ngIf="isProjectAdmin">
+      <div class="nav-item" [class.active]="activeSection === 'audit'" (click)="toggleSection('audit')">
+        <div class="nav-item-content">
+          <i class="nav-icon">A</i>
+          @if (!isCollapsed) {
+          <span class="nav-text">Audit & Compliance</span>
+          }
+        </div>
+        @if (!isCollapsed) {
+        <i class="chevron bi bi-chevron-down" [class.rotated]="activeSection === 'audit'"></i>
+        }
+      </div>
+
+      <!-- Submenu -->
+      @if (activeSection === 'audit') {
+      <div class="submenu">
+        <div class="submenu-item" [class.active]="activeItem === 'projects'" (click)="setActiveItem('projects')"
+          routerLink="/projects">
+          <i class="submenu-icon bi bi-folder"></i>
+          @if (!isCollapsed) {
+          <span>Projects</span>
+          }
+        </div>
+
+        <div class="submenu-item" [class.active]="activeSubItem === 'alert-dashboard'"
+          (click)="setActiveItem('alert-dashboard')" routerLink="/alert-dashboard">
+          <i class="submenu-icon bi bi-exclamation-triangle"></i>
+          @if (!isCollapsed) {
+          <span>Alert Dashboard</span>
+          }
+        </div>
+
+        <div class="submenu-item" [class.active]="activeSubItem === 'organization'"
+          (click)="setActiveItem('organization')" routerLink="/members">
+          <i class="submenu-icon bi bi-people"></i>
+          @if (!isCollapsed) {
+          <span>Organization Members</span>
+          }
+        </div>
+      </div>
+      }
+
+    </div>
+    <div class="nav-section" *ngIf="isAudit">
+      <div class="nav-item" [class.active]="activeSection === 'audit'" (click)="toggleSection('audit')">
+        <div class="nav-item-content">
+          <i class="nav-icon">A</i>
+          @if (!isCollapsed) {
+          <span class="nav-text">Audit & Compliance</span>
+          }
+        </div>
+        @if (!isCollapsed) {
+        <i class="chevron bi bi-chevron-down" [class.rotated]="activeSection === 'audit'"></i>
+        }
+      </div>
+
+      <!-- Submenu -->
+      @if (activeSection === 'audit' && !isCollapsed) {
+      <div class="submenu">
+        <div class="submenu-item" [class.active]="activeItem === 'projects'" (click)="setActiveItem('projects')"
+          routerLink="/projectsDashboard">
+          <i class="submenu-icon bi bi-folder"></i>
+          <span>Projects</span>
+        </div>
+        <div class="submenu-item" [class.active]="activeSubItem === 'alert-dashboard'"
+          (click)="setActiveItem('alert-dashboard')" routerLink="/alert-dashboard">
+          <i class="submenu-icon bi bi-exclamation-triangle"></i>
+          <span>Alert Dashboard</span>
+        </div>
+        <!-- <div class="submenu-item" [class.active]="activeSubItem === 'data'" (click)="setActiveItem('data')" routerLink="/data">
+            <i class="submenu-icon bi bi-folder"></i>
+            <span>Project Manager</span>
+          </div> -->
+        <div class="submenu-item" [class.active]="activeItem === 'organization'" (click)="setActiveItem('organization')"
+          routerLink="/members">
+          <i class="submenu-icon bi bi-people"></i>
+          <span>Organisation Members</span>
+        </div>
+      </div>
+      }
+    </div>
+
+    <div class="nav-section" *ngIf="isAdmin">
+      <div class="nav-item" [class.active]="activeSection === 'admin'" (click)="toggleSection('admin')">
+        <div class="nav-item-content">
+          <i class="nav-icon">A</i>
+          @if (!isCollapsed) {
+          <span class="nav-text">Admin</span>
+          }
+        </div>
+        @if (!isCollapsed) {
+        <i class="chevron bi bi-chevron-down" [class.rotated]="activeSection === 'admin'"></i>
+        }
+      </div>
+
+      <!-- Submenu -->
+      @if (activeSection === 'admin') {
+      <div class="submenu" [class.collapsed]="isCollapsed">
+        <div class="submenu-item" *ngFor="let sub of adminMenu" [class.active]="activeItem === sub.id"
+          (click)="setActiveItem(sub.id)">
+          <i class="submenu-icon bi bi-{{sub.icon}}"></i>
+          @if (!isCollapsed) {
+          <span>{{sub.label}}</span>
+          }
+        </div>
+      </div>
+      }
+    </div>
+
+
+    <div class="nav-section" *ngIf="isGuest">
+      <div class="nav-item" [class.active]="activeSection === 'Guest'" (click)="toggleSection('Guest')">
+        <div class="nav-item-content">
+          <i class="nav-icon">G</i>
+          @if (!isCollapsed) {
+          <span class="nav-text">Guest</span>
+          }
+        </div>
+        @if (!isCollapsed) {
+        <i class="chevron bi bi-chevron-down" [class.rotated]="activeSection === 'Guest'"></i>
+        }
+      </div>
+
+      <!-- Submenu -->
+      @if (activeSection === 'Guest' && !isCollapsed) {
+      <div class="submenu">
+        <div class="submenu-item" [class.active]="activeItem === 'Home'" (click)="setActiveItem('Home')"
+          routerLink="/home">
+          <i class="fa-sharp fa-regular fa-house" aria-hidden="true" style="height: 10px;"></i>
+          <span style="margin-left: 10px;">Home</span>
+        </div>
+        <!-- <div class="submenu-item" [class.active]="activeItem === 'Connections'" (click)="setActiveItem('Connections')"
+          routerLink="/connections">
+          <i class="fa fa-exchange" aria-hidden="true" style="height: 10px;"></i>
+          <span style="margin-left: 10px;">Connections</span>
+        </div> -->
+      </div>
+      }
+    </div>
+    <!-- Data Manager Section -->
+    <div class="nav-section" *ngIf="isDataManager">
+      <div class="nav-item" [class.active]="activeSection === 'dataManager'" (click)="toggleSection('dataManager')">
+        <div class="nav-item-content">
+          <i class="nav-icon">DM</i>
+          @if (!isCollapsed) {
+          <span class="nav-text">Data Manager</span>
+          }
+        </div>
+        @if (!isCollapsed) {
+        <i class="chevron bi bi-chevron-down" [class.rotated]="activeSection === 'dataManager'"></i>
+        }
+      </div>
+
+      <!-- Submenu -->
+      @if (activeSection === 'dataManager') {
+
+      <div class="submenu" [class.collapsed]="isCollapsed">
+        @if (currentDataManagerTab === 'showHome') {
+        <div class="submenu-item" *ngFor="let item of submenuItems1[activateTabs]" [class.active]="activeItem === item.key"
+          (click)="setActiveItem(item.key)">
+          <i class="submenu-icon" [class]="item.icon"></i>
+          @if (!isCollapsed) {
+          <span>{{ item.label }}</span>
+          }
+        </div>
+        }
+        @if (currentDataManagerTab === 'showDashboard') {
+        <div class="submenu-item" *ngFor="let item of submenuItems[activateTabs]" [class.active]="activeItem === item.key"
+          (click)="setActiveItem(item.key)">
+          <i class="submenu-icon" [class]="item.icon"></i>
+          @if (!isCollapsed) {
+          <span>{{ item.label }}</span>
+          }
+        </div>
+        }
+      
+      </div>
+      }
+    </div>
+
+    <!-- Client Admin Section -->
+    <div class="nav-section" *ngIf="isClientAdmin">
+      <div class="nav-item" [class.active]="activeSection === 'clientAdmin'" (click)="toggleSection('clientAdmin')">
+        <div class="nav-item-content">
+          <i class="nav-icon client-admin-icon">A</i>
+          @if (!isCollapsed) {
+          <span class="nav-text">Audit & Compliance</span>
+          }
+        </div>
+        @if (!isCollapsed) {
+        <i class="chevron bi bi-chevron-down" [class.rotated]="activeSection === 'clientAdmin'"></i>
+        }
+      </div>
+
+      <!-- Dynamic Client Admin Submenu -->
+      @if (activeSection === 'clientAdmin') {
+      <div class="submenu" [class.collapsed]="isCollapsed">
+        <!-- Organisation Tabs -->
+        @if (currentClientAdminTab === 'organisation') {
+        <div class="submenu-item" *ngFor="let tab of organisationTabs" [class.active]="tab.isActive"
+          (click)="setActiveTab(tab.id)" [routerLink]="tab.route">
+          <i class="submenu-icon" [ngClass]="tab.icon"></i>
+          @if (!isCollapsed) {
+          <span>{{tab.label}}</span>
+          }
+        </div>
+        }
+
+        <!-- Project Tabs (filtered based on project selection) -->
+        @if (currentClientAdminTab === 'projects') {
+        <div class="submenu-item" *ngFor="let tab of getFilteredProjectTabs()" [class.active]="tab.isActive"
+          (click)="setActiveTab(tab.id)" [routerLink]="tab.route">
+          <i class="submenu-icon" [ngClass]="tab.icon"></i>
+          @if (!isCollapsed) {
+          <span>{{tab.label}}</span>
+          }
+        </div>
+        }
+      </div>
+      }
+    </div>
+
+     <div class="nav-section" *ngIf="isL1User">
+      <div class="nav-item" [class.active]="activeSection === 'clientAdmin'" (click)="toggleSection('clientAdmin')">
+        <div class="nav-item-content">
+          <i class="nav-icon client-admin-icon">L</i>
+          @if (!isCollapsed) {
+          <span class="nav-text">Investigation</span>
+          }
+        </div>
+        @if (!isCollapsed) {
+        <i class="chevron bi bi-chevron-down" [class.rotated]="activeSection === 'clientAdmin'"></i>
+        }
+      </div>
+
+      <!-- Dynamic Client Admin Submenu -->
+      @if (activeSection === 'l1User') {
+      <div class="submenu" [class.collapsed]="isCollapsed">
+        <!-- Organisation Tabs -->
+        @if (currentClientAdminTab === 'organisation') {
+          <div class="submenu-item" *ngFor="let tab of L1userOrganisationTabs" 
+               [class.active]="tab.isActive" 
+               (click)="setActiveTab(tab.id)"
+               [routerLink]="tab.route">
+            <i class="submenu-icon" [ngClass]="tab.icon"></i>
+            @if (!isCollapsed) {
+            <span>{{tab.label}}</span>
+            }
+          </div>
+        }
+
+        <!-- Project Tabs (filtered based on project selection) -->
+        @if (currentClientAdminTab === 'projects') {
+          <div class="submenu-item" *ngFor="let tab of getFilteredProjectTabs()" 
+               [class.active]="tab.isActive" 
+               (click)="setActiveTab(tab.id)"
+               [routerLink]="tab.route">
+            <i class="submenu-icon" [ngClass]="tab.icon"></i>
+            @if (!isCollapsed) {
+            <span>{{tab.label}}</span>
+            }
+          </div>
+        }
+      </div>
+      }
+    </div>
+    <div class="nav-section" *ngIf="isInstanceAdmin">
+      <div class="nav-item" [class.active]="activeSection === 'InstanceAdmin'" (click)="toggleSection('InstanceAdmin')">
+        <div class="nav-item-content">
+          <i class="nav-icon">A</i>
+          @if (!isCollapsed) {
+          <span class="nav-text">Admin</span>
+          }
+        </div>
+        @if (!isCollapsed) {
+        <i class="chevron bi bi-chevron-down" [class.rotated]="activeSection === 'InstanceAdmin'"></i>
+        }
+      </div>
+
+      <!-- Submenu -->
+      @if (activeSection === 'InstanceAdmin') {
+      <div class="submenu" [class.collapsed]="isCollapsed">
+        <ng-container *ngFor="let sub of instanceAdminMenu">
+          <div class="submenu-item" [class.active]="activeItem === sub.id && selectedTab == sub.subItem"
+            (click)="setActiveItem(sub.id, sub.subItem)" *ngIf="sub?.isParent">
+            <i class="submenu-icon bi bi-{{sub.icon}}"></i>
+            @if (!isCollapsed) {
+            <span>{{sub.label}}</span>
+            }
+          </div>
+        </ng-container>
+      </div>
+      <div class="submenu" [class.collapsed]="isCollapsed" style="margin-left:-1px;">
+        <ng-container *ngFor="let sub of instanceAdminMenu">
+          <div class="submenu-item" [class.active]="activeItem === sub.id && selectedTab == sub.subItem"
+            (click)="setActiveItem(sub.id, sub.subItem)" *ngIf="!sub?.isParent && id != null">
+            <i class="submenu-icon bi bi-{{sub.icon}}"></i>
+            @if (!isCollapsed) {
+            <span>{{sub.label}}</span>
+            }
+          </div>
+        </ng-container>
+      </div>
+      }
+    </div>
+  </nav>
+
+  <!-- Bottom Section -->
+  <div class="sidebar-bottom">
+    <div class="submenu" *ngIf="isDataManager">
+      <div class="submenu-item" [class.active]="activeItem === 'archive'" (click)="setActiveItem('archive')">
+        <!-- <div class="submenu" *ngIf="!isAdmin && !isGuest">
+      <div class="submenu-item" (click)="onArchieved()"> -->
+        <i class="submenu-icon bi bi-archive"></i>
+        @if (!isCollapsed) { <span>Archived</span> }
+      </div>
+    </div>
+    <div class="submenu" *ngIf="isAdmin">
+      <div class="submenu-item" [class.active]="activeItem === 'billing'" (click)="setActiveItem('billing')">
+        <i class="submenu-icon bi bi-credit-card"></i>
+        @if (!isCollapsed) { <span>Billing</span> }
+      </div>
+    </div>
+    <div class="submenu">
+      <div class="submenu-item" [class.active]="activeItem === 'notifications'" (click)="toggleNotification()">
+        <i class="submenu-icon bi bi-bell"></i>
+        @if (!isCollapsed) { <span>Notifications</span> }
+      </div>
+    </div>
+
+    <div class="submenu">
+      <div class="submenu-item" [class.active]="activeItem === 'help'" (click)="onHelp()">
+        <i class="submenu-icon bi bi-question-circle"></i>
+        @if (!isCollapsed) { <span>Help & more</span> }
+      </div>
+    </div>
+
+    <!-- User Profile -->
+    @if (currentUser) {
+    <div class="user-profile">
+      <div class="user-avatar">
+        <span>{{ getUserInitials() }}</span>
+      </div>
+      @if (!isCollapsed) {
+      <div class="user-info" (click)="onAccounts()">
+        <!-- <span class="user-name">{{ currentUser.firstName }} {{ currentUser.lastName }}</span> -->
+         <span class="user-name">{{ currentUser.userName }}</span>
+      </div>
+      }
+      @if (!isCollapsed) {
+      <button class="logout-btn" (click)="logout()" title="Logout">
+        <i class="bi bi-box-arrow-right"></i>
+      </button>
+      }
+    </div>
+    }
+  </div>
+</div>
+<app-help [isCollapsed]="isCollapsed"></app-help>
+<app-notification [isCollapsed]="isCollapsed"></app-notification>

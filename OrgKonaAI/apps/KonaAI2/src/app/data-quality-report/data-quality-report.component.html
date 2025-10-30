@@ -1,0 +1,132 @@
+<div class="dqr">
+  <!-- Header -->
+  <div class="dqr__header">
+    <button (click)="goBack()" class="dqr__backButton" aria-label="Back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6" />
+      </svg>
+    </button>
+    <h2 class="dqr__title">{{ issueId || 'BSAK-44' }}</h2>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="dqr__toolbar">
+    <div class="dqr__search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input [(ngModel)]="searchQuery" type="text" placeholder="What are you looking for?" class="dqr__searchInput" />
+    </div>
+    <div style="width:70px;height:25px"></div>
+  </div>
+
+  <!-- Table (styled to match data-quality-detail component exactly) -->
+  <div class="dqr__table">
+    <!-- Table Header -->
+    <div class="dqr__tableHeader">
+      <div class="dqr__headerContent">
+        <div class="dqr__checkboxWrapper">
+          <input #masterChk type="checkbox" [checked]="allSelected" (change)="toggleSelectAll(masterChk.checked)" class="dqr__checkbox" />
+        </div>
+        <div class="dqr__headerGrid">
+          <div class="dqr__headerCell">XBLNR</div>
+          <div class="dqr__headerCell">MANDT</div>
+          <div class="dqr__headerCell">BUKRS</div>
+          <div class="dqr__headerCell">LIFNR</div>
+          <div class="dqr__headerCell">UMSKS</div>
+          <div class="dqr__headerCell">UMSKZ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Rows -->
+    <div class="dqr__tableBody">
+      <div class="dqr__row" *ngFor="let row of paginatedRows; let i = index">
+        <div class="dqr__rowContent">
+          <div class="dqr__checkboxWrapper">
+            <input type="checkbox" [(ngModel)]="row.selected" (ngModelChange)="onRowCheckboxChange()" class="dqr__checkbox" />
+          </div>
+          <div class="dqr__rowGrid">
+            <div class="dqr__dataCell">{{ row.xblnr }}</div>
+            <div class="dqr__dataCell">{{ row.mandt }}</div>
+            <div class="dqr__dataCell">{{ row.bukrs }}</div>
+            <div class="dqr__dataCell">{{ row.lifnr }}</div>
+            <div class="dqr__dataCell">{{ row.umsks }}</div>
+            <div class="dqr__dataCell">{{ row.umskz }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Selection Popup -->
+  <div *ngIf="showSelectionPopup" class="dqr__popupBackdrop" (click)="closeSelectionPopup()"></div>
+  <div *ngIf="showSelectionPopup" class="dqr__selectionPopup">
+    <div class="dqr__popupHeader">
+      <div class="dqr__popupTitle">Selected ({{getSelectedCount()}})</div>
+      <div class="dqr__popupClose">
+        <button (click)="closeSelectionPopup()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <div class="dqr__popupBody">
+      <div class="dqr__resolutionSection">
+        <label class="dqr__resolutionLabel">Resolved by:</label>
+        <div class="dqr__resolutionOptions">
+          <label class="dqr__radioOption">
+            <input type="radio" name="resolution" value="archive" [(ngModel)]="selectedResolution">
+            <span class="dqr__radioLabel">Archive</span>
+          </label>
+          <label class="dqr__radioOption">
+            <input type="radio" name="resolution" value="ignore" [(ngModel)]="selectedResolution">
+            <span class="dqr__radioLabel">Ignore</span>
+          </label>
+          <label class="dqr__radioOption">
+            <input type="radio" name="resolution" value="delete" [(ngModel)]="selectedResolution">
+            <span class="dqr__radioLabel">Delete</span>
+          </label>
+        </div>
+      </div>
+      
+      <button class="dqr__applyButton" (click)="applyResolution()">
+        Apply
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer: counts, per page, pagination -->
+  <div class="dqr__footer">
+    <div class="dqr__summary">Showing {{ pageStartIndex + 1 }}-{{ pageEndIndex }} of {{ totalItems | number }}</div>
+
+    <div class="dqr__controls">
+      <div class="dqr__perpage">
+        <span>Items per page</span>
+        <div class="dqr__selectWrap">
+          <select [(ngModel)]="itemsPerPage" (ngModelChange)="setItemsPerPage($event)" class="dqr__select">
+            <option *ngFor="let opt of itemsPerPageOptions" [ngValue]="opt">{{ opt }}</option>
+          </select>
+          <div class="dqr__selectCaret">▼</div>
+        </div>
+      </div>
+
+      <div class="dqr__pagination">
+        <button class="dqr__pageBtn" (click)="prevPage()" [disabled]="currentPage === 1">‹</button>
+        <ng-container *ngFor="let p of visiblePageNumbers(); let idx = index">
+          <button *ngIf="p !== 'ellipsis'"
+                  class="dqr__pageBtn"
+                  (click)="goToPage(+p)"
+                  [class.is-active]="p === currentPage">{{ p }}</button>
+          <div *ngIf="p === 'ellipsis'" class="dqr__pageBtn" style="cursor:default">...</div>
+        </ng-container>
+        <button class="dqr__pageBtn" (click)="nextPage()" [disabled]="currentPage === totalPages">›</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

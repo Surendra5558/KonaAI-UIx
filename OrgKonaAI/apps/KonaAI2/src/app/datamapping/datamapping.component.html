@@ -1,0 +1,86 @@
+<div class="container" *ngIf="!showDetailsScreen">
+  <!-- <div class="header">
+    <h3>Stagged Data</h3>
+    <div class="status-indicators">
+      <span class="status-icon success">
+        <i class="far fa-check-circle"></i> {{ successCount }}
+      </span>
+      <span class="status-icon error">
+        <i class="far fa-times-circle"></i> {{ errorCount }}
+      </span>
+      <span class="status-icon pending">
+        <i class="far fa-hourglass"></i> {{ warningCount }}
+      </span>
+    </div>
+  </div> -->
+
+  <table class="table-main" >
+    <thead>
+      <tr>
+        <th>Submodule</th>
+        <th>Record Count</th>
+        <th>Exclude Count</th>
+        <th>Status</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of data">
+        <td>{{ row.submodule }}</td>
+        <td>{{ row.recordCount | number }}</td>
+        <td>{{ row.excludeCount }}</td>
+
+        <td>
+          <span class="status-badge completed">
+            <i class="far fa-thumbs-up"></i>
+            {{ row.status }}
+          </span>
+        </td>
+        <td class="icon-cell" style=" padding-right: 16px;">
+          <div style="position: absolute; right: 64px; display: flex;; gap: 30px;">
+            <i class="bi bi-download" (click)="onDownload(row); $event.stopPropagation()" title="Download"
+              style="cursor: pointer; font-size: 15px; -webkit-text-stroke: 0.5px currentColor; display: flex; align-items: center;">
+            </i>
+
+            <svg (click)="goToMapping(row.submodule); $event.stopPropagation()" title="Validations"
+              xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"
+              style="cursor: pointer; display: flex; align-items: center;">
+              <path d="M1 11L11 1M11 1V11M11 1H1" stroke="#2196f3" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </div>
+        </td>
+
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="bottom-bar">
+    <!-- Pagination Buttons (centered) -->
+    <div class="pagination-controls">
+      <!-- Previous Button -->
+      <button class="pagination-arrow" (click)="onPageChange('prev')" [disabled]="page === 1">‹</button>
+
+      <!-- Page Numbers -->
+      <button *ngFor="let p of [].constructor(totalPages); let i = index" (click)="goToPage(i + 1)"
+        [class.active]="page === i + 1">
+        {{ i + 1 }}
+      </button>
+
+      <!-- Next Button -->
+      <button class="pagination-arrow" (click)="onPageChange('next')" [disabled]="page === totalPages">›</button>
+    </div>
+
+    <!-- Execute Button (right) -->
+    <div class="execute">
+      <button class="btn-execute" style="margin-left: -25%;">Execute</button>
+    </div>
+  </div>
+
+</div>
+  <div *ngIf="showDetailsScreen" class="vm-details-fullscreen-overlay" [class.sidebar-pinned]="isSidebarPinned"
+    [class.sidebar-unpinned]="!isSidebarPinned">
+    <app-mappingdetails (backtoIntial)="handleChildEvent($event)">
+    </app-mappingdetails>
+  </div>

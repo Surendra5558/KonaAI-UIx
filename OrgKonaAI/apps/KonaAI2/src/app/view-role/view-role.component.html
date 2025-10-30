@@ -1,0 +1,161 @@
+<!-- Header Section -->
+<div class="view-role-header">
+  <div class="header-content">
+    <!-- Back Button -->
+    <button class="back-button" (click)="onBackClick()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+    </button>
+
+    <!-- Title Section -->
+    <div class="title-section">
+      <h1 class="page-title">{{ pageTitle }}</h1>
+      <p class="subtitle">{{ pageSubtitle }}</p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons" *ngIf="showDeleteButton">
+      <button class="btn btn-clear" (click)="onDeleteRole()">
+        Delete Role
+      </button>
+      <button class="btn btn-save" (click)="onEditRole()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M12 5L11 6L10 5L11 4L12 5Z" fill="white" />
+          <path d="3 13L7 12L13 6L10 3L4 9L3 13Z" stroke="white" stroke-width="1" stroke-linejoin="round" />
+        </svg>
+        Edit Role
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Role Information Section - Only show when viewing existing role -->
+<div class="role-info-section" *ngIf="showRoleInfo">
+  <div class="info-group">
+    <div class="info-item">
+      <label class="info-label">Name</label>
+      <div class="info-value">{{ roleName }}</div>
+    </div>
+  </div>
+
+  <div class="info-group">
+    <div class="info-item">
+      <label class="info-label">Description</label>
+      <div class="info-value">{{ roleDescription }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit/Add Role Form Section -->
+<div class="edit-role-section" *ngIf="isEditMode">
+  <div class="form-group">
+    <label class="form-label">
+      Role Title <span class="required">*</span>
+    </label>
+    <input type="text" class="form-input" [(ngModel)]="editRoleName" placeholder="Enter role title"
+      [class.error]="!editRoleName.trim() && (isAddMode || isEditMode)">
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">
+      Role Description <span class="required">*</span>
+    </label>
+    <input type="text" class="form-input" [(ngModel)]="editRoleDescription" placeholder="Enter role description"
+      [class.error]="!editRoleDescription.trim() && (isAddMode || isEditMode)">
+  </div>
+</div>
+
+<!-- Permissions Section -->
+<div class="permissions-section">
+  <div class="permissions-header">
+    <h2 class="permissions-title">
+      {{ permissionsTitle }}
+      <span class="required" *ngIf="isEditMode">*</span>
+    </h2>
+    <p class="permissions-description">
+      {{ permissionsDescription }}
+    </p>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="permissions-content">
+    <!-- Left Sidebar - Permission Categories -->
+    <div class="categories-sidebar">
+      <div class="category-item" *ngFor="let category of permissionCategories" [class.active]="category.active"
+        (click)="selectCategory(category)">
+        <div class="category-content">
+          <div class="category-indicator" *ngIf="category.active"></div>
+          <span class="category-name" [class.active-text]="category.active">{{ category.name }}</span>
+        </div>
+        <svg class="category-arrow" [class.visible]="category.active" width="16" height="16" viewBox="0 0 16 16"
+          fill="none">
+          <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Right Content - Permissions Table -->
+    <div class="permissions-table-container">
+      <table class="table-main">
+        <!-- Table Header -->
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>
+              <input type="checkbox" class="header-checkbox" [checked]="isAllViewChecked()" [disabled]="!isEditMode"
+                (change)="onHeaderCheckboxChange('view', $event)">
+              <span class="header-text">View</span>
+            </th>
+            <th>
+              <input type="checkbox" class="header-checkbox" [checked]="isAllEditChecked()" [disabled]="!isEditMode"
+                (change)="onHeaderCheckboxChange('edit', $event)">
+              <span class="header-text">Edit</span>
+            </th>
+            <th>
+              <input type="checkbox" class="header-checkbox" [checked]="isAllManageChecked()" [disabled]="!isEditMode"
+                (change)="onHeaderCheckboxChange('manage', $event)">
+              <span class="header-text">Manage</span>
+            </th>
+          </tr>
+        </thead>
+
+        <!-- Table Body -->
+        <tbody>
+          <tr *ngFor="let permission of getActivePermissions()">
+            <td class="module-column">
+              <span class="module-name">{{ permission.name }}</span>
+            </td>
+            <td class="permission-column view-column">
+              <input type="checkbox" [checked]="permission.view" [disabled]="!isEditMode"
+                (change)="onPermissionChange(getActiveCategoryName(), permission.name, 'view', $event)">
+            </td>
+            <td class="permission-column edit-column">
+              <input type="checkbox" [checked]="permission.edit" [disabled]="!isEditMode"
+                (change)="onPermissionChange(getActiveCategoryName(), permission.name, 'edit', $event)">
+            </td>
+            <td class="permission-column manage-column">
+              <input type="checkbox" [checked]="permission.manage" [disabled]="!isEditMode"
+                (change)="onPermissionChange(getActiveCategoryName(), permission.name, 'manage', $event)">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- Save/Cancel Buttons - Show in Edit Mode and Add Mode -->
+<div class="edit-actions" *ngIf="isEditMode">
+  <div class="actions-container">
+    <button class="btn btn-clear" (click)="onCancelEdit()">
+      {{ isAddMode ? 'Cancel' : 'Cancel' }}
+    </button>
+    <button class="btn btn-save" (click)="onSaveRole()">
+      {{ saveButtonText }}
+    </button>
+  </div>
+</div>

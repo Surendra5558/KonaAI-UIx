@@ -1,0 +1,399 @@
+<button class="demo-button" onclick="toggleDemo()">🔄 Toggle Filter View</button>
+    
+    <div class="dashboard-container">
+        <!-- Filter Header (Blue section - appears when filtered) -->
+        <div class="filter-header" id="filterHeader">
+            <div class="filter-tags-row">
+                <div class="filter-tag-blue">
+                    <span>Know Your Vendor: Test - Conflict of Interest</span>
+                    <button class="remove-x" onclick="clearAllFilters()">×</button>
+                </div>
+                <div class="filter-tag-blue">
+                    <span>Text Analytics: Repayment</span>
+                    <button class="remove-x" onclick="clearAllFilters()">×</button>
+                </div>
+                <button class="clear-all-link" onclick="clearAllFilters()">Clear All</button>
+            </div>
+        </div>
+
+        <!-- Main Header -->
+        <div class="header">
+            <div class="search-section">
+                <div class="search-box">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" class="search-input" placeholder="Search across all data" id="searchInput">
+                </div>
+                <div class="region-dropdown">
+                    <select id="regionSelect">
+                        <option selected>All Regions</option>
+                        <option>North America</option>
+                        <option>Europe</option>
+                        <option>Asia Pacific</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Active Selection Impact -->
+            <div class="selection-impact" id="selectionImpact">
+                <span class="impact-title">Active Selection Impact</span>
+                <div class="impact-stats">
+                    <span class="stat">3 Business Units</span>
+                    <span class="stat">4 Vendors</span>
+                    <span class="stat">20 Transactions</span>
+                    <span class="stat">1 Test</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+            <!-- Business Unit Risk Ranking -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Business Unit Risk Ranking</h3>
+                    <div class="chart-actions">
+                        <button class="chart-btn">📊</button>
+                        <button class="chart-btn">📋</button>
+                    </div>
+                </div>
+                <div class="chart-content">
+                    <svg width="100%" height="280" viewBox="0 0 420 280">
+                        <!-- Grid -->
+                        <defs>
+                            <pattern id="grid" width="42" height="28" patternUnits="userSpaceOnUse">
+                                <path d="M 42 0 L 0 0 0 28" fill="none" class="grid-line"/>
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#grid)" />
+                        
+                        <!-- Axes -->
+                        <line x1="50" y1="230" x2="370" y2="230" class="axis-line"/>
+                        <line x1="50" y1="50" x2="50" y2="230" class="axis-line"/>
+                        
+                        <!-- X-axis labels -->
+                        <text x="90" y="250" text-anchor="middle" class="axis-text">2B</text>
+                        <text x="170" y="250" text-anchor="middle" class="axis-text">4B</text>
+                        <text x="250" y="250" text-anchor="middle" class="axis-text">6B</text>
+                        <text x="330" y="250" text-anchor="middle" class="axis-text">8B</text>
+                        <text x="370" y="250" text-anchor="middle" class="axis-text">10B</text>
+                        
+                        <!-- Y-axis labels -->
+                        <text x="40" y="230" text-anchor="end" class="axis-text">0</text>
+                        <text x="40" y="195" text-anchor="end" class="axis-text">2</text>
+                        <text x="40" y="160" text-anchor="end" class="axis-text">4</text>
+                        <text x="40" y="125" text-anchor="end" class="axis-text">6</text>
+                        <text x="40" y="90" text-anchor="end" class="axis-text">8</text>
+                        <text x="40" y="70" text-anchor="end" class="axis-text">10</text>
+                        <text x="40" y="55" text-anchor="end" class="axis-text">12</text>
+                        
+                        <!-- Axis titles -->
+                        <text x="210" y="270" text-anchor="middle" class="axis-title">Amount $</text>
+                        <text x="25" y="140" text-anchor="middle" class="axis-title" transform="rotate(-90 25 140)">Average Risk Score</text>
+                        
+                        <!-- Default data points -->
+                        <g id="businessDefault">
+                            <circle cx="110" cy="115" r="8" class="point low-risk"></circle>
+                            <circle cx="102" cy="135" r="8" class="point low-risk"></circle>
+                            <circle cx="118" cy="165" r="8" class="point low-risk"></circle>
+                            <circle cx="95" cy="185" r="8" class="point low-risk"></circle>
+                            <circle cx="108" cy="200" r="8" class="point low-risk"></circle>
+                            <circle cx="97" cy="210" r="8" class="point low-risk"></circle>
+                            <circle cx="260" cy="155" r="8" class="point medium-risk"></circle>
+                        </g>
+                        
+                        <!-- Filtered data points -->
+                        <g id="businessFiltered" style="display: none;">
+                            <circle cx="110" cy="95" r="8" class="point low-risk"></circle>
+                            <circle cx="102" cy="175" r="8" class="point low-risk"></circle>
+                            <circle cx="260" cy="105" r="8" class="point medium-risk"></circle>
+                        </g>
+                    </svg>
+                </div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <span class="legend-dot low-risk"></span>
+                        <span>Low Risk</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot medium-risk"></span>
+                        <span>Medium Risk</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot high-risk"></span>
+                        <span>High Risk</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vendor Risk Ranking -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Vendor Risk Ranking</h3>
+                    <div class="chart-actions">
+                        <button class="chart-btn">📊</button>
+                        <button class="chart-btn">📋</button>
+                    </div>
+                </div>
+                <div class="chart-content">
+                    <svg width="100%" height="280" viewBox="0 0 420 280">
+                        <rect width="100%" height="100%" fill="url(#grid)" />
+                        
+                        <!-- Axes -->
+                        <line x1="50" y1="230" x2="370" y2="230" class="axis-line"/>
+                        <line x1="50" y1="50" x2="50" y2="230" class="axis-line"/>
+                        
+                        <!-- X-axis labels -->
+                        <text x="90" y="250" text-anchor="middle" class="axis-text">1B</text>
+                        <text x="170" y="250" text-anchor="middle" class="axis-text">2B</text>
+                        <text x="250" y="250" text-anchor="middle" class="axis-text">3B</text>
+                        <text x="330" y="250" text-anchor="middle" class="axis-text">4B</text>
+                        <text x="370" y="250" text-anchor="middle" class="axis-text">5B</text>
+                        
+                        <!-- Y-axis labels -->
+                        <text x="40" y="230" text-anchor="end" class="axis-text">0</text>
+                        <text x="40" y="195" text-anchor="end" class="axis-text">20</text>
+                        <text x="40" y="160" text-anchor="end" class="axis-text">40</text>
+                        <text x="40" y="125" text-anchor="end" class="axis-text">60</text>
+                        <text x="40" y="90" text-anchor="end" class="axis-text">80</text>
+                        <text x="40" y="70" text-anchor="end" class="axis-text">100</text>
+                        <text x="40" y="55" text-anchor="end" class="axis-text">200</text>
+                        
+                        <!-- Axis titles -->
+                        <text x="210" y="270" text-anchor="middle" class="axis-title">Amount $</text>
+                        <text x="25" y="140" text-anchor="middle" class="axis-title" transform="rotate(-90 25 140)">Average Risk Score</text>
+                        
+                        <!-- Default data points -->
+                        <g id="vendorDefault">
+                            <circle cx="98" cy="65" r="8" class="point high-risk"></circle>
+                            <circle cx="115" cy="85" r="8" class="point high-risk"></circle>
+                            <circle cx="122" cy="95" r="8" class="point medium-risk"></circle>
+                            <circle cx="108" cy="100" r="8" class="point medium-risk"></circle>
+                            <circle cx="128" cy="120" r="8" class="point medium-risk"></circle>
+                            <circle cx="115" cy="125" r="8" class="point medium-risk"></circle>
+                            <circle cx="102" cy="130" r="8" class="point low-risk"></circle>
+                            <circle cx="135" cy="140" r="8" class="point low-risk"></circle>
+                            <circle cx="190" cy="205" r="8" class="point low-risk"></circle>
+                            <circle cx="230" cy="200" r="8" class="point low-risk"></circle>
+                            <circle cx="260" cy="195" r="8" class="point low-risk"></circle>
+                            <circle cx="340" cy="185" r="8" class="point low-risk"></circle>
+                            <circle cx="230" cy="115" r="8" class="point medium-risk"></circle>
+                            <circle cx="245" cy="65" r="8" class="point medium-risk"></circle>
+                        </g>
+                        
+                        <!-- Filtered data points -->
+                        <g id="vendorFiltered" style="display: none;">
+                            <circle cx="115" cy="85" r="8" class="point high-risk"></circle>
+                            <circle cx="122" cy="95" r="8" class="point medium-risk"></circle>
+                            <circle cx="190" cy="205" r="8" class="point low-risk"></circle>
+                            <circle cx="260" cy="195" r="8" class="point low-risk"></circle>
+                        </g>
+                    </svg>
+                </div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <span class="legend-dot low-risk"></span>
+                        <span>Low Risk</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot medium-risk"></span>
+                        <span>Medium Risk</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot high-risk"></span>
+                        <span>High Risk</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transaction Risk Ranking -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Transaction Risk Ranking</h3>
+                    <div class="chart-actions">
+                        <button class="chart-btn">📊</button>
+                        <button class="chart-btn">📋</button>
+                    </div>
+                </div>
+                <div class="chart-content">
+                    <svg width="100%" height="280" viewBox="0 0 420 280">
+                        <rect width="100%" height="100%" fill="url(#grid)" />
+                        
+                        <!-- Axes -->
+                        <line x1="50" y1="230" x2="370" y2="230" class="axis-line"/>
+                        <line x1="50" y1="50" x2="50" y2="230" class="axis-line"/>
+                        
+                        <!-- X-axis labels -->
+                        <text x="80" y="250" text-anchor="middle" class="axis-text">0.2B</text>
+                        <text x="130" y="250" text-anchor="middle" class="axis-text">0.4B</text>
+                        <text x="210" y="250" text-anchor="middle" class="axis-text">0.6B</text>
+                        <text x="290" y="250" text-anchor="middle" class="axis-text">0.8B</text>
+                        <text x="370" y="250" text-anchor="middle" class="axis-text">1B</text>
+                        
+                        <!-- Y-axis labels -->
+                        <text x="40" y="230" text-anchor="end" class="axis-text">0</text>
+                        <text x="40" y="195" text-anchor="end" class="axis-text">20</text>
+                        <text x="40" y="160" text-anchor="end" class="axis-text">40</text>
+                        <text x="40" y="125" text-anchor="end" class="axis-text">60</text>
+                        <text x="40" y="90" text-anchor="end" class="axis-text">80</text>
+                        <text x="40" y="70" text-anchor="end" class="axis-text">100</text>
+                        <text x="40" y="55" text-anchor="end" class="axis-text">120</text>
+                        
+                        <!-- Axis titles -->
+                        <text x="210" y="270" text-anchor="middle" class="axis-title">Amount $</text>
+                        <text x="25" y="140" text-anchor="middle" class="axis-title" transform="rotate(-90 25 140)">Average Risk Score</text>
+                        
+                        <!-- Default data points -->
+                        <g id="transactionDefault">
+                            <circle cx="290" cy="70" r="6" class="point high-risk"></circle>
+                            <circle cx="150" cy="75" r="6" class="point medium-risk"></circle>
+                            <circle cx="137" cy="85" r="6" class="point medium-risk"></circle>
+                            <circle cx="128" cy="100" r="6" class="point medium-risk"></circle>
+                            <circle cx="118" cy="110" r="6" class="point medium-risk"></circle>
+                            <circle cx="170" cy="125" r="6" class="point medium-risk"></circle>
+                            <circle cx="195" cy="140" r="6" class="point medium-risk"></circle>
+                            <circle cx="218" cy="120" r="6" class="point medium-risk"></circle>
+                            <circle cx="270" cy="205" r="6" class="point low-risk"></circle>
+                            <circle cx="315" cy="210" r="6" class="point low-risk"></circle>
+                            <circle cx="355" cy="205" r="6" class="point low-risk"></circle>
+                        </g>
+                        
+                        <!-- Filtered data points -->
+                        <g id="transactionFiltered" style="display: none;">
+                            <circle cx="290" cy="60" r="6" class="point high-risk"></circle>
+                            <circle cx="150" cy="90" r="6" class="point medium-risk"></circle>
+                            <circle cx="137" cy="100" r="6" class="point medium-risk"></circle>
+                            <circle cx="128" cy="115" r="6" class="point medium-risk"></circle>
+                            <circle cx="118" cy="125" r="6" class="point medium-risk"></circle>
+                            <circle cx="170" cy="190" r="6" class="point low-risk"></circle>
+                            <circle cx="195" cy="185" r="6" class="point low-risk"></circle>
+                            <circle cx="218" cy="180" r="6" class="point low-risk"></circle>
+                            <circle cx="270" cy="175" r="6" class="point low-risk"></circle>
+                            <circle cx="315" cy="170" r="6" class="point low-risk"></circle>
+                        </g>
+                    </svg>
+                </div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <span class="legend-dot low-risk"></span>
+                        <span>Low Risk</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot medium-risk"></span>
+                        <span>Medium Risk</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot high-risk"></span>
+                        <span>High Risk</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Stratification by Test -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Risk Stratification by Test</h3>
+                    <div class="chart-actions">
+                        <button class="chart-btn">📊</button>
+                        <button class="chart-btn">📋</button>
+                    </div>
+                </div>
+                <div class="chart-content">
+                    <svg width="100%" height="280" viewBox="0 0 420 280">
+                        <!-- Y-axis labels -->
+                        <text x="40" y="230" text-anchor="end" class="axis-text">0</text>
+                        <text x="40" y="195" text-anchor="end" class="axis-text">2M</text>
+                        <text x="40" y="160" text-anchor="end" class="axis-text">4M</text>
+                        <text x="40" y="125" text-anchor="end" class="axis-text">6M</text>
+                        <text x="40" y="90" text-anchor="end" class="axis-text">8M</text>
+                        <text x="40" y="70" text-anchor="end" class="axis-text">10M</text>
+                        
+                        <!-- Axis title -->
+                        <text x="25" y="140" text-anchor="middle" class="axis-title" transform="rotate(-90 25 140)">Invoice Count</text>
+                        
+                        <!-- Default bars -->
+                        <g id="barsDefault">
+                            <!-- Conflict of Interest -->
+                            <rect x="60" y="146" width="26" height="84" class="bar-clean"></rect>
+                            <rect x="60" y="130" width="26" height="16" class="bar-flagged"></rect>
+                            <text x="73" y="250" text-anchor="middle" class="axis-text">Conflict of Interest</text>
+                            
+                            <!-- Anti Corruption -->
+                            <rect x="120" y="220" width="26" height="10" class="bar-clean"></rect>
+                            <rect x="120" y="196" width="26" height="24" class="bar-flagged"></rect>
+                            <text x="133" y="250" text-anchor="middle" class="axis-text">Anti Corruption</text>
+                            
+                            <!-- Fraud Monitoring -->
+                            <rect x="180" y="214" width="26" height="16" class="bar-clean"></rect>
+                            <rect x="180" y="170" width="26" height="44" class="bar-flagged"></rect>
+                            <text x="193" y="250" text-anchor="middle" class="axis-text">Fraud Monitoring</text>
+                            
+                            <!-- DCC Test/Flag -->
+                            <rect x="240" y="206" width="26" height="24" class="bar-clean"></rect>
+                            <rect x="240" y="190" width="26" height="16" class="bar-flagged"></rect>
+                            <text x="253" y="250" text-anchor="middle" class="axis-text">DCC Test/Flag</text>
+                            
+                            <!-- Potential Cost Recovery -->
+                            <rect x="300" y="134" width="26" height="96" class="bar-clean"></rect>
+                            <rect x="300" y="38" width="26" height="96" class="bar-flagged"></rect>
+                            <text x="313" y="250" text-anchor="middle" class="axis-text">Potential Cost Rec.</text>
+                            
+                            <!-- High Risk Analysis -->
+                            <rect x="360" y="166" width="26" height="64" class="bar-clean"></rect>
+                            <rect x="360" y="102" width="26" height="64" class="bar-flagged"></rect>
+                            <text x="373" y="250" text-anchor="middle" class="axis-text">High Risk Analysis</text>
+                        </g>
+
+                        <!-- Filtered bars (with faded inactive ones) -->
+                        <g id="barsFiltered" style="display: none;">
+                            <!-- Conflict of Interest (Active) -->
+                            <rect x="60" y="146" width="26" height="84" class="bar-clean"></rect>
+                            <rect x="60" y="130" width="26" height="16" class="bar-flagged"></rect>
+                            <text x="73" y="250" text-anchor="middle" class="axis-text">Conflict of Interest</text>
+                            
+                            <!-- Anti Corruption (Faded) -->
+                            <rect x="120" y="190" width="26" height="40" class="bar-clean bar-faded"></rect>
+                            <rect x="120" y="170" width="26" height="20" class="bar-flagged bar-faded"></rect>
+                            <text x="133" y="250" text-anchor="middle" class="axis-text">Anti Corruption</text>
+                            
+                            <!-- Fraud Monitoring (Faded) -->
+                            <rect x="180" y="170" width="26" height="60" class="bar-clean bar-faded"></rect>
+                            <rect x="180" y="150" width="26" height="20" class="bar-flagged bar-faded"></rect>
+                            <text x="193" y="250" text-anchor="middle" class="axis-text">Fraud Monitoring</text>
+                            
+                            <!-- DCC Test/Flag (Faded) -->
+                            <rect x="240" y="180" width="26" height="50" class="bar-clean bar-faded"></rect>
+                            <rect x="240" y="160" width="26" height="20" class="bar-flagged bar-faded"></rect>
+                            <text x="253" y="250" text-anchor="middle" class="axis-text">DCC Test/Flag</text>
+                            
+                            <!-- Potential Cost Recovery (Faded) -->
+                            <rect x="300" y="50" width="26" height="180" class="bar-clean bar-faded"></rect>
+                            <rect x="300" y="40" width="26" height="10" class="bar-flagged bar-faded"></rect>
+                            <text x="313" y="250" text-anchor="middle" class="axis-text">Potential Cost Rec.</text>
+                            
+                            <!-- High Risk Analysis (Faded) -->
+                            <rect x="360" y="70" width="26" height="160" class="bar-clean bar-faded"></rect>
+                            <rect x="360" y="50" width="26" height="20" class="bar-flagged bar-faded"></rect>
+                            <text x="373" y="250" text-anchor="middle" class="axis-text">High Risk Analysis</text>
+                        </g>
+                        
+                        <!-- Navigation arrows -->
+                        <text x="50" y="265" text-anchor="middle" font-size="16" fill="#666">‹</text>
+                        <text x="370" y="265" text-anchor="middle" font-size="16" fill="#666">›</text>
+                    </svg>
+                </div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <span class="legend-dot clean-amount"></span>
+                        <span>Clean Amount</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot flagged-invoices"></span>
+                        <span>Flagged Invoices</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

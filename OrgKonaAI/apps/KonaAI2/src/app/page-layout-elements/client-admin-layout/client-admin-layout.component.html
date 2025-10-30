@@ -1,0 +1,33 @@
+<div class="client-admin-layout">
+  <!-- Back Navigation placed left to the client admin layout -->
+  <div class="top-bar-wrapper" *ngIf="!isDataManager && !isInstanceAdmin">
+    <div class="layout-back-wrapper" *ngIf="activeTab === 'projects' && !isOnProjectsHome && !isDataManager && !isInstanceAdmin">
+      <button class="btn-back" (click)="goBackToProjectsHome()" title="Back to Projects Home">
+        <i class="bi bi-arrow-left-short"></i>
+      </button>
+      <span class="layout-back-projectname" *ngIf="projectName">{{ projectName }}</span>
+    </div>
+    <!-- Fixed Header for all Client Admin screens -->
+    <div class="main-topbar" >
+      <div class="main-header">
+        <div class="main-nav-container">
+          <div class="main-tab-wrapper">
+           <div *ngFor="let tab of visibleTabs"
+             class="main-tab-item"
+             [class.active]="activeTab === tab.key"
+             (click)="selectTab(tab.key)">
+          <i class="bi" [ngClass]="tab.icon"></i>
+          <span>{{ tab.label }}</span>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+<div class="client-admin-content-wrapper" >
+  <main class="client-admin-content" [class.no-top-gap]="isL1User || isL2User">
+    <router-outlet></router-outlet>
+  </main>
+  </div>
+</div>
