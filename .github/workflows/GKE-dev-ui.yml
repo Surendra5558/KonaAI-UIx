@@ -68,7 +68,7 @@ jobs:
 
           NAMESPACE=konaai-dev-ui
 
-          CHART_PATH=./OrgKonaAI/GKE-charts/templates  # path to your chart in repo
+          CHART_PATH=./OrgKonaAI/GKE-charts  # path to your chart in repo
 
           helm upgrade --install $RELEASE_NAME $CHART_PATH \
            --namespace $NAMESPACE \
