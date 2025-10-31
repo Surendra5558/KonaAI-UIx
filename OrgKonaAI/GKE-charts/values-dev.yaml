@@ -21,6 +21,11 @@ resources:
     cpu: "300m"
 labels:
   app: ui-app
+autoscaling:
+  enabled: false       # set true if you want HPA
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
 ingress:
   enabled: true
   name: ui-ingress
