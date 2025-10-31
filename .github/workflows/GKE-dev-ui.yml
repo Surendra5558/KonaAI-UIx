@@ -62,22 +62,23 @@ jobs:
               -n ingress-nginx
             echo "TLS secret 'godaddy-wildcard' created successfully in namespace 'ingress-nginx'."
           fi
+
       - name: Helm install or upgrade
         run: |
-         RELEASE_NAME=ui-app
-         NAMESPACE=konaai-dev-ui
-         CHART_PATH=./OrgKonaAI/GKE-charts  # ✅ path where Chart.yaml exists
+          RELEASE_NAME=ui-app
+          NAMESPACE=konaai-dev-ui
+          CHART_PATH=./OrgKonaAI/GKE-charts
 
-           # Make sure namespace exists (avoids "not found" errors)
-         kubectl get ns $NAMESPACE || kubectl create ns $NAMESPACE
+          # Make sure namespace exists
+          kubectl get ns $NAMESPACE || kubectl create ns $NAMESPACE
 
-         # Run Helm upgrade/install
-         helm upgrade --install $RELEASE_NAME $CHART_PATH \
-         --namespace $NAMESPACE \
-         --values ./OrgKonaAI/GKE-charts/values-dev.yaml \
-         # --wait \
-         # --atomic \
-         # --timeout 3m
+          # Add a unique timestamp so Helm always triggers a rollout
+          helm upgrade --install $RELEASE_NAME $CHART_PATH \
+          --namespace $NAMESPACE \
+          --values ./OrgKonaAI/GKE-charts/values-dev.yaml \
+          --set image.tag=latest \
+          --set image.pullPolicy=Always \
+          --set-string buildTimestamp=$(date +%s) \
 
 
            
