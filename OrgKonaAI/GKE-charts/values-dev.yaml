@@ -1,7 +1,7 @@
 namespace: konaai-dev-ui  # Change to "default" if you're moving everything there
 replicaCount: 2
 image:
-  repository: us-central1-docker.pkg.dev/konaai-dev-462909/konaai-gke/dev-ui:latest
+  repository: us-central1-docker.pkg.dev/konaai-dev-462909/konaai-gke/dev-ui
   tag: latest
   pullPolicy: IfNotPresent
 container:
