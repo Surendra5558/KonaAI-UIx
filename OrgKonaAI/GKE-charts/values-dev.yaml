@@ -22,10 +22,12 @@ resources:
 labels:
   app: ui-app
 autoscaling:
-  enabled: false       # set true if you want HPA
+  enabled: true       # set true if you want HPA
   minReplicas: 1
   maxReplicas: 3
   targetCPUUtilizationPercentage: 80
+serviceAccount:
+  create: false
 ingress:
   enabled: true
   name: ui-ingress
