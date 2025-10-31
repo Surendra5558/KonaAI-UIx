@@ -25,16 +25,6 @@ jobs:
       - name: Configure Docker for Artifact Registry
         run: |
           gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
-           
-      - name: Build and push Docker container
-        run: |
-          IMAGE=us-central1-docker.pkg.dev/konaai-dev-462909/konaai-gke/dev-ui
-          docker build -f OrgKonaAI/Dockerfile -t $IMAGE:${{ github.sha }} .
-          docker push $IMAGE:${{ github.sha }}
-
-          # Optional: also push "latest" tag
-          docker tag $IMAGE:${{ github.sha }} $IMAGE:latest
-          docker push $IMAGE:latest
 
       - name: Ensure ingress-nginx is installed
         run: |
