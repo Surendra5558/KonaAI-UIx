@@ -1,5 +1,5 @@
 {
-  "apiBaseUrl": "https://konaai-api.mykonaai.com/api",
+  "apiBaseUrl": "https://konaai-sit-api.mykonaai.com/api",
   "ODataUrl": "https://localhost:44355/v1",
   "reportUrl": "https://localhost:5230/api/report",
   "authUrl": "https://localhost:5230/api/auth"
