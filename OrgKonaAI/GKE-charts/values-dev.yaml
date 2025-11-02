@@ -37,7 +37,7 @@ ingress:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   hosts:
-    - host: konaai-dev.mykonaai.com
+    - host: konaai-sit.mykonaai.com
       paths:
         - path: /
           pathType: Prefix
