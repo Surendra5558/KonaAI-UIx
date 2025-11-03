@@ -65,7 +65,7 @@ jobs:
 
       - name: Helm install or upgrade
         run: |
-          RELEASE_NAME=ui-app
+          RELEASE_NAME=ingress-nginx
           NAMESPACE=konaai-dev-ui
           CHART_PATH=./OrgKonaAI/GKE-charts
 
