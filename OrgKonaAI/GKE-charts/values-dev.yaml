@@ -43,5 +43,5 @@ ingress:
           pathType: Prefix
   tls:
     - hosts:
-        - konaai-dev.mykonaai.com
+        - konaai-sit.mykonaai.com
       secretName: godaddy-wildcard
