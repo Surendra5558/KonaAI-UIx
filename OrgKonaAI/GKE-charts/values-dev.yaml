@@ -39,15 +39,15 @@ ingress:
   hosts:
     - host: konaai-sit.mykonaai.com
       paths:
-        - path: /(.*)
+        - path: /
           pathType: Prefix
           serviceName: ui-service
           servicePort: 80
-        - path: /api/?(.*)
+        - path: /api
           pathType: Prefix
           serviceName: api-service
           servicePort: 80
-        - path: /auth/?(.*)
+        - path: /auth
           pathType: Prefix
           serviceName: auth-service
           servicePort: 80
