@@ -48,8 +48,8 @@ jobs:
              --create-namespace \
              --namespace ingress-nginx
            fi
-           echo " Checking if TLS secret 'godaddy-wildcard' exists in namespace 'ingress-nginx'..."
-           if kubectl get secret godaddy-wildcard -n ingress-nginx >/dev/null 2>&1; then
+           echo " Checking if TLS secret 'godaddy-wildcard' exists in namespace 'konaai-dev'..."
+           if kubectl get secret godaddy-wildcard -n konaai-dev >/dev/null 2>&1; then
              echo "TLS secret 'godaddy-wildcard' already exists. Skipping creation."
            else
             echo " Creating TLS secret 'godaddy-wildcard'..."
