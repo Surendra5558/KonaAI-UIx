@@ -1,4 +1,4 @@
-namespace: konaai-dev-ui  # Change to "default" if you're moving everything there
+namespace: konaai-dev  # Change to "default" if you're moving everything there
 replicaCount: 2
 image:
   repository: us-central1-docker.pkg.dev/konaai-dev-462909/konaai-gke/dev-ui
@@ -30,7 +30,7 @@ serviceAccount:
   create: false
 ingress:
   enabled: true
-  name: ui-ingress
+  name: konaai-dev-ingress
   className: nginx
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
@@ -39,8 +39,18 @@ ingress:
   hosts:
     - host: konaai-sit.mykonaai.com
       paths:
-        - path: /
+        - path: /(.*)
           pathType: Prefix
+          serviceName: ui-service
+          servicePort: 80
+        - path: /api/?(.*)
+          pathType: Prefix
+          serviceName: api-service
+          servicePort: 80
+        - path: /auth/?(.*)
+          pathType: Prefix
+          serviceName: auth-service
+          servicePort: 80
   tls:
     - hosts:
         - konaai-sit.mykonaai.com
