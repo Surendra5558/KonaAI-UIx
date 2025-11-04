@@ -59,14 +59,14 @@ jobs:
             kubectl create secret tls godaddy-wildcard \
               --cert=/tmp/fullchain.crt \
               --key=/tmp/private.key \
-              -n ingress-nginx
+              -n konaai-dev
             echo "TLS secret 'godaddy-wildcard' created successfully in namespace 'ingress-nginx'."
           fi
 
       - name: Helm install or upgrade
         run: |
-          RELEASE_NAME=ingress-nginx
-          NAMESPACE=konaai-dev-ui
+          RELEASE_NAME=Kona-Dev
+          NAMESPACE=konaai-dev
           CHART_PATH=./OrgKonaAI/GKE-charts
 
           # Make sure namespace exists
