@@ -1,26 +1,40 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ui-ingress
-  namespace: ingress-nginx   # ✅ move to default namespace
+  name: common-ingress
+  namespace: konaai-dev-ui
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
-  ingressClassName: nginx
   tls:
     - hosts:
-        - konaai-dev.mykonaai.com
-      secretName: konaai-ssl-cert   # also move this secret to default ns
+        - mykonaai.com
+      secretName: godaddy-wildcard
   rules:
-    - host: konaai-dev.mykonaai.com
+    - host: mykonaai.com
       http:
         paths:
-          - path: /
+          - path: /(.*)
             pathType: Prefix
             backend:
               service:
                 name: ui-service
+                port:
+                  number: 80
+          - path: /api/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: api-service
+                port:
+                  number: 80
+          - path: /auth/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-service
                 port:
                   number: 80
