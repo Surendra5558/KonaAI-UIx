@@ -55,6 +55,7 @@ jobs:
             echo " Creating TLS secret 'godaddy-wildcard'..."
             echo "${{ secrets.TLS_FULLCHAIN_CRT }}" > /tmp/fullchain.crt
             echo "${{ secrets.TLS_PRIVATE_KEY }}" > /tmp/private.key
+            kubectl create namespace konaai-dev
             
             kubectl create secret tls godaddy-wildcard \
               --cert=/tmp/fullchain.crt \
