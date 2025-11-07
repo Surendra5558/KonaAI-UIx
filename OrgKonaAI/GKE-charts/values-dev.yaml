@@ -1,5 +1,5 @@
 namespace: konaai-dev  # Change to "default" if you're moving everything there
-replicaCount: 2
+replicaCount: 1
 image:
   repository: us-central1-docker.pkg.dev/konaai-dev-462909/konaai-gke/dev-ui
   tag: latest
@@ -23,7 +23,7 @@ labels:
   app: ui-app
 autoscaling:
   enabled: true       # set true if you want HPA
-  minReplicas: 2
+  minReplicas: 1
   maxReplicas: 5
   targetCPUUtilizationPercentage: 80
 serviceAccount:
