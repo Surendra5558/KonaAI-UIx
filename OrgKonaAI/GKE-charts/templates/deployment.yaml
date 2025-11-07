@@ -47,8 +47,10 @@ spec:
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: {{ .Values.env.name | quote }}
-            - name: ConnectionStrings__DefaultConnection
-              value: {{ .Values.env.connectionString | quote }}
+            - name: apiBaseUrl Connection
+              value: {{ .Values.env.apiBaseUrl | quote }}
+            - name: ODataUrl Connection
+              value: {{ .Values.env.ODataUrl | quote }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
