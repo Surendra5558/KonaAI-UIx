@@ -59,3 +59,10 @@ ingress:
     - hosts:
         - konaai-sit.mykonaai.com
       secretName: godaddy-wildcard
+config:
+  apiBaseUrl: "https://dev-api.mykonaai.com/api"
+  ODataUrl: "https://dev-api.mykonaai.com/v1"
+  reportUrl: "https://dev-api.mykonaai.com/api/report"
+  authUrl: "https://dev-api.mykonaai.com/api/auth"
+  Datamanager: "https://dev-api.mykonaai.com/"
+      
