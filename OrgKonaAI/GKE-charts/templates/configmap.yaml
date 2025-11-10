@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "ui-helm.fullname" . }}-config
+  name: {{ .Values.config.name }}-config
 data:
   app-config.json: |
     {
