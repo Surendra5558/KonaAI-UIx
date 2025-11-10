@@ -66,6 +66,7 @@ config:
   name: konaai-dev-config
   apiBaseUrl: "https://konaai-api1.mykonaai.com/api"
   ODataUrl: "https://konaai-api1.mykonaai.com/v1"
+  reportUrl: "https://konaai-api1.mykonaai.com/api/report"
   authUrl: "https://konaai-api1.mykonaai.com/api/auth"
   Datamanager: "https://konaai-api1.mykonaai.com"
 
