@@ -66,7 +66,7 @@ jobs:
 
       - name: Helm install or upgrade
         run: |
-          RELEASE_NAME=kona-dev
+          RELEASE_NAME=konaai-dev
           NAMESPACE=konaai-dev
           CHART_PATH=./OrgKonaAI/GKE-charts
 
