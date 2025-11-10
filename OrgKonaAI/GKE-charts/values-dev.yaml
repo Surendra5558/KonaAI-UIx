@@ -1,8 +1,6 @@
 namespace: konaai-dev  # Change to "default" if you're moving everything there
-env:
-  name: "Development"
-  apiBaseUrl: "Server=dev-db;Database=myapp;User Id=dev;Password=devpass;"
-  ODataUrl: "Server=dev-db;Database=myapp;User Id=dev;Password=devpass"
+deployment:
+  name: konaai-dev-ui
 replicaCount: 1
 image:
   repository: us-central1-docker.pkg.dev/konaai-dev-462909/konaai-gke/dev-ui
