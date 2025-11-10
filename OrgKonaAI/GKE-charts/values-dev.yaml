@@ -38,6 +38,10 @@ ingress:
     #nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    
+  hosts:
+    - host: konaai-sit.mykonaai.com
+      paths:
   hosts:
     - host: konaai-sit.mykonaai.com
       paths:
@@ -45,18 +49,19 @@ ingress:
           pathType: Prefix
           serviceName: ui-service
           servicePort: 80
-        - path: /api
+
+    - host: konaai-api.mykonaai.com
+      paths:
+        - path: /
           pathType: Prefix
           serviceName: api-service
-          servicePort: 80
-        - path: /auth
-          pathType: Prefix
-          serviceName: auth-service
           servicePort: 80
   tls:
     - hosts:
         - konaai-sit.mykonaai.com
+        - konaai-api.mykonaai.com
       secretName: godaddy-wildcard
+
 config:
   name: konaai-dev-config
   apiBaseUrl: "https://test-api.mykonaai.com/api"
