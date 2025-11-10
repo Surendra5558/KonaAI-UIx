@@ -9,5 +9,4 @@ data:
       "ODataUrl": "{{ .Values.config.ODataUrl }}",
       "reportUrl": "{{ .Values.config.reportUrl }}",
       "authUrl": "{{ .Values.config.authUrl }}",
-      "Datamanager": "{{ .Values.config.Datamanager }}"
     }
