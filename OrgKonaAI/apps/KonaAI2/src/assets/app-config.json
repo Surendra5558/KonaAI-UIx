@@ -3,6 +3,7 @@
   "ODataUrl": "https://konaai-sit-api.mykonaai.com/v1",
   "reportUrl": "https://konaai-sit-api.mykonaai.com/api/report",
   "authUrl": "https://konaai-sit-api.mykonaai.com/auth"
+  "Datamanager":"https://konaai-api.mykonaai.com/"
 }
 
 
