@@ -67,5 +67,5 @@ config:
   apiBaseUrl: "https://konaai-api1.mykonaai.com/api"
   ODataUrl: "https://konaai-api1.mykonaai.com/v1"
   authUrl: "https://konaai-api1.mykonaai.com/api/auth"
-  Datamanager: "https://konaai-api1.mykonaai.com/"
+
       
